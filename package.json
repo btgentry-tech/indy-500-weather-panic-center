@@ -1,0 +1,34 @@
+{
+  "name": "indy-500-weather-panic-center",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "predev": "node scripts/generate-firebase-config.mjs",
+    "dev": "next dev",
+    "prebuild": "node scripts/generate-firebase-config.mjs",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "poll": "node --import tsx scripts/poll-weather.ts --force",
+    "poll:dry": "node --import tsx scripts/poll-weather.ts --dry-run --force"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "firebase": "^12.13.0",
+    "firebase-admin": "^13.10.0",
+    "next": "16.2.6",
+    "react": "19.2.4",
+    "react-chartjs-2": "^5.3.1",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@ducanh2912/next-pwa": "^10.2.9",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.6",
+    "tsx": "^4.22.2",
+    "typescript": "^5"
+  }
+}

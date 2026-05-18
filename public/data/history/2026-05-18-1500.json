@@ -1,0 +1,71 @@
+{
+  "id": "2026-05-18-1500",
+  "fetchedAt": "2026-05-18T19:00:00.000Z",
+  "noaaGeneratedAt": "2026-05-18T23:16:57+00:00",
+  "defcon": 2,
+  "panicMeter": 61,
+  "mood": "Dangerous moisture developments",
+  "forecastStability": 68,
+  "lastForecastChange": "DEFCON elevated to 2. Storm timing moved earlier.",
+  "days": {
+    "carbDay": {
+      "label": "Carb Day",
+      "date": "2026-05-22",
+      "rainPct": 79,
+      "stormRisk": "ACTIVE",
+      "highTemp": 73,
+      "confidence": "DETERIORATING",
+      "trend": "→",
+      "shortForecast": "Showers And Thunderstorms",
+      "detailedForecast": "Showers and thunderstorms. Mostly cloudy."
+    },
+    "legendsDay": {
+      "label": "Legends Day",
+      "date": "2026-05-23",
+      "rainPct": 51,
+      "stormRisk": "ACTIVE",
+      "highTemp": 79,
+      "confidence": "UNCERTAIN",
+      "trend": "→",
+      "shortForecast": "Chance Showers And Thunderstorms",
+      "detailedForecast": "A chance of showers and thunderstorms."
+    },
+    "raceDay": {
+      "label": "Race Day",
+      "date": "2026-05-24",
+      "rainPct": 44,
+      "stormRisk": "ACTIVE",
+      "highTemp": 82,
+      "confidence": "DETERIORATING",
+      "trend": "↑",
+      "shortForecast": "Chance Showers And Thunderstorms",
+      "detailedForecast": "A chance of showers and thunderstorms. Partly sunny."
+    }
+  },
+  "hourly": [
+    {
+      "time": "2026-05-24T10:00:00-04:00",
+      "rainPct": 35,
+      "shortForecast": "Chance Showers And Thunderstorms",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T12:00:00-04:00",
+      "rainPct": 44,
+      "shortForecast": "Chance Showers And Thunderstorms",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T14:00:00-04:00",
+      "rainPct": 40,
+      "shortForecast": "Chance Showers And Thunderstorms",
+      "hasStormWording": true
+    }
+  ],
+  "volatility": {
+    "changes24h": 2,
+    "largestRainSwing": 18,
+    "stabilityScore": 68,
+    "volatilityScore": 32
+  }
+}

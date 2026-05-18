@@ -1,0 +1,65 @@
+{
+  "id": "2026-05-18-1300",
+  "fetchedAt": "2026-05-18T17:00:00.000Z",
+  "noaaGeneratedAt": "2026-05-18T21:16:57+00:00",
+  "defcon": 3,
+  "panicMeter": 48,
+  "mood": "Monitoring situation",
+  "forecastStability": 74,
+  "lastForecastChange": "Forecast improving. Moisture retreating eastward.",
+  "days": {
+    "carbDay": {
+      "label": "Carb Day",
+      "date": "2026-05-22",
+      "rainPct": 79,
+      "stormRisk": "ACTIVE",
+      "highTemp": 73,
+      "confidence": "DETERIORATING",
+      "trend": "↑",
+      "shortForecast": "Showers And Thunderstorms",
+      "detailedForecast": "Showers and thunderstorms. Mostly cloudy."
+    },
+    "legendsDay": {
+      "label": "Legends Day",
+      "date": "2026-05-23",
+      "rainPct": 51,
+      "stormRisk": "ACTIVE",
+      "highTemp": 79,
+      "confidence": "UNCERTAIN",
+      "trend": "↓",
+      "shortForecast": "Chance Showers And Thunderstorms",
+      "detailedForecast": "A chance of showers and thunderstorms."
+    },
+    "raceDay": {
+      "label": "Race Day",
+      "date": "2026-05-24",
+      "rainPct": 26,
+      "stormRisk": "ELEVATED",
+      "highTemp": 82,
+      "confidence": "STABLE",
+      "trend": "↓",
+      "shortForecast": "Chance Showers And Thunderstorms",
+      "detailedForecast": "Partly sunny, with a high near 82."
+    }
+  },
+  "hourly": [
+    {
+      "time": "2026-05-24T12:00:00-04:00",
+      "rainPct": 26,
+      "shortForecast": "Chance Showers And Thunderstorms",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T14:00:00-04:00",
+      "rainPct": 24,
+      "shortForecast": "Slight Chance Rain Showers",
+      "hasStormWording": false
+    }
+  ],
+  "volatility": {
+    "changes24h": 1,
+    "largestRainSwing": 7,
+    "stabilityScore": 74,
+    "volatilityScore": 26
+  }
+}

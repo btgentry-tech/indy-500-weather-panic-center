@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#000"/>
+  <rect x="16" y="16" width="480" height="480" fill="none" stroke="#33ff33" stroke-width="8"/>
+  <text x="256" y="200" fill="#33ff33" font-family="monospace" font-size="48" text-anchor="middle">WEATHER</text>
+  <text x="256" y="280" fill="#ff3333" font-family="monospace" font-size="72" text-anchor="middle">PANIC</text>
+  <text x="256" y="360" fill="#ffff00" font-family="monospace" font-size="28" text-anchor="middle">CENTER</text>
+</svg>

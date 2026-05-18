@@ -1,0 +1,36 @@
+{
+  "entries": [
+    {
+      "at": "2026-05-18T19:00:00.000Z",
+      "snapshotId": "2026-05-18-1500",
+      "severity": "warning",
+      "summary": "DEFCON elevated to 2. Storm timing moved earlier.",
+      "details": [
+        "Race Day precipitation probability revised upward (26% → 44%).",
+        "Thunderstorm language introduced for Carb Day.",
+        "DEFCON 3 → 2."
+      ],
+      "defconFrom": 3,
+      "defconTo": 2
+    },
+    {
+      "at": "2026-05-18T17:00:00.000Z",
+      "snapshotId": "2026-05-18-1300",
+      "severity": "info",
+      "summary": "Forecast improving. Moisture retreating eastward.",
+      "details": [
+        "Legends Day precipitation probability revised downward (58% → 51%)."
+      ]
+    },
+    {
+      "at": "2026-05-18T15:00:00.000Z",
+      "snapshotId": "2026-05-18-1100",
+      "severity": "info",
+      "summary": "Monitoring station online. Baseline forecast captured.",
+      "details": [
+        "Initial atmospheric baseline recorded."
+      ],
+      "defconTo": 3
+    }
+  ]
+}

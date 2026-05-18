@@ -1,0 +1,65 @@
+{
+  "id": "2026-05-18-1100",
+  "fetchedAt": "2026-05-18T15:00:00.000Z",
+  "noaaGeneratedAt": "2026-05-18T18:45:29+00:00",
+  "defcon": 3,
+  "panicMeter": 52,
+  "mood": "Monitoring situation",
+  "forecastStability": 78,
+  "lastForecastChange": "Monitoring station online. Baseline forecast captured.",
+  "days": {
+    "carbDay": {
+      "label": "Carb Day",
+      "date": "2026-05-22",
+      "rainPct": 72,
+      "stormRisk": "ELEVATED",
+      "highTemp": 73,
+      "confidence": "UNCERTAIN",
+      "trend": "→",
+      "shortForecast": "Showers And Thunderstorms",
+      "detailedForecast": "Rain showers likely before 2pm, then showers and thunderstorms."
+    },
+    "legendsDay": {
+      "label": "Legends Day",
+      "date": "2026-05-23",
+      "rainPct": 58,
+      "stormRisk": "ELEVATED",
+      "highTemp": 79,
+      "confidence": "UNCERTAIN",
+      "trend": "→",
+      "shortForecast": "Chance Showers And Thunderstorms",
+      "detailedForecast": "A chance of showers and thunderstorms. Mostly cloudy."
+    },
+    "raceDay": {
+      "label": "Race Day",
+      "date": "2026-05-24",
+      "rainPct": 30,
+      "stormRisk": "ELEVATED",
+      "highTemp": 82,
+      "confidence": "STABLE",
+      "trend": "→",
+      "shortForecast": "Chance Showers And Thunderstorms",
+      "detailedForecast": "A slight chance of rain showers before 2pm, then a chance of showers and thunderstorms."
+    }
+  },
+  "hourly": [
+    {
+      "time": "2026-05-24T12:00:00-04:00",
+      "rainPct": 28,
+      "shortForecast": "Chance Showers And Thunderstorms",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T14:00:00-04:00",
+      "rainPct": 30,
+      "shortForecast": "Chance Showers And Thunderstorms",
+      "hasStormWording": true
+    }
+  ],
+  "volatility": {
+    "changes24h": 0,
+    "largestRainSwing": 0,
+    "stabilityScore": 78,
+    "volatilityScore": 22
+  }
+}
