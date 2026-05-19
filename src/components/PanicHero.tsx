@@ -23,13 +23,10 @@ export function PanicHero({
   lastForecastChangeAt,
 }: PanicHeroProps) {
   const race = snapshot.days.raceDay;
-  const hasMeaningfulChange =
-    Boolean(lastForecastChangeAt) &&
-    Boolean(lastForecastChange ?? snapshot.lastForecastChange);
   const changeText =
     lastForecastChange ??
     snapshot.lastForecastChange ??
-    "No meaningful forecast shift since the last editorial update.";
+    "Awaiting the next NOAA forecast revision.";
   const changeAt = lastForecastChangeAt ?? snapshot.fetchedAt;
   const stability = resolveSnapshotStabilityLevel(snapshot);
 
@@ -81,12 +78,10 @@ export function PanicHero({
       </div>
       <div className="hero-incident">
         <p className="incident-header">
-          <span className="field-label">Last meaningful change</span>
-          {hasMeaningfulChange ? (
-            <time className="incident-time" dateTime={changeAt}>
-              {formatStationTime(changeAt)}
-            </time>
-          ) : null}
+          <span className="field-label">Last forecast change</span>
+          <time className="incident-time" dateTime={changeAt}>
+            {formatStationTime(changeAt)}
+          </time>
         </p>
         <p className="hero-incident-text">{truncateChangeLine(changeText, 120)}</p>
       </div>

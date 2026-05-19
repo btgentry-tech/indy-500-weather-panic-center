@@ -85,5 +85,5 @@ export function summarizeSnapshotDelta(
       `PANIC INDEX ${previous.panicIndex} → ${current.panicIndex}`,
     );
   }
-  return parts.join(" | ") || "No material change";
+  return parts.join(" | ") || "Routine NOAA revision recorded.";
 }

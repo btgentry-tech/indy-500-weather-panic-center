@@ -28,9 +28,8 @@ function hourlyForecastChanged(
 }
 
 /**
- * Any forecast data change — lower bar than meaningful change. Triggers a new
- * snapshot history entry and FCM when rain, temp, storm risk, hourly slots,
- * derived trends, or panic index differ from the previous poll.
+ * True when any NOAA grid field differs from the previous poll — triggers snapshot
+ * history, editorial updates, changelog, timestamps, and notifications.
  */
 export function hasForecastDataChanged(
   previous: ForecastSnapshot,
@@ -43,6 +42,7 @@ export function hasForecastDataChanged(
     const nextDay = next.days[key];
     if (
       prevDay.rainPct !== nextDay.rainPct ||
+      prevDay.trend !== nextDay.trend ||
       prevDay.stormRisk !== nextDay.stormRisk ||
       prevDay.highTemp !== nextDay.highTemp ||
       prevDay.shortForecast !== nextDay.shortForecast
@@ -93,9 +93,7 @@ export function buildSnapshot(
     mood: PANIC_INDEX_MOODS[panicIndex],
     forecastStability,
     forecastStabilityLevel,
-    lastForecastChange: compare.hasMeaningfulChange
-      ? compare.summary
-      : previous?.lastForecastChange ?? null,
+    lastForecastChange: previous ? compare.summary : null,
     days,
     hourly: forecast.hourly,
     volatility,

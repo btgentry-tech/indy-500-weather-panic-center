@@ -40,7 +40,8 @@ interface IncidentReportProps {
 
 export function IncidentReport({ snapshot, previous }: IncidentReportProps) {
   const summary = previous
-    ? summarizeSnapshotDelta(previous, snapshot)
+    ? snapshot.lastForecastChange ??
+      summarizeSnapshotDelta(previous, snapshot)
     : "Baseline forecast recorded.";
   const tone = incidentTone(summary, snapshot, previous);
 

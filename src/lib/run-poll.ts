@@ -124,7 +124,7 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
         message: `DRY RUN — would ${dataChanged ? "save" : "refresh"} ${snapshot.id}${wouldNotify ? "; would notify" : ""}`,
         snapshotSaved: false,
         forecastDataChanged: dataChanged,
-        forecastChanged: compare.hasMeaningfulChange,
+        forecastChanged: dataChanged,
         notificationSent: false,
         panicIndex: snapshot.panicIndex,
         snapshotId: snapshot.id,
@@ -134,14 +134,34 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
     let persisted: ForecastSnapshot;
     let outcome: PollHeartbeat["outcome"] = dataChanged ? "saved" : "checked_no_save";
     let message = dataChanged
-      ? `Snapshot saved: ${snapshot.id}`
+      ? `Forecast updated: ${compare.summary}`
       : "NOAA checked; forecast unchanged — refreshed snapshot timestamp.";
 
     if (dataChanged) {
-      persisted = snapshot;
+      persisted = {
+        ...snapshot,
+        lastForecastChange: compare.summary,
+      };
       await saveSnapshot(persisted);
       await updateIndex(persisted.id);
       await updateLatest(persisted.id);
+
+      station.lastForecastChangeAt = checkedAt;
+      station.lastForecastChangeSummary = compare.summary;
+
+      const changelog = await loadChangelog();
+      const entry: ChangelogEntry = {
+        at: checkedAt,
+        snapshotId: persisted.id,
+        severity: compare.severity,
+        summary: compare.summary,
+        details: compare.details,
+        panicIndexFrom: compare.panicIndexFrom,
+        panicIndexTo: compare.panicIndexTo,
+        defconFrom: compare.panicIndexFrom,
+        defconTo: compare.panicIndexTo,
+      };
+      await appendChangelog(changelog, entry);
     } else {
       persisted = {
         ...snapshot,
@@ -157,47 +177,21 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
 
     let notificationSent = false;
 
-    // Meaningful forecast change — editorial summaries, changelog, hero timestamps only.
-    if (compare.hasMeaningfulChange) {
-      station.lastForecastChangeAt = checkedAt;
-      station.lastForecastChangeSummary = compare.summary;
-
-      persisted = { ...persisted, lastForecastChange: compare.summary };
-      await saveSnapshot(persisted);
-
-      const changelog = await loadChangelog();
-      const entry: ChangelogEntry = {
-        at: checkedAt,
-        snapshotId: persisted.id,
-        severity: compare.severity,
-        summary: compare.summary,
-        details: compare.details,
-        panicIndexFrom: compare.panicIndexFrom,
-        panicIndexTo: compare.panicIndexTo,
-        defconFrom: compare.panicIndexFrom,
-        defconTo: compare.panicIndexTo,
-      };
-      await appendChangelog(changelog, entry);
-    }
-
-    // Any forecast data change — FCM push (after snapshot is persisted; skipped when grid is identical).
     if (dataChanged && process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
       const { title, body } = buildForecastChangeNotification(
         compare,
         snapshot.panicIndex,
         {
-          meaningful: compare.hasMeaningfulChange,
+          isMajor: compare.isMajorChange,
           isInitial: !previous,
         },
       );
       await sendTopicNotification(title, body);
       notificationSent = true;
       outcome = "saved_notify";
-      message = compare.hasMeaningfulChange
-        ? `Meaningful forecast change. ${compare.summary}`
-        : `Forecast data changed. ${body}`;
-    } else if (compare.hasMeaningfulChange) {
-      message = `Meaningful change logged; notification skipped (no FIREBASE_SERVICE_ACCOUNT_JSON). ${compare.summary}`;
+      message = `Forecast updated. ${body}`;
+    } else if (dataChanged) {
+      message = `Forecast updated; notification skipped (no FIREBASE_SERVICE_ACCOUNT_JSON). ${compare.summary}`;
     }
 
     await updateStationMeta(station);
@@ -209,7 +203,7 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
         message,
         shouldSave: dataChanged,
         hasForecastDataChanged: dataChanged,
-        hasMeaningfulChange: compare.hasMeaningfulChange,
+        isMajorChange: compare.isMajorChange,
         snapshotId: persisted.id,
         panicIndex: snapshot.panicIndex,
       },
@@ -224,7 +218,7 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
       snapshotSaved: true,
       snapshotId: persisted.id,
       forecastDataChanged: dataChanged,
-      forecastChanged: compare.hasMeaningfulChange,
+      forecastChanged: dataChanged,
       notificationSent,
       panicIndex: snapshot.panicIndex,
     };

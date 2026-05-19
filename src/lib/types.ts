@@ -68,10 +68,10 @@ export interface PollHeartbeat {
     | "error";
   message: string;
   shouldSave?: boolean;
-  /** Grid differed from previous snapshot (FCM trigger). */
+  /** Grid differed from previous snapshot. */
   hasForecastDataChanged?: boolean;
-  /** Editorial/changelog threshold met. */
-  hasMeaningfulChange?: boolean;
+  /** Stronger alert tier for this revision. */
+  isMajorChange?: boolean;
   snapshotId?: string;
   panicIndex?: number;
   error?: string;
@@ -125,7 +125,8 @@ export interface LatestPointer {
 }
 
 export interface CompareResult {
-  hasMeaningfulChange: boolean;
+  /** Stronger alert wording — not a separate “counts as update” gate. */
+  isMajorChange: boolean;
   details: string[];
   severity: ChangelogSeverity;
   summary: string;
