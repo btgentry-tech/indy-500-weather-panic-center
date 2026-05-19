@@ -159,8 +159,8 @@ export function resolveSnapshotStabilityLevel(
 
 export function stabilityCssClass(
   level: ForecastStabilityLevel,
-): "stability-calm" | "stability-mid" | "stability-high" {
-  if (level === "stable" || level === "mostly-stable") return "stability-calm";
-  if (level === "unsettled") return "stability-mid";
-  return "stability-high";
+): "hero-stability-calm" | "hero-stability-mid" | "hero-stability-high" {
+  if (level === "stable" || level === "mostly-stable") return "hero-stability-calm";
+  if (level === "unsettled") return "hero-stability-mid";
+  return "hero-stability-high";
 }

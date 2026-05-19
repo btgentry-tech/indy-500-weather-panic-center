@@ -17,7 +17,9 @@ export default async function TimelinePage() {
       <section className="panel">
         <h2 className="panel-title">Atmospheric Incident Log</h2>
         <p className="status-line">
-          Tap an entry to expand details. Green = improving, red = worsening.
+          Tap an entry to expand. Each revision uses the same panic, stability,
+          and operational language as the dashboard — computed from NOAA deltas,
+          not stale stored copy. Green = improving, red = worsening.
         </p>
         {reversed.length === 0 ? (
           <p>No incidents on record.</p>
