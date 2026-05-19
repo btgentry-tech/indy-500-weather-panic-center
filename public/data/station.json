@@ -1,5 +1,5 @@
 {
-  "lastCheckedAt": "2026-05-19T16:48:38.606Z",
+  "lastCheckedAt": "2026-05-19T16:53:47.683Z",
   "lastSnapshotAt": "2026-05-19T16:37:22.148Z",
   "lastSnapshotId": "2026-05-19-0430",
   "lastForecastChangeAt": "2026-05-19T00:01:46.030Z",
@@ -12,5 +12,7 @@
     "observedAt": "2026-05-19T16:30:00+00:00"
   },
   "lastMajorShiftAt": "2026-05-19T00:01:46.030Z",
-  "lastMajorShiftSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward."
+  "lastMajorShiftSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
+  "lastOperationalUpdateAt": "2026-05-19T16:37:22.148Z",
+  "lastOperationalUpdateSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward."
 }
