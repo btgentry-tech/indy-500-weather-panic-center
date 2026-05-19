@@ -1,9 +1,10 @@
 import type { ForecastSnapshot } from "@/lib/types";
 import { PANIC_INDEX_MOODS } from "@/lib/panic-index";
 import {
-  FORECAST_STABILITY_NOTE,
+  FORECAST_STABILITY_DISCLAIMER,
   resolveSnapshotStabilityLevel,
   stabilityCssClass,
+  stabilityExplanation,
   stabilityLabel,
 } from "@/lib/forecast-stability";
 import { truncateChangeLine } from "@/lib/labels";
@@ -62,10 +63,8 @@ export function PanicHero({
         >
           {stabilityLabel(stability)}
         </p>
-        <p className="hero-stability-note">{FORECAST_STABILITY_NOTE}</p>
-        <p className="hero-stability-derived">
-          Derived interpretation — not an official NOAA metric.
-        </p>
+        <p className="hero-stability-note">{stabilityExplanation(stability)}</p>
+        <p className="hero-stability-derived">{FORECAST_STABILITY_DISCLAIMER}</p>
       </div>
       <div className="hero-metrics">
         <div className="hero-metric">

@@ -9,20 +9,57 @@ export type ForecastStabilityLevel =
   | "volatile"
   | "rapidly-changing";
 
-export const FORECAST_STABILITY_LABELS: Record<ForecastStabilityLevel, string> =
-  {
-    stable: "Stable",
-    "mostly-stable": "Mostly Stable",
-    unsettled: "Unsettled",
-    volatile: "Volatile",
-    "rapidly-changing": "Rapidly Changing",
-  };
+/** Plain-language status + one-line meaning per stability band. */
+export const FORECAST_STABILITY_COPY: Record<
+  ForecastStabilityLevel,
+  { label: string; explanation: string }
+> = {
+  stable: {
+    label: "Forecast holding steady",
+    explanation:
+      "Recent NOAA polls mostly agree — rain odds and timing are not bouncing around.",
+  },
+  "mostly-stable": {
+    label: "Mostly steady",
+    explanation:
+      "Guidance drifts a little between polls, but nothing dramatic yet.",
+  },
+  unsettled: {
+    label: "NOAA guidance still shifting",
+    explanation:
+      "Rain chances and storm timing keep moving as new polls land.",
+  },
+  volatile: {
+    label: "Forecast changing frequently",
+    explanation:
+      "Big revisions are common — percentages and storm wording keep swinging.",
+  },
+  "rapidly-changing": {
+    label: "Forecast in heavy flux",
+    explanation:
+      "Poll-to-poll jumps are large; treat the outlook as highly uncertain.",
+  },
+};
 
+export const FORECAST_STABILITY_DISCLAIMER =
+  "Internal trend analysis — unofficial.";
+
+/** @deprecated Use FORECAST_STABILITY_COPY[level].label */
+export const FORECAST_STABILITY_LABELS: Record<ForecastStabilityLevel, string> =
+  Object.fromEntries(
+    Object.entries(FORECAST_STABILITY_COPY).map(([k, v]) => [k, v.label]),
+  ) as Record<ForecastStabilityLevel, string>;
+
+/** @deprecated Use stabilityExplanation */
 export const FORECAST_STABILITY_NOTE =
-  "Based on NOAA forecast revisions over time.";
+  "How much NOAA forecasts have shifted between recent polls.";
 
 export function stabilityLabel(level: ForecastStabilityLevel): string {
-  return FORECAST_STABILITY_LABELS[level];
+  return FORECAST_STABILITY_COPY[level].label;
+}
+
+export function stabilityExplanation(level: ForecastStabilityLevel): string {
+  return FORECAST_STABILITY_COPY[level].explanation;
 }
 
 export function stabilityLevelFromVolatilityScore(

@@ -1,6 +1,7 @@
 import { RACE_DAYS } from "@/lib/race-days";
 import {
   computeDayStabilityLevel,
+  FORECAST_STABILITY_DISCLAIMER,
   stabilityCssClass,
   stabilityLabel,
 } from "@/lib/forecast-stability";
@@ -18,7 +19,8 @@ export function ForecastTable({ snapshot, history }: ForecastTableProps) {
     <section className="panel">
       <h2 className="panel-title">Race Weekend Forecast</h2>
       <p className="forecast-table-note">
-        Forecast stability reflects recent NOAA revision patterns per day.
+        Stability tracks how much each day&apos;s NOAA forecast has shifted
+        between polls. {FORECAST_STABILITY_DISCLAIMER}
       </p>
       <div className="table-scroll">
         <table className="data">
