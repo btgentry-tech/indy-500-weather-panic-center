@@ -8,10 +8,10 @@ export const metadata: Metadata = {
   title: "INDY 500 WEATHER PANIC CENTER",
   description:
     "Race week forecast watch for Indianapolis Motor Speedway.",
-  applicationName: "Indy Weather Panic Center",
+  applicationName: "Indy 500 Weather",
   appleWebApp: {
     capable: true,
-    title: "Panic Center",
+    title: "Indy 500 Weather",
     statusBarStyle: "black",
   },
 };

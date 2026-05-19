@@ -19,6 +19,13 @@ export function isStandalonePwa(): boolean {
   );
 }
 
+/** iOS Safari tab or browser without push APIs — show setup guide instead of failing silently. */
+export function needsAlertSetupGuide(): boolean {
+  if (typeof window === "undefined") return false;
+  if (isIos() && !isStandalonePwa()) return true;
+  return !notificationsSupported();
+}
+
 async function registerServiceWorker(): Promise<ServiceWorkerRegistration> {
   const existing = await navigator.serviceWorker.getRegistration("/");
   if (existing?.active) return existing;

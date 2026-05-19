@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "INDY 500 WEATHER PANIC CENTER",
-    short_name: "Panic Center",
+    name: "Indy 500 Weather",
+    short_name: "Indy 500 Weather",
     description:
       "Race week forecast watch for Indianapolis 500 weekend weather.",
     start_url: "/",

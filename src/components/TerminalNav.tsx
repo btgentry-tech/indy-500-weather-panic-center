@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { ALERTS_ARMED_EVENT, isAlertsArmed } from "@/lib/alerts-storage";
 import {
-  ALERTS_ARMED_EVENT,
-  isAlertsArmed,
-  notificationsSupported,
-} from "@/lib/alerts-storage";
-import { disableAppAlerts, enableAppAlerts } from "@/lib/alerts-fcm";
+  disableAppAlerts,
+  enableAppAlerts,
+  needsAlertSetupGuide,
+} from "@/lib/alerts-fcm";
 import { AlertsConfirmModal } from "@/components/AlertsConfirmModal";
+import { IphoneSetupModal } from "@/components/IphoneSetupModal";
 
 const LINKS = [
   { href: "/", label: "DASHBOARD" },
@@ -27,13 +28,12 @@ export function TerminalNav() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [alertsArmed, setAlertsArmed] = useState(false);
-  const [supported, setSupported] = useState(true);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [setupModalOpen, setSetupModalOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [navError, setNavError] = useState("");
 
   const refreshArmed = useCallback(() => {
-    setSupported(notificationsSupported());
     setAlertsArmed(isAlertsArmed());
   }, []);
 
@@ -55,6 +55,11 @@ export function TerminalNav() {
   }, [pathname]);
 
   async function handleActivate() {
+    if (needsAlertSetupGuide()) {
+      setSetupModalOpen(true);
+      return;
+    }
+
     setBusy(true);
     setNavError("");
     try {
@@ -82,8 +87,6 @@ export function TerminalNav() {
   }
 
   function renderAlertsStatus() {
-    if (!supported) return null;
-
     if (alertsArmed) {
       return (
         <span className="nav-alerts-status">
@@ -155,6 +158,10 @@ export function TerminalNav() {
         busy={busy}
         onConfirm={handleConfirmDisable}
         onCancel={() => setConfirmOpen(false)}
+      />
+      <IphoneSetupModal
+        open={setupModalOpen}
+        onClose={() => setSetupModalOpen(false)}
       />
     </>
   );

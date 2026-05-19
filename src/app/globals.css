@@ -647,9 +647,33 @@ table.data tr:nth-child(even) {
   padding: 16px;
 }
 
+.alert-modal-title {
+  margin: 0 0 12px;
+  color: var(--text);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
 .alert-modal-text {
   margin: 0 0 12px;
   color: var(--text);
+}
+
+.alert-modal-steps {
+  margin: 0 0 12px;
+  padding-left: 1.25rem;
+  color: var(--text);
+}
+
+.alert-modal-steps li {
+  margin-bottom: 6px;
+}
+
+.alert-modal-note {
+  margin: 0 0 12px;
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.4;
 }
 
 .alert-modal-actions {
@@ -660,6 +684,10 @@ table.data tr:nth-child(even) {
 .alert-modal-actions .btn-terminal {
   flex: 1;
   min-height: 44px;
+}
+
+.alert-modal-actions-single .btn-terminal {
+  width: 100%;
 }
 
 .alert-collapsed {

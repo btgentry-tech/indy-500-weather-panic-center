@@ -7,40 +7,37 @@ import {
   isAlertsArmed,
   notificationsSupported,
 } from "@/lib/alerts-storage";
-import { enableAppAlerts, isIos, isStandalonePwa, resubscribeIfArmed } from "@/lib/alerts-fcm";
+import {
+  enableAppAlerts,
+  needsAlertSetupGuide,
+  resubscribeIfArmed,
+} from "@/lib/alerts-fcm";
 import { onMessage } from "firebase/messaging";
+import { IphoneSetupModal } from "@/components/IphoneSetupModal";
 
-type AlertState =
-  | "offline"
-  | "requesting"
-  | "armed"
-  | "denied"
-  | "failed"
-  | "unsupported";
+type AlertState = "offline" | "requesting" | "armed" | "denied" | "failed";
 
 export function AlertSubscribePanel() {
   const [state, setState] = useState<AlertState>("offline");
   const [status, setStatus] = useState("");
   const [foregroundMsg, setForegroundMsg] = useState<string | null>(null);
-  const [supported, setSupported] = useState(true);
+  const [setupModalOpen, setSetupModalOpen] = useState(false);
 
   const syncArmedState = useCallback(async () => {
-    if (!notificationsSupported()) {
-      setSupported(false);
-      setState("unsupported");
-      return;
-    }
-    setSupported(true);
-
     if (!isAlertsArmed()) {
       setState(
-        Notification.permission === "denied" ? "denied" : "offline",
+        typeof Notification !== "undefined" &&
+          Notification.permission === "denied"
+          ? "denied"
+          : "offline",
       );
       return;
     }
 
     setState("armed");
-    await resubscribeIfArmed();
+    if (notificationsSupported()) {
+      await resubscribeIfArmed();
+    }
   }, []);
 
   useEffect(() => {
@@ -51,7 +48,7 @@ export function AlertSubscribePanel() {
   }, [syncArmedState]);
 
   useEffect(() => {
-    if (!supported) return;
+    if (!notificationsSupported()) return;
     let unsubscribe: (() => void) | undefined;
 
     getClientMessaging()
@@ -65,7 +62,7 @@ export function AlertSubscribePanel() {
       .catch(() => {});
 
     return () => unsubscribe?.();
-  }, [supported]);
+  }, []);
 
   async function enableAlerts() {
     setState("requesting");
@@ -80,23 +77,23 @@ export function AlertSubscribePanel() {
         error instanceof Error ? error.message : "Subscription failed.";
       if (Notification.permission === "denied") {
         setState("denied");
-      } else if (state !== "unsupported") {
+      } else {
         setState("failed");
       }
       setStatus(message);
     }
   }
 
-  if (state === "armed") {
-    return null;
+  function handleEnableClick() {
+    if (needsAlertSetupGuide()) {
+      setSetupModalOpen(true);
+      return;
+    }
+    void enableAlerts();
   }
 
-  if (state === "unsupported") {
-    return (
-      <p className="alert-collapsed status-line severity-warning">
-        NOTIFICATIONS UNAVAILABLE IN THIS BROWSER
-      </p>
-    );
+  if (state === "armed") {
+    return null;
   }
 
   const statusLabel =
@@ -107,31 +104,32 @@ export function AlertSubscribePanel() {
         : "ALERTS OFFLINE";
 
   return (
-    <section className="panel alert-panel" aria-label="Weather alerts">
-      <p
-        className={`alert-status ${state === "offline" ? "alert-status-offline" : ""}`}
-      >
-        {statusLabel}
-      </p>
-      {isIos() && !isStandalonePwa() && (
-        <p className="severity-warning ios-warning">
-          iOS: add to Home Screen, then reopen.
+    <>
+      <section className="panel alert-panel" aria-label="Weather alerts">
+        <p
+          className={`alert-status ${state === "offline" ? "alert-status-offline" : ""}`}
+        >
+          {statusLabel}
         </p>
-      )}
-      <button
-        type="button"
-        className="btn-terminal btn-alert"
-        onClick={enableAlerts}
-        disabled={state === "requesting"}
-      >
-        [ ENABLE WEATHER ALERTS ]
-      </button>
-      {status && <p className="status-line alert-feedback">{status}</p>}
-      {foregroundMsg && (
-        <p className="severity-warning alert-feedback">
-          INCOMING: {foregroundMsg}
-        </p>
-      )}
-    </section>
+        <button
+          type="button"
+          className="btn-terminal btn-alert"
+          onClick={handleEnableClick}
+          disabled={state === "requesting"}
+        >
+          [ ENABLE PANIC ALERTS ]
+        </button>
+        {status && <p className="status-line alert-feedback">{status}</p>}
+        {foregroundMsg && (
+          <p className="severity-warning alert-feedback">
+            INCOMING: {foregroundMsg}
+          </p>
+        )}
+      </section>
+      <IphoneSetupModal
+        open={setupModalOpen}
+        onClose={() => setSetupModalOpen(false)}
+      />
+    </>
   );
 }
