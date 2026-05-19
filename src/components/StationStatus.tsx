@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { formatClockNow, formatStationTime } from "@/lib/format";
 import { isPollStale, minutesSince } from "@/lib/poll-stale";
-import { formatNextPollUtc, pollCadenceLabel } from "@/lib/polling";
+import { formatNextPoll, pollCadenceLabel } from "@/lib/polling";
 import type { StationMeta } from "@/lib/types";
 
 const FLAVOR_LINES = [
@@ -77,9 +77,11 @@ export function StationStatus({ station: initialStation }: StationStatusProps) {
 
   useEffect(() => {
     setClock(formatClockNow());
-    setNextPoll(formatNextPollUtc());
+    const refreshNextPoll = () =>
+      setNextPoll(formatNextPoll(new Date(), station.lastCheckedAt));
+    refreshNextPoll();
     const clockTimer = setInterval(() => setClock(formatClockNow()), 1000);
-    const pollTimer = setInterval(() => setNextPoll(formatNextPollUtc()), 30_000);
+    const pollTimer = setInterval(refreshNextPoll, 30_000);
     const flavorTimer = setInterval(
       () => setFlavorIndex((i) => (i + 1) % FLAVOR_LINES.length),
       8000,
@@ -89,7 +91,7 @@ export function StationStatus({ station: initialStation }: StationStatusProps) {
       clearInterval(pollTimer);
       clearInterval(flavorTimer);
     };
-  }, []);
+  }, [station.lastCheckedAt]);
 
   const pollStale = isPollStale(station.lastCheckedAt);
   const minsSinceCheck = minutesSince(station.lastCheckedAt);
