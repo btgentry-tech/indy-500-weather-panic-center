@@ -18,10 +18,11 @@ import {
 import type { ChangelogEntry } from "../src/lib/types";
 
 const dryRun = process.argv.includes("--dry-run");
-const force = process.argv.includes("--force");
+/** Bypass April–May window check (GitHub Actions) */
+const forceWindow = process.argv.includes("--force-window");
 
 async function main() {
-  if (!force && !isWithinPollingWindow()) {
+  if (!forceWindow && !isWithinPollingWindow()) {
     console.log("Outside polling window. Exiting cleanly.");
     return;
   }
@@ -40,15 +41,16 @@ async function main() {
   );
 
   const shouldSave =
-    force || shouldPersistSnapshot(previous, snapshot) || !previous;
+    !previous || shouldPersistSnapshot(previous, snapshot);
 
-  if (!shouldSave && !compare.hasMeaningfulChange) {
+  if (!shouldSave) {
     console.log("No material forecast change. Snapshot not saved.");
     return;
   }
 
   if (dryRun) {
     console.log("DRY RUN — would save snapshot:", snapshot.id);
+    console.log("Notify:", compare.hasMeaningfulChange);
     console.log("Compare:", compare);
     return;
   }
@@ -79,8 +81,12 @@ async function main() {
       );
       console.log("Notification dispatched to topic.");
     } else {
-      console.log("Skipping notification — FIREBASE_SERVICE_ACCOUNT_JSON not set.");
+      console.log(
+        "Skipping notification — FIREBASE_SERVICE_ACCOUNT_JSON not set.",
+      );
     }
+  } else {
+    console.log("Snapshot saved; no notification (immaterial revision).");
   }
 
   console.log(

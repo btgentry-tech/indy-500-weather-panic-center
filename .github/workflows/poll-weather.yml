@@ -2,7 +2,8 @@ name: Poll Weather
 
 on:
   schedule:
-    - cron: "0 * * * *"
+    # Every 15 minutes
+    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 permissions:

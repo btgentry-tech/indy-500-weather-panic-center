@@ -19,7 +19,7 @@ export default async function DashboardPage() {
         <AlertSubscribePanel />
         <section className="panel">
           <p className="severity-alert">
-            NO SNAPSHOT DATA. Run hourly poll or wait for GitHub Actions.
+            NO SNAPSHOT DATA. Run poll or wait for GitHub Actions (every 15 min).
           </p>
         </section>
       </>

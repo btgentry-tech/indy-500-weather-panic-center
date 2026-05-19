@@ -104,7 +104,7 @@ git push -u origin main
 2. Under **Workflow permissions**, select **Read and write permissions**
 3. Save
 
-### Test the hourly poll manually
+### Test the 15-minute poll manually
 
 1. **Actions** tab → **Poll Weather** → **Run workflow**
 2. Wait for green checkmark

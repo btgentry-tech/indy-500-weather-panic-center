@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { formatClockNow, formatStationTime } from "@/lib/format";
+import { formatNextPollUtc, pollCadenceLabel } from "@/lib/polling";
 
 const FLAVOR_LINES = [
   "Checking latest forecast…",
@@ -19,12 +20,15 @@ interface StationStatusProps {
 
 export function StationStatus({ lastSync, snapshotId }: StationStatusProps) {
   const [clock, setClock] = useState("");
+  const [nextPoll, setNextPoll] = useState("");
   const [flavorIndex, setFlavorIndex] = useState(0);
   const [checking, setChecking] = useState(false);
 
   useEffect(() => {
     setClock(formatClockNow());
+    setNextPoll(formatNextPollUtc());
     const clockTimer = setInterval(() => setClock(formatClockNow()), 1000);
+    const pollTimer = setInterval(() => setNextPoll(formatNextPollUtc()), 30_000);
     const flavorTimer = setInterval(
       () => setFlavorIndex((i) => (i + 1) % FLAVOR_LINES.length),
       6000,
@@ -35,6 +39,7 @@ export function StationStatus({ lastSync, snapshotId }: StationStatusProps) {
     }, 45000);
     return () => {
       clearInterval(clockTimer);
+      clearInterval(pollTimer);
       clearInterval(flavorTimer);
       clearInterval(checkTimer);
     };
@@ -62,6 +67,12 @@ export function StationStatus({ lastSync, snapshotId }: StationStatusProps) {
           "NO DATA"
         )}
         {snapshotId ? ` — ${snapshotId}` : ""}
+      </p>
+      <p className="status-line">
+        POLL CADENCE: <strong>{pollCadenceLabel()}</strong>
+      </p>
+      <p className="status-line">
+        NEXT SCHEDULED POLL: <strong>{nextPoll || "—"}</strong>
       </p>
     </section>
   );

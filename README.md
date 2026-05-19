@@ -2,7 +2,7 @@
 
 Unofficial race-week forecast watch for Indianapolis Motor Speedway.
 
-Tracks NOAA forecasts for the speedway (`39.7950, -86.2347`), stores hourly snapshots as JSON, computes a PANIC INDEX, and sends push notifications when forecasts change materially.
+Tracks NOAA forecasts for the speedway (`39.7950, -86.2347`), stores forecast snapshots as JSON every 15 minutes, computes a PANIC INDEX, and sends push notifications when forecasts change materially.
 
 **Not** affiliated with IMS or NWS.
 
@@ -12,7 +12,7 @@ Tracks NOAA forecasts for the speedway (`39.7950, -86.2347`), stores hourly snap
 - Chart.js — forecast history charts
 - NOAA Weather API — `api.weather.gov`
 - JSON files in `public/data/` — no database
-- GitHub Actions — hourly polling + git commits
+- GitHub Actions — 15-minute polling + git commits
 - Firebase Cloud Messaging — topic `indy-panic`
 - Vercel — hosting
 - PWA — `@ducanh2912/next-pwa`

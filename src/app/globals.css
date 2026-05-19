@@ -45,6 +45,36 @@ a {
   display: flex;
   gap: 4px;
   flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.nav-menu-toggle {
+  display: none;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+
+.nav-menu-toggle:hover,
+.nav-menu-toggle[aria-expanded="true"] {
+  color: var(--warn);
+  border-color: var(--border);
+  background: var(--row-alt);
+}
+
+.nav-links {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  flex: 1;
 }
 
 .nav-link {
@@ -478,23 +508,6 @@ table.data tr:nth-child(even) {
 }
 
 /* Nav extras */
-.nav-btn-briefing {
-  min-height: 44px;
-  padding: 8px 14px;
-  background: transparent;
-  border: 1px solid transparent;
-  color: var(--text-dim);
-  font-family: inherit;
-  font-size: inherit;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-.nav-btn-briefing:hover {
-  color: var(--warn);
-  border-color: var(--border);
-}
-
 .nav-alerts-armed {
   display: flex;
   align-items: center;
@@ -511,10 +524,6 @@ table.data tr:nth-child(even) {
   margin-bottom: 12px;
   text-align: center;
   color: var(--text);
-}
-
-.briefing-drawer {
-  margin-bottom: 12px;
 }
 
 /* Radar pulse */
@@ -619,11 +628,28 @@ table.data tr:nth-child(even) {
     font-size: 7px;
   }
 
-  .nav {
+  .nav-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-links {
+    display: none;
     flex-direction: column;
+    width: 100%;
+  }
+
+  .nav-links-open {
+    display: flex;
   }
 
   .nav-link {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .nav-alerts-armed {
     width: 100%;
     justify-content: center;
   }

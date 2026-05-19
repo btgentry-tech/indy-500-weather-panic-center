@@ -9,8 +9,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "poll": "node --import tsx scripts/poll-weather.ts --force",
-    "poll:dry": "node --import tsx scripts/poll-weather.ts --dry-run --force"
+    "poll": "node --import tsx scripts/poll-weather.ts --force-window",
+    "poll:dry": "node --import tsx scripts/poll-weather.ts --dry-run --force-window"
   },
   "dependencies": {
     "chart.js": "^4.5.1",

@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { isAlertsArmed } from "@/lib/alerts-storage";
+import {
+  ALERTS_ARMED_EVENT,
+  isAlertsArmed,
+} from "@/lib/alerts-storage";
 
 const LINKS = [
   { href: "/", label: "DASHBOARD" },
@@ -19,7 +22,7 @@ function isActive(pathname: string, href: string): boolean {
 
 export function TerminalNav() {
   const pathname = usePathname();
-  const [briefingOpen, setBriefingOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [alertsArmed, setAlertsArmed] = useState(false);
 
   const refreshArmed = useCallback(() => {
@@ -28,18 +31,36 @@ export function TerminalNav() {
 
   useEffect(() => {
     refreshArmed();
-    const onStorage = () => refreshArmed();
-    window.addEventListener("storage", onStorage);
+    const onUpdate = () => refreshArmed();
+    window.addEventListener("storage", onUpdate);
+    window.addEventListener(ALERTS_ARMED_EVENT, onUpdate);
     const interval = setInterval(refreshArmed, 2000);
     return () => {
-      window.removeEventListener("storage", onStorage);
+      window.removeEventListener("storage", onUpdate);
+      window.removeEventListener(ALERTS_ARMED_EVENT, onUpdate);
       clearInterval(interval);
     };
   }, [refreshArmed]);
 
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
   return (
-    <>
-      <nav className="nav" aria-label="Main navigation">
+    <nav className="nav" aria-label="Main navigation">
+      <button
+        type="button"
+        className="nav-menu-toggle"
+        onClick={() => setMenuOpen((v) => !v)}
+        aria-expanded={menuOpen}
+        aria-controls="nav-links"
+      >
+        [ MENU ]
+      </button>
+      <div
+        id="nav-links"
+        className={`nav-links ${menuOpen ? "nav-links-open" : ""}`}
+      >
         {LINKS.map(({ href, label }) => {
           const active = isActive(pathname, href);
           return (
@@ -53,49 +74,10 @@ export function TerminalNav() {
             </Link>
           );
         })}
-        <button
-          type="button"
-          className="nav-link nav-btn-briefing"
-          onClick={() => setBriefingOpen((v) => !v)}
-          aria-expanded={briefingOpen}
-        >
-          [ ? briefing ]
-        </button>
         {alertsArmed && (
           <span className="nav-alerts-armed">ALERTS ARMED</span>
         )}
-      </nav>
-      {briefingOpen && <BriefingDrawerForced onClose={() => setBriefingOpen(false)} />}
-    </>
-  );
-}
-
-function BriefingDrawerForced({ onClose }: { onClose: () => void }) {
-  return (
-    <section className="panel briefing-drawer" aria-label="Station briefing">
-      <h2 className="panel-title">Briefing</h2>
-      <p>
-        Race-week forecast watch for Indianapolis Motor Speedway. Tracks rain
-        chances, storm timing, and how often NOAA revises the forecast.
-      </p>
-      <ul className="intro-list">
-        <li>
-          <strong>Dashboard</strong> — panic index, race day rain, recent
-          changes.
-        </li>
-        <li>
-          <strong>History</strong> — charts of forecast evolution.
-        </li>
-        <li>
-          <strong>Timeline</strong> — incident log of each snapshot.
-        </li>
-        <li>
-          <strong>Archive</strong> — historic Indy weather lore (coming).
-        </li>
-      </ul>
-      <button type="button" className="btn-terminal btn-dismiss" onClick={onClose}>
-        [ Close Briefing ]
-      </button>
-    </section>
+      </div>
+    </nav>
   );
 }
