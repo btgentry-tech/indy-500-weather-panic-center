@@ -1,10 +1,10 @@
 {
-  "at": "2026-05-19T19:26:58.348Z",
+  "at": "2026-05-19T21:04:07.702Z",
   "ok": true,
   "outcome": "saved_notify",
-  "message": "Forecast updated. Race Day rain chances ticked upward. Carb Day improving — rain odds easing.",
+  "message": "Forecast updated. NOAA guidance updated.",
   "shouldSave": true,
   "hasForecastDataChanged": true,
-  "snapshotId": "2026-05-19-1526",
+  "snapshotId": "2026-05-19-1704",
   "panicIndex": 4
 }

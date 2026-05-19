@@ -1,6 +1,16 @@
 {
   "entries": [
     {
+      "at": "2026-05-19T21:04:07.702Z",
+      "snapshotId": "2026-05-19-1704",
+      "severity": "info",
+      "summary": "NOAA guidance updated.",
+      "details": [
+        "Carb Day trend ↓ → →.",
+        "Race Day trend ↑ → →."
+      ]
+    },
+    {
       "at": "2026-05-19T19:26:58.348Z",
       "snapshotId": "2026-05-19-1526",
       "severity": "info",

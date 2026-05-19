@@ -1,18 +1,18 @@
 {
-  "lastCheckedAt": "2026-05-19T19:26:58.348Z",
-  "lastSnapshotAt": "2026-05-19T19:26:58.348Z",
-  "lastSnapshotId": "2026-05-19-1526",
+  "lastCheckedAt": "2026-05-19T21:04:07.702Z",
+  "lastSnapshotAt": "2026-05-19T21:04:07.702Z",
+  "lastSnapshotId": "2026-05-19-1704",
   "lastForecastChangeAt": "2026-05-19T00:01:46.030Z",
   "lastForecastChangeSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
   "localConditions": {
     "temperatureF": 82,
-    "condition": "MOSTLY CLEAR",
-    "windDirection": "S",
-    "windSpeedMph": 58,
-    "observedAt": "2026-05-19T19:10:00+00:00"
+    "condition": "MOSTLY CLOUDY",
+    "windDirection": "SW",
+    "windSpeedMph": 41,
+    "observedAt": "2026-05-19T20:40:00+00:00"
   },
   "lastMajorShiftAt": "2026-05-19T00:01:46.030Z",
   "lastMajorShiftSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
-  "lastOperationalUpdateAt": "2026-05-19T19:26:58.348Z",
-  "lastOperationalUpdateSummary": "Race Day rain chances ticked upward. Carb Day improving — rain odds easing."
+  "lastOperationalUpdateAt": "2026-05-19T21:04:07.702Z",
+  "lastOperationalUpdateSummary": "NOAA guidance updated."
 }
