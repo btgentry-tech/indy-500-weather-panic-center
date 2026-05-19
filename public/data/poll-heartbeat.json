@@ -1,8 +1,8 @@
 {
-  "at": "2026-05-19T16:37:22.148Z",
+  "at": "2026-05-19T16:47:01.437Z",
   "ok": true,
   "outcome": "checked_no_save",
-  "message": "NOAA checked; forecast unchanged — refreshed snapshot timestamp.",
+  "message": "NOAA checked; forecast unchanged.",
   "shouldSave": false,
   "hasForecastDataChanged": false,
   "isMajorChange": false,
