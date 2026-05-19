@@ -157,14 +157,22 @@ Vercel only hosts the site. **Polling runs on GitHub Actions** (free every 15 mi
 ## Part 5 — Verify notifications
 
 1. On the deployed site, enable alerts (subscribes your device to topic `indy-panic`)
-2. Run **Poll Weather** on GitHub Actions after a forecast change, or locally:
+2. Send a **manual test push** (no forecast change required):
+
+```bash
+npm run notify:test
+```
+
+Or in GitHub: **Actions** → **Test Push Notification** → **Run workflow**.
+
+3. Put the app in the background (or close it) and wait for the OS notification. If the app is open in the foreground, you may only see the in-app `INCOMING:` line instead.
+
+4. For a real forecast-driven push, run **Poll Weather** after a forecast change, or locally:
 
 ```bash
 npm run poll:dry   # preview only
 npm run poll       # saves snapshot + may notify
 ```
-
-3. You should receive a notification like: `PANIC INDEX elevated to 2. Storm timing moved earlier.`
 
 ---
 
