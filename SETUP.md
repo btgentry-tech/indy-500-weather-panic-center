@@ -116,6 +116,21 @@ git push -u origin main
 
 Repo **Settings** → **Actions** → **General** → ensure Actions are enabled and scheduled workflows are allowed.
 
+**If “Last NOAA check” stops updating:** open **Actions** → **Poll Weather** — if every run shows `workflow_dispatch` and none show `schedule`, GitHub’s cron has not started yet (new repos can take up to ~24h) or Actions are disabled. Use **Run workflow** for an immediate check, or configure the Vercel cron backup below.
+
+### Vercel cron backup (recommended)
+
+`vercel.json` calls `/api/cron/poll` every 15 minutes, which triggers the GitHub **Poll Weather** workflow via API.
+
+On Vercel → **Settings** → **Environment Variables**, add:
+
+| Variable | Value |
+|----------|-------|
+| `CRON_SECRET` | Long random string (Vercel sends `Authorization: Bearer …` on cron requests) |
+| `GITHUB_PAT` | GitHub fine-grained or classic PAT with **Actions: Read and write** on this repo |
+
+Redeploy after adding variables. Hobby plan supports one cron job per project.
+
 ---
 
 ## Part 4 — Deploy to Vercel

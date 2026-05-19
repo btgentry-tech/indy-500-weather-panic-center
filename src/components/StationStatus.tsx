@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { formatClockNow, formatStationTime } from "@/lib/format";
+import { isPollStale, minutesSince } from "@/lib/poll-stale";
 import { formatNextPollUtc, pollCadenceLabel } from "@/lib/polling";
 import type { StationMeta } from "@/lib/types";
 
@@ -52,6 +53,9 @@ export function StationStatus({ station: initialStation }: StationStatusProps) {
     };
   }, []);
 
+  const pollStale = isPollStale(station.lastCheckedAt);
+  const minsSinceCheck = minutesSince(station.lastCheckedAt);
+
   return (
     <section className="station-telemetry" aria-label="Station telemetry">
       <p className="telemetry-flavor">
@@ -69,6 +73,14 @@ export function StationStatus({ station: initialStation }: StationStatusProps) {
             {station.lastCheckedAt
               ? formatStationTime(station.lastCheckedAt)
               : "NO DATA"}
+            {pollStale ? (
+              <span className="telemetry-stale">
+                Automated poll overdue
+                {minsSinceCheck !== null
+                  ? ` (${minsSinceCheck} min ago; expected every 15)`
+                  : ""}
+              </span>
+            ) : null}
           </dd>
         </div>
         <div className="telemetry-row">

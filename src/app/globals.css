@@ -855,6 +855,13 @@ table.data .row-race-day .col-rain {
   font-weight: 500;
 }
 
+.telemetry-stale {
+  display: block;
+  margin-top: var(--space-1);
+  color: var(--warn);
+  font-size: var(--text-sm);
+}
+
 .telemetry-note,
 .telemetry-meta {
   display: block;
