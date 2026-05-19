@@ -4,23 +4,26 @@
 :root {
   --bg: #000000;
   --panel: #080808;
-  --panel-elevated: #0c0c0c;
+  --panel-elevated: #0e0e0e;
+  --panel-note: #0f120f;
 
-  --border: #2a2a2a;
-  --border-dim: #1a1a1a;
-  --border-live: #3d5c3d;
+  --border: #343434;
+  --border-dim: #252525;
+  --border-live: #4d7a4d;
+  --border-note: #3d4030;
 
-  --text: #b8b8b8;
-  --text-bright: #e2e2e2;
-  --text-dim: #6e6e6e;
-  --text-muted: #4a4a4a;
-  --text-active: #5dbd5d;
+  --text: #d4d4d4;
+  --text-bright: #f2f2f2;
+  --text-dim: #9a9a9a;
+  --text-muted: #707070;
+  --text-label: #c9bc5c;
+  --text-active: #72e072;
 
-  --warn: #b8a84a;
-  --alert: #c44a4a;
+  --warn: #d9cc62;
+  --alert: #e05a5a;
 
-  --row-alt: #0a0a0a;
-  --row-highlight: #101410;
+  --row-alt: #0b0b0b;
+  --row-highlight: #141c14;
 
   --space-1: 4px;
   --space-2: 8px;
@@ -29,15 +32,16 @@
   --space-5: 24px;
   --space-6: 32px;
 
-  --text-xs: 10px;
-  --text-sm: 11px;
-  --text-base: 13px;
-  --text-md: 14px;
-  --text-lg: 16px;
-  --text-hero: 56px;
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 14px;
+  --text-md: 15px;
+  --text-lg: 17px;
+  --text-hero: 64px;
 
-  --line-tight: 1.25;
-  --line-base: 1.5;
+  --line-tight: 1.3;
+  --line-base: 1.55;
+  --line-dense: 1.45;
 }
 
 * {
@@ -72,10 +76,10 @@ a:hover {
 
 /* ── Typography utilities ── */
 .field-label {
-  color: var(--text-dim);
+  color: var(--text-label);
   font-size: var(--text-sm);
-  font-weight: 400;
-  letter-spacing: 0.06em;
+  font-weight: 500;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
 }
 
@@ -84,11 +88,15 @@ a:hover {
   font-weight: 600;
 }
 
+.field-value-live {
+  color: var(--text-active);
+}
+
 .status-line {
   color: var(--text-dim);
   font-size: var(--text-sm);
   margin: var(--space-2) 0 0;
-  line-height: var(--line-base);
+  line-height: var(--line-dense);
 }
 
 /* ── Navigation ── */
@@ -208,17 +216,18 @@ a:hover {
 
 .panel-live {
   border-color: var(--border);
-  border-left: 2px solid var(--border-live);
+  border-left: 3px solid var(--border-live);
   background: var(--panel-elevated);
+  box-shadow: inset 0 0 24px rgba(114, 224, 114, 0.03);
 }
 
 .panel-title {
-  color: var(--text-dim);
+  color: var(--text-label);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin: 0 0 var(--space-3);
+  margin: 0 0 var(--space-4);
   font-size: var(--text-sm);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .intro-panel p {
@@ -322,25 +331,62 @@ a:hover {
   margin: 0;
   font-size: var(--text-hero);
   line-height: var(--line-tight);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--text-bright);
+  text-shadow: 0 0 20px rgba(242, 242, 242, 0.08);
 }
 
 .panic-index-mood {
-  margin: var(--space-2) 0 0;
-  font-size: var(--text-base);
-  color: var(--text-dim);
-  line-height: var(--line-base);
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-md);
+  color: var(--text);
+  line-height: var(--line-dense);
+  font-weight: 500;
+  max-width: 36em;
+}
+
+.panic-index-block.panic-index-1 .panic-index-fraction,
+.panic-index-block.panic-index-2 .panic-index-fraction {
+  color: var(--text-active);
+  text-shadow: 0 0 24px rgba(114, 224, 114, 0.15);
 }
 
 .panic-index-block.panic-index-3 .panic-index-fraction {
   color: var(--warn);
+  text-shadow: 0 0 20px rgba(217, 204, 98, 0.12);
 }
 
 .panic-index-block.panic-index-4 .panic-index-fraction,
 .panic-index-block.panic-index-5 .panic-index-fraction {
   color: var(--alert);
+  text-shadow: 0 0 20px rgba(224, 90, 90, 0.15);
+}
+
+.panic-meter-block {
+  margin-top: var(--space-3);
+}
+
+.panic-meter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+  margin: var(--space-2) 0 0;
+}
+
+.panic-meter-bar {
+  font-size: var(--text-md);
+  letter-spacing: 3px;
+  color: var(--text-active);
+  line-height: 1;
+}
+
+.panic-meter-value {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-bright);
+  font-variant-numeric: tabular-nums;
 }
 
 .hero-metrics {
@@ -363,12 +409,14 @@ a:hover {
 .trend-metric .field-value {
   font-size: var(--text-base);
   text-transform: lowercase;
+  font-weight: 700;
 }
 
 .hero-incident {
-  padding: var(--space-3);
-  border: 1px solid var(--border-dim);
-  background: var(--bg);
+  padding: var(--space-4);
+  border: 1px solid var(--border-note);
+  border-left: 3px solid var(--warn);
+  background: var(--panel-note);
 }
 
 .incident-header {
@@ -384,13 +432,15 @@ a:hover {
   font-size: var(--text-xs);
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
+  font-weight: 400;
 }
 
 .hero-incident-text {
   margin: 0;
-  font-size: var(--text-base);
+  font-size: var(--text-md);
   color: var(--text-bright);
-  line-height: var(--line-base);
+  line-height: var(--line-dense);
+  font-weight: 500;
 }
 
 /* Legacy panic index (charts) */
@@ -428,8 +478,9 @@ a:hover {
 
 /* ── Trends ── */
 .trend-indicator {
-  font-weight: 600;
+  font-weight: 700;
   text-transform: lowercase;
+  letter-spacing: 0.02em;
 }
 
 .trend-line {
@@ -442,7 +493,7 @@ a:hover {
 }
 
 .trend-better {
-  color: var(--text-bright);
+  color: var(--text-active);
 }
 
 .trend-stable {
@@ -465,20 +516,20 @@ table.data {
 
 table.data th,
 table.data td {
-  border-bottom: 1px solid var(--border-dim);
-  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-3) var(--space-3);
   text-align: left;
   vertical-align: middle;
 }
 
 table.data th {
-  color: var(--text-muted);
+  color: var(--text-label);
   text-transform: uppercase;
   font-size: var(--text-xs);
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  background: var(--bg);
-  border-bottom-color: var(--border);
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  background: #050505;
+  border-bottom: 2px solid var(--border);
 }
 
 table.data tbody tr:nth-child(even) {
@@ -496,30 +547,34 @@ table.data .col-event {
 
 table.data .col-value {
   color: var(--text-bright);
-  font-weight: 600;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
+  font-size: var(--text-md);
 }
 
 table.data .col-muted {
-  color: var(--text-dim);
+  color: var(--text);
   font-size: var(--text-sm);
 }
 
 table.data .col-trend {
   white-space: nowrap;
+  font-size: var(--text-sm);
 }
 
 table.data .row-race-day {
   background: var(--row-highlight);
+  box-shadow: inset 3px 0 0 var(--border-live);
 }
 
 table.data .row-race-day .col-event {
-  color: var(--text);
+  color: var(--text-bright);
   font-weight: 600;
 }
 
 table.data .row-race-day .col-rain {
-  color: var(--warn);
+  color: var(--text-active);
+  font-size: var(--text-lg);
 }
 
 /* ── Change feed ── */
@@ -670,10 +725,10 @@ table.data .row-race-day .col-rain {
 .conditions-strip-label {
   margin: 0 0 var(--space-2);
   font-size: var(--text-xs);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text-label);
 }
 
 .conditions-strip-values {
@@ -695,12 +750,13 @@ table.data .row-race-day .col-rain {
 .conditions-temp {
   font-size: var(--text-lg);
   font-variant-numeric: tabular-nums;
+  color: var(--text-active);
 }
 
 .conditions-wind {
   font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--text);
+  font-weight: 600;
+  color: var(--text-bright);
 }
 
 .conditions-sep {
@@ -712,7 +768,7 @@ table.data .row-race-day .col-rain {
 .conditions-strip-unavailable {
   margin: 0;
   font-size: var(--text-sm);
-  color: var(--text-muted);
+  color: var(--text-dim);
   letter-spacing: 0.02em;
 }
 
@@ -730,7 +786,7 @@ table.data .row-race-day .col-rain {
   gap: var(--space-2);
   margin: 0 0 var(--space-3);
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: var(--text-dim);
   letter-spacing: 0.04em;
 }
 
@@ -751,16 +807,18 @@ table.data .row-race-day .col-rain {
 
 .telemetry-row dt {
   margin: 0;
-  color: var(--text-muted);
+  color: var(--text-label);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 400;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+  font-size: var(--text-xs);
 }
 
 .telemetry-row dd {
   margin: 0;
-  color: var(--text-dim);
+  color: var(--text);
   font-variant-numeric: tabular-nums;
+  font-weight: 500;
 }
 
 .telemetry-note,
@@ -828,15 +886,39 @@ table.data .row-race-day .col-rain {
 }
 
 /* ── Volatility strip ── */
-.volatility-strip .volatility-line {
-  font-size: var(--text-sm);
-  line-height: var(--line-base);
-  margin: 0 0 var(--space-2);
-  color: var(--text-dim);
+.volatility-strip {
+  padding-bottom: var(--space-4);
 }
 
-.volatility-strip .volatility-line:last-child {
+.vol-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.vol-metrics:last-child {
   margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.vol-metric {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.vol-metric .field-value {
+  font-size: var(--text-lg);
+  font-variant-numeric: tabular-nums;
+}
+
+.vol-metric-highlight .field-value {
+  color: var(--warn);
 }
 
 .vol-sep {
@@ -1105,7 +1187,7 @@ table.data .row-race-day .col-rain {
   }
 
   .panic-index-fraction {
-    font-size: 48px;
+    font-size: 52px;
   }
 
   .panic-index-level {

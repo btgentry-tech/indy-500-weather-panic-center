@@ -21,6 +21,12 @@ export function PanicHero({
     snapshot.lastForecastChange ??
     PANIC_INDEX_MOODS[snapshot.panicIndex];
   const changeAt = lastForecastChangeAt ?? snapshot.fetchedAt;
+  const meterFilled = Math.max(
+    0,
+    Math.min(10, Math.round(snapshot.panicMeter / 10)),
+  );
+  const meterBar =
+    "█".repeat(meterFilled) + "░".repeat(10 - meterFilled);
 
   return (
     <section
@@ -44,11 +50,23 @@ export function PanicHero({
         <p className="panic-index-mood">
           {PANIC_INDEX_MOODS[snapshot.panicIndex]}
         </p>
+        <div className="panic-meter-block">
+          <span className="field-label">Atmospheric load</span>
+          <p
+            className="panic-meter"
+            aria-label={`Atmospheric load meter ${snapshot.panicMeter} out of 100`}
+          >
+            <span className="panic-meter-bar" aria-hidden="true">
+              {meterBar}
+            </span>
+            <span className="panic-meter-value">{snapshot.panicMeter}/100</span>
+          </p>
+        </div>
       </div>
       <div className="hero-metrics">
         <div className="hero-metric">
           <span className="field-label">Race day rain</span>
-          <span className="field-value">{race.rainPct}%</span>
+          <span className="field-value field-value-live">{race.rainPct}%</span>
         </div>
         <TrendIndicator trend={race.trend} compact />
       </div>
