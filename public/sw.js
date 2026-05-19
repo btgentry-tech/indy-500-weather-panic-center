@@ -1,4 +1,5 @@
 /* FCM service worker — background push for Indy Panic Center */
+/* fcm-handlers registers push/messaging handlers during initial evaluation */
 importScripts("/fcm-handlers.js");
 
 self.addEventListener("install", () => {
