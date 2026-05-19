@@ -60,7 +60,7 @@ export function StationStatus({ station: initialStation }: StationStatusProps) {
       </p>
       <dl className="telemetry-grid">
         <div className="telemetry-row">
-          <dt>Local time (IMS)</dt>
+          <dt>Indianapolis Motor Speedway local time</dt>
           <dd>{clock || "—"}</dd>
         </div>
         <div className="telemetry-row">

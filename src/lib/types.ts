@@ -41,12 +41,21 @@ export interface RecordVolatilityStats {
   stabilityScore: number;
 }
 
+export interface LocalConditions {
+  temperatureF: number | null;
+  condition: string | null;
+  windDirection: string | null;
+  windSpeedMph: number | null;
+  observedAt: string | null;
+}
+
 export interface StationMeta {
   lastCheckedAt: string | null;
   lastSnapshotAt: string | null;
   lastSnapshotId: string | null;
   lastForecastChangeAt: string | null;
   lastForecastChangeSummary: string | null;
+  localConditions?: LocalConditions | null;
 }
 
 /** Written every poll run for pipeline diagnostics (GitHub Actions). */

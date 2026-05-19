@@ -13,7 +13,7 @@ import {
   DATA_DIR,
 } from "../src/lib/data";
 import { sendTopicNotification } from "../src/lib/firebase-admin";
-import { fetchNoaaForecast } from "../src/lib/noaa";
+import { fetchLocalConditionsSafe, fetchNoaaForecast } from "../src/lib/noaa";
 import { isWithinPollingWindow } from "../src/lib/race-days";
 import {
   buildSnapshot,
@@ -60,7 +60,12 @@ async function main() {
 
   try {
     log("Fetching NOAA forecast…");
-    const forecast = await fetchNoaaForecast();
+    const [forecast, localConditions] = await Promise.all([
+      fetchNoaaForecast(),
+      fetchLocalConditionsSafe(),
+    ]);
+    station.localConditions =
+      localConditions ?? priorStation.localConditions ?? null;
     const history = await loadAllSnapshots();
     const previous = await loadLatestSnapshot();
     const snapshot = buildSnapshot(forecast, history);

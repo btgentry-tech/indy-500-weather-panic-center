@@ -1,6 +1,17 @@
+import {
+  celsiusToF,
+  degreesToCardinal,
+  metersPerSecToMph,
+  normalizeConditionText,
+} from "./local-conditions";
 import { IMS_LAT, IMS_LON, RACE_DAYS } from "./race-days";
 import { detectStormRisk } from "./panic-index";
-import type { DayKey, HourlyPoint, NormalizedForecast } from "./types";
+import type {
+  DayKey,
+  HourlyPoint,
+  LocalConditions,
+  NormalizedForecast,
+} from "./types";
 
 const NOAA_BASE = "https://api.weather.gov";
 
@@ -39,16 +50,39 @@ interface NoaaPointsResponse {
   properties: {
     forecast: string;
     forecastHourly: string;
+    observationStations: string;
   };
 }
 
-async function noaaFetch<T>(url: string): Promise<T> {
+interface NoaaStationsResponse {
+  features: Array<{ id: string }>;
+}
+
+interface NoaaQuantity {
+  value: number | null;
+  unitCode?: string;
+}
+
+interface NoaaObservationResponse {
+  properties: {
+    timestamp: string | null;
+    temperature: NoaaQuantity | null;
+    textDescription: string | null;
+    windDirection: NoaaQuantity | null;
+    windSpeed: NoaaQuantity | null;
+  };
+}
+
+async function noaaFetch<T>(
+  url: string,
+  revalidateSeconds = 0,
+): Promise<T> {
   const res = await fetch(url, {
     headers: {
       Accept: "application/geo+json",
       "User-Agent": getNoaaUserAgent(),
     },
-    next: { revalidate: 0 },
+    next: { revalidate: revalidateSeconds },
   });
 
   if (!res.ok) {
@@ -176,6 +210,92 @@ export async function fetchNoaaForecastSafe(): Promise<NormalizedForecast | null
     return await fetchNoaaForecast();
   } catch (error) {
     console.error("NOAA fetch failed:", error);
+    return null;
+  }
+}
+
+function parseObservation(
+  observation: NoaaObservationResponse,
+): LocalConditions | null {
+  const { properties } = observation;
+  const tempC = properties.temperature?.value;
+  const windDeg = properties.windDirection?.value;
+  const windMs = properties.windSpeed?.value;
+
+  const temperatureF =
+    tempC != null && Number.isFinite(tempC) ? celsiusToF(tempC) : null;
+  const condition = normalizeConditionText(properties.textDescription);
+  const windDirection =
+    windDeg != null && Number.isFinite(windDeg)
+      ? degreesToCardinal(windDeg)
+      : null;
+  const windSpeedMph =
+    windMs != null && Number.isFinite(windMs) ? metersPerSecToMph(windMs) : null;
+
+  if (temperatureF == null && !condition && windSpeedMph == null) {
+    return null;
+  }
+
+  return {
+    temperatureF,
+    condition,
+    windDirection,
+    windSpeedMph,
+    observedAt: properties.timestamp,
+  };
+}
+
+function conditionsFromHourlyPeriod(period: NoaaPeriod): LocalConditions {
+  return {
+    temperatureF: Number.isFinite(period.temperature) ? period.temperature : null,
+    condition: normalizeConditionText(period.shortForecast),
+    windDirection: null,
+    windSpeedMph: null,
+    observedAt: period.startTime,
+  };
+}
+
+export async function fetchLocalConditions(
+  revalidateSeconds = 0,
+): Promise<LocalConditions | null> {
+  const points = await noaaFetch<NoaaPointsResponse>(
+    `${NOAA_BASE}/points/${IMS_LAT},${IMS_LON}`,
+    revalidateSeconds,
+  );
+
+  try {
+    const stations = await noaaFetch<NoaaStationsResponse>(
+      points.properties.observationStations,
+      revalidateSeconds,
+    );
+    const stationUrl = stations.features[0]?.id;
+    if (stationUrl) {
+      const observation = await noaaFetch<NoaaObservationResponse>(
+        `${stationUrl}/observations/latest`,
+        revalidateSeconds,
+      );
+      const parsed = parseObservation(observation);
+      if (parsed) return parsed;
+    }
+  } catch (error) {
+    console.warn("NOAA observation fetch failed, using hourly fallback:", error);
+  }
+
+  const hourly = await noaaFetch<NoaaHourlyResponse>(
+    points.properties.forecastHourly,
+    revalidateSeconds,
+  );
+  const current = hourly.properties.periods[0];
+  return current ? conditionsFromHourlyPeriod(current) : null;
+}
+
+export async function fetchLocalConditionsSafe(
+  revalidateSeconds = 0,
+): Promise<LocalConditions | null> {
+  try {
+    return await fetchLocalConditions(revalidateSeconds);
+  } catch (error) {
+    console.error("Local conditions fetch failed:", error);
     return null;
   }
 }
