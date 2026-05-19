@@ -466,6 +466,19 @@ a:hover {
   line-height: var(--line-dense);
 }
 
+.hero-major-escalation {
+  margin: var(--space-3) 0 0;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border-dim);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: var(--line-dense);
+}
+
+.hero-major-escalation .field-label {
+  font-size: var(--text-xs);
+}
+
 .incident-header {
   display: flex;
   flex-wrap: wrap;

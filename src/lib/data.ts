@@ -117,6 +117,8 @@ const EMPTY_STATION: StationMeta = {
   lastCheckedAt: null,
   lastSnapshotAt: null,
   lastSnapshotId: null,
+  lastOperationalUpdateAt: null,
+  lastOperationalUpdateSummary: null,
   lastMajorShiftAt: null,
   lastMajorShiftSummary: null,
 };
@@ -133,16 +135,24 @@ export function normalizeStationMeta(
 
   let lastSnapshotAt = raw.lastSnapshotAt;
   let lastSnapshotId = raw.lastSnapshotId;
+  let lastOperationalUpdateAt = raw.lastOperationalUpdateAt ?? null;
+  let lastOperationalUpdateSummary = raw.lastOperationalUpdateSummary ?? null;
 
   if (latestSnapshot) {
     lastSnapshotId = latestSnapshot.id;
     lastSnapshotAt = latestSnapshot.fetchedAt;
+    if (latestSnapshot.lastForecastChange) {
+      lastOperationalUpdateAt = latestSnapshot.fetchedAt;
+      lastOperationalUpdateSummary = latestSnapshot.lastForecastChange;
+    }
   }
 
   return {
     ...raw,
     lastSnapshotId,
     lastSnapshotAt,
+    lastOperationalUpdateAt,
+    lastOperationalUpdateSummary,
     lastMajorShiftAt,
     lastMajorShiftSummary,
   };

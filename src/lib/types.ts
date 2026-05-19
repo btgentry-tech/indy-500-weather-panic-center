@@ -52,7 +52,10 @@ export interface StationMeta {
   /** Latest forecast snapshot time (from `latest.json` / snapshot `fetchedAt`). */
   lastSnapshotAt: string | null;
   lastSnapshotId: string | null;
-  /** Editorial layer — last major NOAA shift (≥ thresholds in compare). */
+  /** Latest revision summary — any NOAA grid change (matches latest snapshot). */
+  lastOperationalUpdateAt: string | null;
+  lastOperationalUpdateSummary: string | null;
+  /** Last major escalation only (≥ thresholds in compare). */
   lastMajorShiftAt: string | null;
   lastMajorShiftSummary: string | null;
   /** @deprecated Written on major shift for legacy JSON; use lastMajorShiftAt. */

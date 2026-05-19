@@ -148,6 +148,8 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
 
       station.lastSnapshotAt = persisted.fetchedAt;
       station.lastSnapshotId = persisted.id;
+      station.lastOperationalUpdateAt = persisted.fetchedAt;
+      station.lastOperationalUpdateSummary = compare.summary;
 
       const changelog = await loadChangelog();
       const entry: ChangelogEntry = {

@@ -24,13 +24,51 @@ export function StationStatus({ station: initialStation }: StationStatusProps) {
   const [flavorIndex, setFlavorIndex] = useState(0);
 
   useEffect(() => {
-    const refreshStation = () => {
-      fetch(`/data/station.json?ts=${Date.now()}`, { cache: "no-store" })
-        .then((res) => (res.ok ? res.json() : null))
-        .then((data: StationMeta | null) => {
-          if (data?.lastCheckedAt) setStation(data);
-        })
-        .catch(() => {});
+    const refreshStation = async () => {
+      try {
+        const ts = Date.now();
+        const [stationRes, latestRes] = await Promise.all([
+          fetch(`/data/station.json?ts=${ts}`, { cache: "no-store" }),
+          fetch(`/data/latest.json?ts=${ts}`, { cache: "no-store" }),
+        ]);
+        const stationData: StationMeta | null = stationRes.ok
+          ? await stationRes.json()
+          : null;
+        const latest: { snapshotId?: string } | null = latestRes.ok
+          ? await latestRes.json()
+          : null;
+
+        if (!stationData?.lastCheckedAt) return;
+
+        let merged: StationMeta = { ...stationData };
+
+        if (latest?.snapshotId) {
+          const snapRes = await fetch(
+            `/data/history/${latest.snapshotId}.json?ts=${ts}`,
+            { cache: "no-store" },
+          );
+          if (snapRes.ok) {
+            const snap: {
+              id: string;
+              fetchedAt: string;
+              lastForecastChange?: string | null;
+            } = await snapRes.json();
+            merged = {
+              ...merged,
+              lastSnapshotId: snap.id,
+              lastSnapshotAt: snap.fetchedAt,
+            };
+            if (snap.lastForecastChange) {
+              merged.lastOperationalUpdateAt = snap.fetchedAt;
+              merged.lastOperationalUpdateSummary = snap.lastForecastChange;
+            }
+          }
+        }
+
+        setStation(merged);
+      } catch {
+        /* ignore */
+      }
     };
     refreshStation();
     const stationTimer = setInterval(refreshStation, 60_000);
@@ -94,19 +132,32 @@ export function StationStatus({ station: initialStation }: StationStatusProps) {
             ) : null}
           </dd>
         </div>
-        <div className="telemetry-row telemetry-row-secondary">
+        <div className="telemetry-row">
           <dt>Latest operational update</dt>
           <dd>
-            {station.lastMajorShiftAt
-              ? formatStationTime(station.lastMajorShiftAt)
+            {station.lastOperationalUpdateAt
+              ? formatStationTime(station.lastOperationalUpdateAt)
               : "NONE YET"}
-            {station.lastMajorShiftSummary ? (
+            {station.lastOperationalUpdateSummary ? (
               <span className="telemetry-note">
-                {station.lastMajorShiftSummary}
+                {station.lastOperationalUpdateSummary}
               </span>
             ) : null}
           </dd>
         </div>
+        {station.lastMajorShiftAt &&
+        station.lastMajorShiftSummary &&
+        station.lastMajorShiftAt !== station.lastOperationalUpdateAt ? (
+          <div className="telemetry-row telemetry-row-secondary">
+            <dt>Last major escalation</dt>
+            <dd>
+              {formatStationTime(station.lastMajorShiftAt)}
+              <span className="telemetry-note">
+                {station.lastMajorShiftSummary}
+              </span>
+            </dd>
+          </div>
+        ) : null}
         <div className="telemetry-row">
           <dt>Poll cadence</dt>
           <dd>
