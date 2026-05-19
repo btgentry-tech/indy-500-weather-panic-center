@@ -25,7 +25,7 @@ export function StationStatus({ station: initialStation }: StationStatusProps) {
 
   useEffect(() => {
     const refreshStation = () => {
-      fetch(`/data/station.json?ts=${Date.now()}`, { cache: "no-store" })
+      fetch(`/api/data/station?ts=${Date.now()}`, { cache: "no-store" })
         .then((res) => (res.ok ? res.json() : null))
         .then((data: StationMeta | null) => {
           if (data?.lastCheckedAt) setStation(data);

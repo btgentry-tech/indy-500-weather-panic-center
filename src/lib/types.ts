@@ -56,7 +56,7 @@ export interface StationMeta {
   localConditions?: LocalConditions | null;
 }
 
-/** Written every poll run for pipeline diagnostics (GitHub Actions). */
+/** Written every poll run for pipeline diagnostics. */
 export interface PollHeartbeat {
   at: string;
   ok: boolean;
