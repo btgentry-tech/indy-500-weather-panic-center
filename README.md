@@ -15,7 +15,7 @@ Tracks NOAA forecasts for the speedway (`39.7950, -86.2347`), stores forecast sn
 - GitHub Actions — 15-minute polling + git commits
 - Firebase Cloud Messaging — topic `indy-panic`
 - Vercel — hosting
-- PWA — `@ducanh2912/next-pwa`
+- PWA — static `public/sw.js` + `fcm-handlers.js` for FCM
 
 ## Pages
 
