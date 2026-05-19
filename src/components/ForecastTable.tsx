@@ -1,13 +1,15 @@
 import { RACE_DAYS } from "@/lib/race-days";
 import { stormDisplayLabel } from "@/lib/labels";
 import type { ForecastSnapshot } from "@/lib/types";
+import { RainDeltaIndicator } from "./RainDeltaIndicator";
 import { TrendIndicator } from "./TrendIndicator";
 
 interface ForecastTableProps {
   snapshot: ForecastSnapshot;
+  previous?: ForecastSnapshot | null;
 }
 
-export function ForecastTable({ snapshot }: ForecastTableProps) {
+export function ForecastTable({ snapshot, previous }: ForecastTableProps) {
   return (
     <section className="panel dashboard-breakdown">
       <h2 className="panel-title">Race weekend breakdown</h2>
@@ -36,7 +38,15 @@ export function ForecastTable({ snapshot }: ForecastTableProps) {
                   className={isRaceDay ? "row-race-day" : undefined}
                 >
                   <td className="col-event">{day.label}</td>
-                  <td className="col-value col-rain">{day.rainPct}%</td>
+                  <td className="col-value col-rain">
+                    <span className="rain-pct-cell">
+                      <span>{day.rainPct}%</span>
+                      <RainDeltaIndicator
+                        current={day.rainPct}
+                        previous={previous?.days[config.key].rainPct}
+                      />
+                    </span>
+                  </td>
                   <td className="col-muted">{stormLabel}</td>
                   <td className="col-muted">{day.highTemp}°</td>
                   <td className="col-trend">

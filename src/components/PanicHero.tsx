@@ -31,14 +31,14 @@ export function PanicHero({ snapshot, revisionSummary }: PanicHeroProps) {
       <div
         className={`panic-index-block panic-index-${snapshot.panicIndex}`}
       >
-        <p className="panic-index-caption">Panic index</p>
+        <span className="field-label">Panic index</span>
         <p
           className="panic-index-fraction"
           aria-label={`Panic index ${snapshot.panicIndex} of 5`}
         >
           {snapshot.panicIndex}/5
         </p>
-        <p className="panic-index-mood">
+        <p className="hero-detail-line">
           {PANIC_INDEX_MOODS[snapshot.panicIndex]}
         </p>
       </div>
@@ -49,7 +49,7 @@ export function PanicHero({ snapshot, revisionSummary }: PanicHeroProps) {
         >
           {stabilityLabel(stability)}
         </p>
-        <p className="hero-stability-note">{stabilityDetailLine(stability)}</p>
+        <p className="hero-detail-line">{stabilityDetailLine(stability)}</p>
       </div>
       {revisionText ? (
         <div className="hero-revision">
@@ -59,7 +59,7 @@ export function PanicHero({ snapshot, revisionSummary }: PanicHeroProps) {
               {formatStationTime(revisionAt)}
             </time>
           </p>
-          <p className="hero-revision-text">
+          <p className="hero-detail-line">
             {truncateChangeLine(revisionText, 160)}
           </p>
         </div>

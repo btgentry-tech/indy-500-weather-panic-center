@@ -17,6 +17,26 @@ export function getTrendDisplay(trend: TrendArrow): TrendDisplay {
   }
 }
 
+export interface RainDeltaDisplay {
+  arrow: "↑" | "↓";
+  absDelta: number;
+  className: "trend-worse" | "trend-better";
+}
+
+/** Change in rain % vs previous poll; null when unchanged or no prior snapshot. */
+export function getRainDeltaDisplay(
+  current: number,
+  previous?: number,
+): RainDeltaDisplay | null {
+  if (previous === undefined) return null;
+  const delta = current - previous;
+  if (delta === 0) return null;
+  if (delta > 0) {
+    return { arrow: "↑", absDelta: delta, className: "trend-worse" };
+  }
+  return { arrow: "↓", absDelta: Math.abs(delta), className: "trend-better" };
+}
+
 export function stormDisplayLabel(risk: StormRisk, rainPct: number): string {
   if (risk === "ACTIVE") {
     return rainPct >= 60 ? "Likely" : "Developing";

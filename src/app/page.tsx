@@ -43,7 +43,7 @@ export default async function DashboardPage() {
       <AsciiHeader compact />
       <AlertSubscribePanel />
       <PanicHero snapshot={snapshot} revisionSummary={revisionSummary} />
-      <ForecastTable snapshot={snapshot} />
+      <ForecastTable snapshot={snapshot} previous={previous} />
     </>
   );
 }
