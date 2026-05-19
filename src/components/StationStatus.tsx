@@ -55,7 +55,7 @@ export function StationStatus({ station: initialStation }: StationStatusProps) {
   return (
     <section className="station-telemetry" aria-label="Station telemetry">
       <p className="telemetry-flavor">
-        <span className="radar-pulse radar-pulse-dim" aria-hidden="true" />
+        <span className="radar-pulse" aria-hidden="true" />
         {FLAVOR_LINES[flavorIndex]}
       </p>
       <dl className="telemetry-grid">
