@@ -72,9 +72,9 @@ export function formatIncidentTime(iso: string): string {
 export function formatClockNow(): string {
   return new Intl.DateTimeFormat("en-US", {
     timeZone: TZ,
-    hour: "2-digit",
+    hour: "numeric",
     minute: "2-digit",
     second: "2-digit",
-    hour12: false,
+    hour12: true,
   }).format(new Date());
 }

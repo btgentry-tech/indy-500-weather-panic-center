@@ -175,43 +175,17 @@ a {
   letter-spacing: 0.02em;
 }
 
-.panic-index-meter {
-  margin: 0 0 8px;
-  font-size: 20px;
-  line-height: 1.2;
-  letter-spacing: 0.14em;
-}
-
-.meter-bracket {
-  color: var(--text-dim);
-}
-
-.meter-seg {
-  display: inline-block;
-  width: 1.1em;
-  text-align: center;
-}
-
-.meter-seg-empty {
-  color: var(--text-dim);
-}
-
 .panic-index-block.panic-index-1 .panic-index-fraction,
-.panic-index-block.panic-index-2 .panic-index-fraction,
-.panic-index-block.panic-index-1 .meter-seg-filled,
-.panic-index-block.panic-index-2 .meter-seg-filled {
+.panic-index-block.panic-index-2 .panic-index-fraction {
   color: var(--text);
 }
 
-.panic-index-block.panic-index-3 .panic-index-fraction,
-.panic-index-block.panic-index-3 .meter-seg-filled {
+.panic-index-block.panic-index-3 .panic-index-fraction {
   color: var(--warn);
 }
 
 .panic-index-block.panic-index-4 .panic-index-fraction,
-.panic-index-block.panic-index-5 .panic-index-fraction,
-.panic-index-block.panic-index-4 .meter-seg-filled,
-.panic-index-block.panic-index-5 .meter-seg-filled {
+.panic-index-block.panic-index-5 .panic-index-fraction {
   color: var(--alert);
 }
 
@@ -843,10 +817,6 @@ table.data tr:nth-child(even) {
 
   .panic-index-fraction {
     font-size: 40px;
-  }
-
-  .panic-index-meter {
-    font-size: 17px;
   }
 
   .panic-index-level {
