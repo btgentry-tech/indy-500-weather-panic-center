@@ -20,6 +20,7 @@ export function PanicHero({
     lastForecastChange ??
     snapshot.lastForecastChange ??
     PANIC_INDEX_MOODS[snapshot.panicIndex];
+  const changeAt = lastForecastChangeAt ?? snapshot.fetchedAt;
 
   return (
     <section
@@ -49,17 +50,8 @@ export function PanicHero({
       </p>
       <TrendIndicator trend={race.trend} />
       <p className="hero-change">
-        Latest change: {truncateChangeLine(changeText)}
-        {lastForecastChangeAt ? (
-          <span className="hero-change-time">
-            {" "}
-            ({formatStationTime(lastForecastChangeAt)})
-          </span>
-        ) : null}
-      </p>
-      <p className="hero-updated status-line">
-        Snapshot {snapshot.id} — saved{" "}
-        {formatStationTime(snapshot.fetchedAt)}
+        Latest Change ({formatStationTime(changeAt)}):{" "}
+        {truncateChangeLine(changeText)}
       </p>
     </section>
   );
