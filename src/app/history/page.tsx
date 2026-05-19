@@ -11,7 +11,7 @@ export default async function HistoryPage() {
     <>
       <AsciiHeader
         compact
-        pageHint="How panic index and hourly rain shifted over time"
+        pageHint="How panic index shifted over time"
       />
       <section className="panel">
         <h2 className="panel-title">Forecast History</h2>

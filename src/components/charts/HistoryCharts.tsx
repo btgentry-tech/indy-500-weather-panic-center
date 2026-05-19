@@ -9,10 +9,9 @@ import {
   Title,
   Tooltip,
   Legend,
-  Filler,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { CHART_AMBER_FILL, CHART_COLORS } from "@/lib/chart-colors";
+import { CHART_COLORS } from "@/lib/chart-colors";
 import type { ForecastSnapshot } from "@/lib/types";
 import { formatChartLabel, formatStationTime } from "@/lib/format";
 import { baseChartOptions } from "./chart-options";
@@ -25,7 +24,6 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  Filler,
 );
 
 function labelsFromSnapshots(snapshots: ForecastSnapshot[]): string[] {
@@ -57,25 +55,6 @@ export function HistoryCharts({ snapshots }: HistoryChartsProps) {
     ],
   };
 
-  const latest = snapshots[snapshots.length - 1];
-  const raceHourly = latest?.hourly.filter((h) =>
-    h.time.includes("2026-05-24"),
-  );
-
-  const hourlyData = {
-    labels: raceHourly?.map((h) => h.time.slice(11, 16)) ?? [],
-    datasets: [
-      {
-        label: "Race Day Hourly Rain %",
-        data: raceHourly?.map((h) => h.rainPct) ?? [],
-        borderColor: CHART_COLORS.amber,
-        fill: true,
-        backgroundColor: CHART_AMBER_FILL,
-        tension: 0.2,
-      },
-    ],
-  };
-
   const tooltipCallbacks = {
     title: (items: { dataIndex: number }[]) => {
       const i = items[0]?.dataIndex ?? 0;
@@ -84,40 +63,31 @@ export function HistoryCharts({ snapshots }: HistoryChartsProps) {
   };
 
   return (
-    <>
-      <section className="panel chart-panel">
-        <h2 className="panel-title">PANIC INDEX Over Time</h2>
-        <div className="chart-canvas" style={{ height: 220 }}>
-          <Line
-            data={panicIndexData}
-            options={{
-              ...baseChartOptions,
-              plugins: {
-                ...baseChartOptions.plugins,
-                tooltip: {
-                  ...baseChartOptions.plugins.tooltip,
-                  callbacks: tooltipCallbacks,
-                },
+    <section className="panel chart-panel">
+      <h2 className="panel-title">PANIC INDEX Over Time</h2>
+      <div className="chart-canvas" style={{ height: 220 }}>
+        <Line
+          data={panicIndexData}
+          options={{
+            ...baseChartOptions,
+            plugins: {
+              ...baseChartOptions.plugins,
+              tooltip: {
+                ...baseChartOptions.plugins.tooltip,
+                callbacks: tooltipCallbacks,
               },
-              scales: {
-                ...baseChartOptions.scales,
-                y: {
-                  ...baseChartOptions.scales.y,
-                  min: 1,
-                  max: 5,
-                },
+            },
+            scales: {
+              ...baseChartOptions.scales,
+              y: {
+                ...baseChartOptions.scales.y,
+                min: 1,
+                max: 5,
               },
-            }}
-          />
-        </div>
-      </section>
-
-      <section className="panel chart-panel">
-        <h2 className="panel-title">Race Day Hourly Precipitation</h2>
-        <div className="chart-canvas" style={{ height: 220 }}>
-          <Line data={hourlyData} options={baseChartOptions} />
-        </div>
-      </section>
-    </>
+            },
+          }}
+        />
+      </div>
+    </section>
   );
 }
