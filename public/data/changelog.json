@@ -1,25 +1,17 @@
 {
   "entries": [
     {
-      "at": "2026-05-19T00:01:46.030Z",
-      "snapshotId": "2026-05-18-2001",
-      "severity": "info",
-      "summary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
-      "details": [
-        "Race Day precipitation probability revised downward (44% → 26%).",
-        "Storm timing moved earlier."
-      ]
-    },
-    {
       "at": "2026-05-18T19:00:00.000Z",
       "snapshotId": "2026-05-18-1500",
       "severity": "warning",
-      "summary": "DEFCON elevated to 2. Storm timing moved earlier.",
+      "summary": "PANIC INDEX elevated to 2. Storm timing moved earlier.",
       "details": [
         "Race Day precipitation probability revised upward (26% → 44%).",
         "Thunderstorm language introduced for Carb Day.",
-        "DEFCON 3 → 2."
+        "PANIC INDEX 3 → 2."
       ],
+      "panicIndexFrom": 3,
+      "panicIndexTo": 2,
       "defconFrom": 3,
       "defconTo": 2
     },
@@ -40,6 +32,7 @@
       "details": [
         "Initial atmospheric baseline recorded."
       ],
+      "panicIndexTo": 3,
       "defconTo": 3
     }
   ]

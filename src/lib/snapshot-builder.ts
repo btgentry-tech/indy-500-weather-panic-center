@@ -1,10 +1,10 @@
 import { compareForecasts } from "./compare";
 import {
   buildRaceDayRows,
-  computeDefcon,
+  computePanicIndex,
   computePanicMeter,
-  DEFCON_MOODS,
-} from "./defcon";
+  PANIC_INDEX_MOODS,
+} from "./panic-index";
 import type { ForecastSnapshot, NormalizedForecast } from "./types";
 import { computeForecastStability, computeVolatility } from "./volatility";
 import { formatSnapshotId } from "./race-days";
@@ -24,7 +24,7 @@ export function buildSnapshot(
   const days = buildRaceDayRows(forecast, previous?.days, rainHistory);
 
   const volatility = computeVolatility(history, { days });
-  const defcon = computeDefcon(days, volatility.largestRainSwing);
+  const panicIndex = computePanicIndex(days, volatility.largestRainSwing);
   const panicMeter = computePanicMeter(days, volatility.volatilityScore);
   const forecastStability = computeForecastStability([
     ...history,
@@ -32,9 +32,9 @@ export function buildSnapshot(
       id,
       fetchedAt: fetchedAt.toISOString(),
       noaaGeneratedAt: forecast.noaaGeneratedAt,
-      defcon,
+      panicIndex,
       panicMeter,
-      mood: DEFCON_MOODS[defcon],
+      mood: PANIC_INDEX_MOODS[panicIndex],
       forecastStability: 0,
       lastForecastChange: null,
       days,
@@ -47,17 +47,18 @@ export function buildSnapshot(
     previous ?? null,
     days,
     forecast.hourly,
-    defcon,
-    previous?.defcon,
+    panicIndex,
+    previous?.panicIndex,
   );
 
   return {
     id,
     fetchedAt: fetchedAt.toISOString(),
     noaaGeneratedAt: forecast.noaaGeneratedAt,
-    defcon,
+    panicIndex,
+    defcon: panicIndex,
     panicMeter,
-    mood: DEFCON_MOODS[defcon],
+    mood: PANIC_INDEX_MOODS[panicIndex],
     forecastStability,
     lastForecastChange: compare.hasMeaningfulChange
       ? compare.summary
@@ -73,7 +74,7 @@ export function shouldPersistSnapshot(
   next: ForecastSnapshot,
 ): boolean {
   if (!previous) return true;
-  if (previous.defcon !== next.defcon) return true;
+  if (previous.panicIndex !== next.panicIndex) return true;
 
   for (const key of ["carbDay", "legendsDay", "raceDay"] as const) {
     if (

@@ -9,6 +9,7 @@ export function ForecastTable({ snapshot }: ForecastTableProps) {
   return (
     <section className="panel">
       <h2 className="panel-title">Current Forecast Table</h2>
+      <div className="table-scroll">
       <table className="data">
         <thead>
           <tr>
@@ -38,6 +39,7 @@ export function ForecastTable({ snapshot }: ForecastTableProps) {
           })}
         </tbody>
       </table>
+      </div>
     </section>
   );
 }

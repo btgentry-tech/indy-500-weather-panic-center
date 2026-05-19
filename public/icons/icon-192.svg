@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
   <rect width="192" height="192" fill="#000"/>
   <rect x="8" y="8" width="176" height="176" fill="none" stroke="#33ff33" stroke-width="4"/>
-  <text x="96" y="78" fill="#33ff33" font-family="monospace" font-size="22" text-anchor="middle">DEFCON</text>
+  <text x="96" y="78" fill="#33ff33" font-family="monospace" font-size="18" text-anchor="middle">PANIC</text>
   <text x="96" y="118" fill="#ff3333" font-family="monospace" font-size="40" text-anchor="middle">?</text>
   <text x="96" y="150" fill="#ffff00" font-family="monospace" font-size="14" text-anchor="middle">PANIC</text>
 </svg>

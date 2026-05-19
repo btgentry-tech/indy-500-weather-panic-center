@@ -1,5 +1,5 @@
 import { IMS_LAT, IMS_LON, RACE_DAYS } from "./race-days";
-import { detectStormRisk } from "./defcon";
+import { detectStormRisk } from "./panic-index";
 import type { DayKey, HourlyPoint, NormalizedForecast } from "./types";
 
 const NOAA_BASE = "https://api.weather.gov";

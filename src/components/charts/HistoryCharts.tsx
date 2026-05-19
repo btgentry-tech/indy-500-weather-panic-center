@@ -87,12 +87,12 @@ export function HistoryCharts({ snapshots }: HistoryChartsProps) {
     ],
   };
 
-  const defconData = {
+  const panicIndexData = {
     labels,
     datasets: [
       {
-        label: "DEFCON (1 = maximum panic)",
-        data: snapshots.map((s) => s.defcon),
+        label: "PANIC INDEX (1 = maximum panic)",
+        data: snapshots.map((s) => s.panicIndex),
         borderColor: "#ff3333",
         stepped: true,
         backgroundColor: "transparent",
@@ -160,10 +160,10 @@ export function HistoryCharts({ snapshots }: HistoryChartsProps) {
       </section>
 
       <section className="panel chart-panel">
-        <h2 className="panel-title">DEFCON Over Time</h2>
+        <h2 className="panel-title">PANIC INDEX Over Time</h2>
         <div style={{ height: 220 }}>
           <Line
-            data={defconData}
+            data={panicIndexData}
             options={{
               ...chartOptions,
               scales: {

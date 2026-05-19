@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import Link from "next/link";
+import { IntroPanel } from "@/components/IntroPanel";
+import { StationStatus } from "@/components/StationStatus";
+import { TerminalNav } from "@/components/TerminalNav";
+import { loadLatestPointer } from "@/lib/data";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -20,22 +23,25 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const latest = await loadLatestPointer();
+
   return (
     <html lang="en">
       <body>
         <div className="shell">
-          <nav className="nav" aria-label="Main">
-            <Link href="/">Dashboard</Link>
-            <Link href="/history">History</Link>
-            <Link href="/timeline">Timeline</Link>
-          </nav>
+          <TerminalNav />
+          <IntroPanel />
           {children}
-          <footer className="status-line" style={{ marginTop: 24 }}>
+          <StationStatus
+            lastSync={latest?.updatedAt ?? null}
+            snapshotId={latest?.snapshotId ?? null}
+          />
+          <footer className="status-line site-footer">
             NOAA grid IND/55,70 — unofficial fan bunker — not affiliated with
             IMS/NWS
           </footer>

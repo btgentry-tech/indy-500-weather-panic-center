@@ -92,8 +92,10 @@ export function summarizeSnapshotDelta(
       parts.push(`${config.label} rain ${from}% → ${to}%`);
     }
   }
-  if (previous.defcon !== current.defcon) {
-    parts.unshift(`DEFCON ${previous.defcon} → ${current.defcon}`);
+  if (previous.panicIndex !== current.panicIndex) {
+    parts.unshift(
+      `PANIC INDEX ${previous.panicIndex} → ${current.panicIndex}`,
+    );
   }
   return parts.join(" | ") || "No material change";
 }

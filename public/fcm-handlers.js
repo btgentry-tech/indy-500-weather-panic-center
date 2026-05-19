@@ -10,6 +10,10 @@ function initMessaging() {
   return fetch("/firebase-config.json")
     .then((response) => response.json())
     .then((config) => {
+      if (!config.apiKey) {
+        console.warn("[fcm-handlers] Firebase config not set.");
+        return null;
+      }
       if (!firebase.apps.length) {
         firebase.initializeApp(config);
       }
@@ -18,6 +22,8 @@ function initMessaging() {
 }
 
 initMessaging().then((messaging) => {
+  if (!messaging) return;
+
   messaging.onBackgroundMessage((payload) => {
     const title =
       payload.notification?.title ?? "Atmospheric Alert";

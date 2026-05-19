@@ -1,11 +1,11 @@
 import type {
   CompareResult,
   DayKey,
-  DefconLevel,
   ForecastSnapshot,
   NormalizedForecast,
+  PanicIndexLevel,
 } from "./types";
-import { DEFCON_MOODS } from "./defcon";
+import { PANIC_INDEX_MOODS } from "./panic-index";
 import { RACE_DAYS, getRaceDayByKey } from "./race-days";
 
 const RAIN_THRESHOLD = 15;
@@ -40,8 +40,8 @@ export function compareForecasts(
   previous: ForecastSnapshot | null,
   currentDays: Record<DayKey, { rainPct: number; stormRisk: string }>,
   currentHourly: NormalizedForecast["hourly"],
-  defcon: DefconLevel,
-  previousDefcon?: DefconLevel,
+  panicIndex: PanicIndexLevel,
+  previousPanicIndex?: PanicIndexLevel,
 ): CompareResult {
   const details: string[] = [];
   let severity: CompareResult["severity"] = "info";
@@ -53,9 +53,9 @@ export function compareForecasts(
       details: ["Initial atmospheric baseline recorded."],
       severity: "info",
       summary: "Monitoring station online. Baseline forecast captured.",
-      defconTo: defcon,
+      panicIndexTo: panicIndex,
       notificationTitle: "Panic Center Online",
-      notificationBody: `DEFCON ${defcon}. ${DEFCON_MOODS[defcon]}.`,
+      notificationBody: `PANIC INDEX: ${panicIndex}. ${PANIC_INDEX_MOODS[panicIndex]}.`,
     };
   }
 
@@ -111,27 +111,32 @@ export function compareForecasts(
     parts.push("Storm timing shifted.");
   }
 
-  const defconChanged =
-    previousDefcon !== undefined && previousDefcon !== defcon;
+  const indexChanged =
+    previousPanicIndex !== undefined && previousPanicIndex !== panicIndex;
 
-  if (defconChanged) {
-    const direction = defcon < previousDefcon! ? "elevated" : "lowered";
-    parts.push(`DEFCON ${direction} to ${defcon}.`);
-    severity = defcon <= 2 ? "alert" : "warning";
-    details.push(`DEFCON ${previousDefcon} → ${defcon}.`);
+  if (indexChanged) {
+    const direction =
+      panicIndex < previousPanicIndex! ? "elevated" : "stabilizing";
+    if (direction === "elevated") {
+      parts.push(`PANIC INDEX elevated to ${panicIndex}.`);
+    } else {
+      parts.push(`PANIC INDEX stabilizing at ${panicIndex}.`);
+    }
+    severity = panicIndex <= 2 ? "alert" : "warning";
+    details.push(`PANIC INDEX ${previousPanicIndex} → ${panicIndex}.`);
   }
 
-  if (improving && !defconChanged) {
+  if (improving && !indexChanged) {
     parts.push("Forecast improving. Moisture retreating eastward.");
     severity = "info";
-  } else if (rainSwing && defcon <= 3) {
+  } else if (rainSwing && panicIndex <= 3) {
     parts.push("Atmospheric instability increasing.");
     severity = "warning";
   }
 
   const hasMeaningfulChange =
     rainSwing ||
-    defconChanged ||
+    indexChanged ||
     details.some((d) => d.includes("Thunderstorm")) ||
     (shift !== null && shift >= TIMING_SHIFT_HOURS);
 
@@ -140,8 +145,8 @@ export function compareForecasts(
       ? parts.join(" ")
       : details[0] ?? "Forecast update recorded.";
 
-  const notificationTitle = defconChanged
-    ? `DEFCON ${defcon}`
+  const notificationTitle = indexChanged
+    ? `PANIC INDEX: ${panicIndex}`
     : "Forecast Update";
 
   const notificationBody =
@@ -152,8 +157,8 @@ export function compareForecasts(
     details,
     severity,
     summary,
-    defconFrom: defconChanged ? previousDefcon : undefined,
-    defconTo: defconChanged ? defcon : undefined,
+    panicIndexFrom: indexChanged ? previousPanicIndex : undefined,
+    panicIndexTo: indexChanged ? panicIndex : undefined,
     notificationTitle,
     notificationBody,
   };

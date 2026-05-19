@@ -1,7 +1,9 @@
 export type StormRisk = "NONE" | "ELEVATED" | "ACTIVE";
 export type ForecastConfidence = "STABLE" | "UNCERTAIN" | "DETERIORATING";
 export type TrendArrow = "↑" | "↓" | "→";
-export type DefconLevel = 1 | 2 | 3 | 4 | 5;
+export type PanicIndexLevel = 1 | 2 | 3 | 4 | 5;
+/** @deprecated Use PanicIndexLevel */
+export type DefconLevel = PanicIndexLevel;
 export type DayKey = "carbDay" | "legendsDay" | "raceDay";
 export type ChangelogSeverity = "info" | "warning" | "alert";
 
@@ -35,7 +37,9 @@ export interface ForecastSnapshot {
   id: string;
   fetchedAt: string;
   noaaGeneratedAt: string;
-  defcon: DefconLevel;
+  panicIndex: PanicIndexLevel;
+  /** Legacy field — kept in sync when writing */
+  defcon?: PanicIndexLevel;
   panicMeter: number;
   mood: string;
   forecastStability: number;
@@ -51,8 +55,11 @@ export interface ChangelogEntry {
   severity: ChangelogSeverity;
   summary: string;
   details: string[];
-  defconFrom?: DefconLevel;
-  defconTo?: DefconLevel;
+  panicIndexFrom?: PanicIndexLevel;
+  panicIndexTo?: PanicIndexLevel;
+  /** Legacy fields */
+  defconFrom?: PanicIndexLevel;
+  defconTo?: PanicIndexLevel;
 }
 
 export interface ChangelogFile {
@@ -73,8 +80,8 @@ export interface CompareResult {
   details: string[];
   severity: ChangelogSeverity;
   summary: string;
-  defconFrom?: DefconLevel;
-  defconTo?: DefconLevel;
+  panicIndexFrom?: PanicIndexLevel;
+  panicIndexTo?: PanicIndexLevel;
   notificationTitle: string;
   notificationBody: string;
 }
@@ -84,3 +91,9 @@ export interface NormalizedForecast {
   days: Record<DayKey, Omit<RaceDayForecast, "confidence" | "trend">>;
   hourly: HourlyPoint[];
 }
+
+/** Raw snapshot shape from disk (may use legacy defcon field) */
+export type RawForecastSnapshot = Omit<ForecastSnapshot, "panicIndex"> & {
+  panicIndex?: PanicIndexLevel;
+  defcon?: PanicIndexLevel;
+};

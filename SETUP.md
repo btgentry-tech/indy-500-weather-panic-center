@@ -149,7 +149,7 @@ npm run poll:dry   # preview only
 npm run poll       # saves snapshot + may notify
 ```
 
-3. You should receive a dry notification like: `DEFCON elevated to 2. Storm timing moved earlier.`
+3. You should receive a dry notification like: `PANIC INDEX elevated to 2. Storm timing moved earlier.`
 
 ---
 
@@ -161,7 +161,8 @@ npm run poll       # saves snapshot + may notify
 | Subscribe API 500 | Check `FIREBASE_SERVICE_ACCOUNT_JSON` on Vercel |
 | No push on iPhone | Must use Home Screen installed PWA, not Safari tab |
 | Empty dashboard | Run `npm run poll` or wait for GitHub Action |
-| Service worker errors | Run `npm run prebuild` after changing Firebase env vars |
+| Service worker errors | Run `npm run prebuild` after changing Firebase env vars; push requires production build (`npm run build && npm start`) — dev mode disables PWA |
+| Alerts show OFFLINE after subscribe | Check Vercel env vars; confirm `/sw.js` loads on deployed site |
 
 ---
 
@@ -173,4 +174,4 @@ npm run poll       # saves snapshot + may notify
 | Change feed | `public/data/changelog.json` |
 | Poll script | `scripts/poll-weather.ts` |
 | GitHub workflow | `.github/workflows/poll-weather.yml` |
-| FCM service worker | `public/firebase-messaging-sw.js` |
+| FCM handlers (imported into PWA SW) | `public/fcm-handlers.js` |

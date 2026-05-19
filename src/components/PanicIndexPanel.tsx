@@ -1,20 +1,23 @@
 import type { ForecastSnapshot } from "@/lib/types";
-import { getDefconLabel } from "@/lib/defcon";
+import { getPanicIndexLabel } from "@/lib/panic-index";
+import { formatStationTime } from "@/lib/format";
 
-interface DefconPanelProps {
+interface PanicIndexPanelProps {
   snapshot: ForecastSnapshot;
 }
 
-export function DefconPanel({ snapshot }: DefconPanelProps) {
+export function PanicIndexPanel({ snapshot }: PanicIndexPanelProps) {
   const bar = "█".repeat(Math.round(snapshot.panicMeter / 5)).padEnd(20, "░");
 
   return (
-    <section className="panel" aria-label="DEFCON status">
-      <h2 className="panel-title">Main DEFCON Panel</h2>
-      <div className={`defcon-level defcon-${snapshot.defcon}`}>
-        {getDefconLabel(snapshot.defcon)}
+    <section className="panel" aria-label="Panic index status">
+      <h2 className="panel-title">Main Panic Index Panel</h2>
+      <div
+        className={`panic-index-level panic-index-${snapshot.panicIndex}`}
+      >
+        {getPanicIndexLabel(snapshot.panicIndex)}
       </div>
-      <p>{snapshot.mood}</p>
+      <p className="mood-line">{snapshot.mood}</p>
       <table className="data">
         <tbody>
           <tr>
@@ -36,11 +39,15 @@ export function DefconPanel({ snapshot }: DefconPanelProps) {
           </tr>
           <tr>
             <th scope="row">Last NOAA Update</th>
-            <td>{snapshot.noaaGeneratedAt}</td>
+            <td title={snapshot.noaaGeneratedAt}>
+              {formatStationTime(snapshot.noaaGeneratedAt)}
+            </td>
           </tr>
           <tr>
             <th scope="row">Station Poll</th>
-            <td>{snapshot.fetchedAt}</td>
+            <td title={snapshot.fetchedAt}>
+              {formatStationTime(snapshot.fetchedAt)}
+            </td>
           </tr>
         </tbody>
       </table>

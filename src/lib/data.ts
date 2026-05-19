@@ -1,10 +1,12 @@
 import fs from "fs/promises";
 import path from "path";
 import type {
+  ChangelogEntry,
   ChangelogFile,
   DataIndex,
   ForecastSnapshot,
   LatestPointer,
+  RawForecastSnapshot,
 } from "./types";
 
 export const DATA_DIR = path.join(process.cwd(), "public", "data");
@@ -12,6 +14,33 @@ export const HISTORY_DIR = path.join(DATA_DIR, "history");
 
 export function historyPath(id: string): string {
   return path.join(HISTORY_DIR, `${id}.json`);
+}
+
+export function normalizeSnapshot(raw: RawForecastSnapshot): ForecastSnapshot {
+  const panicIndex = raw.panicIndex ?? raw.defcon ?? 3;
+  return {
+    ...raw,
+    panicIndex,
+    defcon: panicIndex,
+  };
+}
+
+export function normalizeChangelogEntry(entry: ChangelogEntry): ChangelogEntry {
+  return {
+    ...entry,
+    panicIndexFrom: entry.panicIndexFrom ?? entry.defconFrom,
+    panicIndexTo: entry.panicIndexTo ?? entry.defconTo,
+  };
+}
+
+export function snapshotForDisk(
+  snapshot: ForecastSnapshot,
+): ForecastSnapshot {
+  return {
+    ...snapshot,
+    panicIndex: snapshot.panicIndex,
+    defcon: snapshot.panicIndex,
+  };
 }
 
 export async function readJson<T>(filePath: string): Promise<T | null> {
@@ -45,7 +74,9 @@ export async function loadLatestSnapshot(): Promise<ForecastSnapshot | null> {
 }
 
 export async function loadSnapshot(id: string): Promise<ForecastSnapshot | null> {
-  return readJson<ForecastSnapshot>(historyPath(id));
+  const raw = await readJson<RawForecastSnapshot>(historyPath(id));
+  if (!raw) return null;
+  return normalizeSnapshot(raw);
 }
 
 export async function loadAllSnapshots(): Promise<ForecastSnapshot[]> {
@@ -59,15 +90,17 @@ export async function loadAllSnapshots(): Promise<ForecastSnapshot[]> {
 }
 
 export async function loadChangelog(): Promise<ChangelogFile> {
-  return (
+  const file =
     (await readJson<ChangelogFile>(path.join(DATA_DIR, "changelog.json"))) ?? {
       entries: [],
-    }
-  );
+    };
+  return {
+    entries: file.entries.map(normalizeChangelogEntry),
+  };
 }
 
 export async function saveSnapshot(snapshot: ForecastSnapshot): Promise<void> {
-  await writeJson(historyPath(snapshot.id), snapshot);
+  await writeJson(historyPath(snapshot.id), snapshotForDisk(snapshot));
 }
 
 export async function updateIndex(id: string): Promise<void> {
@@ -87,14 +120,13 @@ export async function updateLatest(id: string): Promise<void> {
 
 export async function appendChangelog(
   changelog: ChangelogFile,
-  entry: ChangelogFile["entries"][number],
+  entry: ChangelogEntry,
 ): Promise<void> {
   changelog.entries.unshift(entry);
   changelog.entries = changelog.entries.slice(0, 200);
   await writeJson(path.join(DATA_DIR, "changelog.json"), changelog);
 }
 
-/** Public URL helpers for client-side fetches */
 export function publicDataUrl(relative: string): string {
   return `/data/${relative}`;
 }

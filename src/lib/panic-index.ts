@@ -1,21 +1,24 @@
 import type {
   DayKey,
-  DefconLevel,
   ForecastConfidence,
   NormalizedForecast,
+  PanicIndexLevel,
   RaceDayForecast,
   StormRisk,
   TrendArrow,
 } from "./types";
 import { RACE_DAYS } from "./race-days";
 
-export const DEFCON_MOODS: Record<DefconLevel, string> = {
+export const PANIC_INDEX_MOODS: Record<PanicIndexLevel, string> = {
   5: "Ideal grilling weather",
   4: "Minor atmospheric nonsense",
   3: "Monitoring situation",
   2: "Dangerous moisture developments",
   1: "Race control pacing internally",
 };
+
+/** @deprecated Use PANIC_INDEX_MOODS */
+export const DEFCON_MOODS = PANIC_INDEX_MOODS;
 
 const STORM_WEIGHT: Record<StormRisk, number> = {
   NONE: 0,
@@ -42,10 +45,10 @@ export function detectStormRisk(text: string): StormRisk {
   return "NONE";
 }
 
-export function computeDefcon(
+export function computePanicIndex(
   days: Record<DayKey, Pick<RaceDayForecast, "rainPct" | "stormRisk">>,
   largestRainSwing = 0,
-): DefconLevel {
+): PanicIndexLevel {
   const race = days.raceDay;
   const raceRain = race.rainPct;
   const raceStorm = race.stormRisk;
@@ -68,6 +71,9 @@ export function computeDefcon(
   }
   return 5;
 }
+
+/** @deprecated Use computePanicIndex */
+export const computeDefcon = computePanicIndex;
 
 export function computePanicMeter(
   days: Record<DayKey, Pick<RaceDayForecast, "rainPct" | "stormRisk">>,
@@ -142,6 +148,9 @@ export function buildRaceDayRows(
   return result;
 }
 
-export function getDefconLabel(level: DefconLevel): string {
-  return `DEFCON ${level}`;
+export function getPanicIndexLabel(level: PanicIndexLevel): string {
+  return `PANIC INDEX: ${level}`;
 }
+
+/** @deprecated Use getPanicIndexLabel */
+export const getDefconLabel = getPanicIndexLabel;

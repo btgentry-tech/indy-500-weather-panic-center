@@ -35,8 +35,8 @@ async function main() {
     previous,
     snapshot.days,
     snapshot.hourly,
-    snapshot.defcon,
-    previous?.defcon,
+    snapshot.panicIndex,
+    previous?.panicIndex,
   );
 
   const shouldSave =
@@ -65,8 +65,10 @@ async function main() {
       severity: compare.severity,
       summary: compare.summary,
       details: compare.details,
-      defconFrom: compare.defconFrom,
-      defconTo: compare.defconTo,
+      panicIndexFrom: compare.panicIndexFrom,
+      panicIndexTo: compare.panicIndexTo,
+      defconFrom: compare.panicIndexFrom,
+      defconTo: compare.panicIndexTo,
     };
     await appendChangelog(changelog, entry);
 
@@ -81,7 +83,9 @@ async function main() {
     }
   }
 
-  console.log(`Snapshot saved: ${snapshot.id} (DEFCON ${snapshot.defcon})`);
+  console.log(
+    `Snapshot saved: ${snapshot.id} (PANIC INDEX ${snapshot.panicIndex})`,
+  );
 }
 
 main().catch((error) => {

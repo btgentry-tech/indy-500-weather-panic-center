@@ -1,8 +1,8 @@
 import { AsciiHeader } from "@/components/AsciiHeader";
+import { AlertSubscribePanel } from "@/components/AlertSubscribePanel";
 import { ChangeFeed } from "@/components/ChangeFeed";
-import { DefconPanel } from "@/components/DefconPanel";
-import { EnableAlerts } from "@/components/EnableAlerts";
 import { ForecastTable } from "@/components/ForecastTable";
+import { PanicIndexPanel } from "@/components/PanicIndexPanel";
 import { VolatilityPanel } from "@/components/VolatilityPanel";
 import { loadChangelog, loadLatestSnapshot } from "@/lib/data";
 
@@ -21,6 +21,7 @@ export default async function DashboardPage() {
             NO SNAPSHOT DATA. Run hourly poll or wait for GitHub Actions.
           </p>
         </section>
+        <AlertSubscribePanel />
       </>
     );
   }
@@ -28,11 +29,11 @@ export default async function DashboardPage() {
   return (
     <>
       <AsciiHeader />
-      <DefconPanel snapshot={snapshot} />
+      <PanicIndexPanel snapshot={snapshot} />
       <ForecastTable snapshot={snapshot} />
       <ChangeFeed entries={changelog.entries} />
       <VolatilityPanel volatility={snapshot.volatility} />
-      <EnableAlerts />
+      <AlertSubscribePanel />
     </>
   );
 }

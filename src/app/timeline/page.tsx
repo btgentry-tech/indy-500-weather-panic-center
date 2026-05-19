@@ -31,7 +31,7 @@ export default async function TimelinePage() {
                   [{snap.id.replace("T", " ").slice(0, 16)}] {summary}
                 </summary>
                 <div className="timeline-detail">
-                  <p>DEFCON {snap.defcon} — {snap.mood}</p>
+                  <p>PANIC INDEX: {snap.panicIndex} — {snap.mood}</p>
                   <p>Panic meter: {snap.panicMeter}</p>
                   <p>Carb {snap.days.carbDay.rainPct}% | Legends{" "}
                   {snap.days.legendsDay.rainPct}% | Race{" "}

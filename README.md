@@ -2,7 +2,7 @@
 
 Atmospheric Monitoring Division — unofficial race weekend forecast bunker.
 
-Tracks NOAA forecasts for Indianapolis Motor Speedway (`39.7950, -86.2347`), stores hourly snapshots as JSON, computes DEFCON panic levels, and sends Firebase topic push notifications when forecasts change materially.
+Tracks NOAA forecasts for Indianapolis Motor Speedway (`39.7950, -86.2347`), stores hourly snapshots as JSON, computes PANIC INDEX escalation levels, and sends Firebase topic push notifications when forecasts change materially.
 
 **Not** affiliated with IMS, NWS, or Doug Boles (he is merely pacing internally).
 
@@ -21,8 +21,8 @@ Tracks NOAA forecasts for Indianapolis Motor Speedway (`39.7950, -86.2347`), sto
 
 | Route | Purpose |
 |-------|---------|
-| `/` | DEFCON dashboard, forecast table, change feed |
-| `/history` | Rain %, DEFCON, volatility charts |
+| `/` | Panic index dashboard, forecast table, change feed |
+| `/history` | Rain %, panic index, volatility charts |
 | `/timeline` | Snapshot log (weather git history) |
 
 ## Commands
@@ -38,7 +38,7 @@ npm run poll         # fetch NOAA, save snapshot, maybe notify
 
 See [`.env.example`](.env.example). Full click-by-click setup: **[SETUP.md](SETUP.md)**.
 
-## DEFCON levels
+## PANIC INDEX levels
 
 | Level | Mood |
 |-------|------|
