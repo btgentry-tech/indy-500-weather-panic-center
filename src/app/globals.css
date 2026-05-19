@@ -152,6 +152,12 @@ a {
   margin-bottom: 10px;
 }
 
+.panic-index-latest {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 .panic-index-headline {
   display: flex;
   align-items: baseline;

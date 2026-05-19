@@ -43,16 +43,16 @@ export function PanicHero({
             {snapshot.panicIndex}/5
           </span>
         </div>
+        <p className="hero-change panic-index-latest">
+          Latest Change ({formatStationTime(changeAt)}):{" "}
+          {truncateChangeLine(changeText)}
+        </p>
       </div>
       <p className="mood-line">{PANIC_INDEX_MOODS[snapshot.panicIndex]}</p>
       <p className="hero-rain">
         Race Day Rain: <strong>{race.rainPct}%</strong>
       </p>
       <TrendIndicator trend={race.trend} />
-      <p className="hero-change">
-        Latest Change ({formatStationTime(changeAt)}):{" "}
-        {truncateChangeLine(changeText)}
-      </p>
     </section>
   );
 }
