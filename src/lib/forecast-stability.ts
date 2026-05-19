@@ -62,6 +62,11 @@ export function stabilityExplanation(level: ForecastStabilityLevel): string {
   return FORECAST_STABILITY_COPY[level].explanation;
 }
 
+/** One-line stability context + unofficial disclaimer (hero display). */
+export function stabilityDetailLine(level: ForecastStabilityLevel): string {
+  return `${FORECAST_STABILITY_COPY[level].explanation} ${FORECAST_STABILITY_DISCLAIMER}`;
+}
+
 export function stabilityLevelFromVolatilityScore(
   volatilityScore: number,
   changes24h: number,

@@ -1,10 +1,9 @@
 import type { ForecastSnapshot } from "@/lib/types";
 import { PANIC_INDEX_MOODS } from "@/lib/panic-index";
 import {
-  FORECAST_STABILITY_DISCLAIMER,
   resolveSnapshotStabilityLevel,
   stabilityCssClass,
-  stabilityExplanation,
+  stabilityDetailLine,
   stabilityLabel,
 } from "@/lib/forecast-stability";
 import { truncateChangeLine } from "@/lib/labels";
@@ -12,12 +11,13 @@ import { formatStationTime } from "@/lib/format";
 
 interface PanicHeroProps {
   snapshot: ForecastSnapshot;
+  revisionSummary: string | null;
 }
 
-export function PanicHero({ snapshot }: PanicHeroProps) {
+export function PanicHero({ snapshot, revisionSummary }: PanicHeroProps) {
   const stability = resolveSnapshotStabilityLevel(snapshot);
   const revisionAt = snapshot.fetchedAt;
-  const revisionText = snapshot.lastForecastChange;
+  const revisionText = revisionSummary ?? snapshot.lastForecastChange;
 
   return (
     <section
@@ -28,12 +28,6 @@ export function PanicHero({ snapshot }: PanicHeroProps) {
         <span className="live-badge">LIVE</span>
         <span className="radar-pulse" aria-hidden="true" />
       </div>
-      <p className="hero-forecast-asof">
-        <span className="field-label">Latest NOAA forecast</span>
-        <time dateTime={snapshot.fetchedAt}>
-          {formatStationTime(snapshot.fetchedAt)}
-        </time>
-      </p>
       <div
         className={`panic-index-block panic-index-${snapshot.panicIndex}`}
       >
@@ -55,8 +49,7 @@ export function PanicHero({ snapshot }: PanicHeroProps) {
         >
           {stabilityLabel(stability)}
         </p>
-        <p className="hero-stability-note">{stabilityExplanation(stability)}</p>
-        <p className="hero-stability-derived">{FORECAST_STABILITY_DISCLAIMER}</p>
+        <p className="hero-stability-note">{stabilityDetailLine(stability)}</p>
       </div>
       {revisionText ? (
         <div className="hero-revision">

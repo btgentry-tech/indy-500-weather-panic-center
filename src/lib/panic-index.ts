@@ -10,11 +10,11 @@ import { RACE_DAYS } from "./race-days";
 
 /** 1 = low concern, 5 = high concern */
 export const PANIC_INDEX_MOODS: Record<PanicIndexLevel, string> = {
-  1: "Minimal threat. Backyard cookout conditions. Stable pattern. Panic systems idle.",
-  2: "Minor concern. Small storm energy detected. Fans remain cautiously hydrated. Conditions worth monitoring.",
-  3: "Moderate concern. Forecast confidence weakening. Pattern instability increasing. Contingency beers advised.",
-  4: "High concern. Track drying equipment on standby. Atmospheric chaos entering the chat.",
-  5: "Red alert. Every uncle in Indiana is now a meteorologist. Significant weather disruption possible.",
+  1: "Minimal threat — backyard cookout conditions, panic systems idle.",
+  2: "Minor concern — small storm energy detected, stay hydrated and watch the radar.",
+  3: "Moderate concern — forecast confidence weakening, contingency beers advised.",
+  4: "High concern — track drying on standby, atmospheric chaos in the chat.",
+  5: "Red alert — every uncle in Indiana is now a meteorologist, disruption possible.",
 };
 
 /** @deprecated Use PANIC_INDEX_MOODS */

@@ -2,12 +2,18 @@ import { AsciiHeader } from "@/components/AsciiHeader";
 import { AlertSubscribePanel } from "@/components/AlertSubscribePanel";
 import { ForecastTable } from "@/components/ForecastTable";
 import { PanicHero } from "@/components/PanicHero";
-import { loadLatestSnapshot } from "@/lib/data";
+import { compareForecasts } from "@/lib/compare";
+import { loadAllSnapshots, loadLatestSnapshot } from "@/lib/data";
 
 export const revalidate = 900;
 
 export default async function DashboardPage() {
-  const snapshot = await loadLatestSnapshot();
+  const history = await loadAllSnapshots();
+  const snapshot =
+    history.length > 0
+      ? history[history.length - 1]
+      : await loadLatestSnapshot();
+
   if (!snapshot) {
     return (
       <>
@@ -23,11 +29,20 @@ export default async function DashboardPage() {
     );
   }
 
+  const previous = history.length >= 2 ? history[history.length - 2] : null;
+  const revisionSummary = compareForecasts(
+    previous,
+    snapshot.days,
+    snapshot.hourly,
+    snapshot.panicIndex,
+    previous?.panicIndex,
+  ).summary;
+
   return (
     <>
       <AsciiHeader compact />
       <AlertSubscribePanel />
-      <PanicHero snapshot={snapshot} />
+      <PanicHero snapshot={snapshot} revisionSummary={revisionSummary} />
       <ForecastTable snapshot={snapshot} />
     </>
   );
