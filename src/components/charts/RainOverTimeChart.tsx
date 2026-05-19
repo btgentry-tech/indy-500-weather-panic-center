@@ -63,7 +63,7 @@ export function RainOverTimeChart({ snapshots }: RainOverTimeChartProps) {
 
   return (
     <section className="panel chart-panel dashboard-rain-chart">
-      <h2 className="panel-title">Rain % over time</h2>
+      <h2 className="panel-title">Rain forecast changes</h2>
       <div className="chart-canvas" style={{ height: 220 }}>
         <Line
           data={rainData}
@@ -82,7 +82,7 @@ export function RainOverTimeChart({ snapshots }: RainOverTimeChartProps) {
               },
               title: {
                 display: true,
-                text: "Race Weekend Precipitation Probability",
+                text: "Rain forecast changes",
                 color: CHART_COLORS.label,
               },
             },
