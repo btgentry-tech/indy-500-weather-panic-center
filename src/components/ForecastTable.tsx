@@ -37,14 +37,15 @@ export function ForecastTable({ snapshot }: ForecastTableProps) {
                 ? snapshot.volatility.volatilityScore
                 : undefined,
             );
+            const isRaceDay = config.key === "raceDay";
             return (
-              <tr key={config.key}>
-                <td>{day.label}</td>
-                <td>{day.rainPct}%</td>
-                <td>{stormLabel}</td>
-                <td>{day.highTemp}°</td>
-                <td>{stability}</td>
-                <td>
+              <tr key={config.key} className={isRaceDay ? "row-race-day" : undefined}>
+                <td className="col-event">{day.label}</td>
+                <td className="col-value col-rain">{day.rainPct}%</td>
+                <td className="col-muted">{stormLabel}</td>
+                <td className="col-muted">{day.highTemp}°</td>
+                <td className="col-muted">{stability}</td>
+                <td className="col-trend">
                   <TrendIndicator trend={day.trend} inline />
                 </td>
               </tr>

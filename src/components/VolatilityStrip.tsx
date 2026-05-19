@@ -10,21 +10,24 @@ export function VolatilityStrip({ record, panicMeter }: VolatilityStripProps) {
     <section className="panel volatility-strip" aria-label="Forecast volatility">
       <h2 className="panel-title">How Unstable Has It Been?</h2>
       <p className="volatility-line">
-        <span>Total revisions on record:</span>{" "}
-        <strong>{record.totalRevisions}</strong>
+        <span className="field-label">Total revisions</span>{" "}
+        <span className="field-value">{record.totalRevisions}</span>
         <span className="vol-sep">|</span>
-        <span>Revisions (24h):</span> <strong>{record.changes24h}</strong>
+        <span className="field-label">24h</span>{" "}
+        <span className="field-value">{record.changes24h}</span>
       </p>
       <p className="volatility-line">
-        <span>Largest rain swing (record):</span>{" "}
-        <strong>{record.largestRainSwingRecord}%</strong>
+        <span className="field-label">Max rain swing</span>{" "}
+        <span className="field-value">{record.largestRainSwingRecord}%</span>
         <span className="vol-sep">|</span>
-        <span>Latest rain swing:</span>{" "}
-        <strong>{record.latestRainSwing}%</strong>
+        <span className="field-label">Latest swing</span>{" "}
+        <span className="field-value">{record.latestRainSwing}%</span>
         <span className="vol-sep">|</span>
-        <span>Stability:</span> <strong>{record.stabilityScore}%</strong>
+        <span className="field-label">Stability</span>{" "}
+        <span className="field-value">{record.stabilityScore}%</span>
         <span className="vol-sep">|</span>
-        <span>Panic meter:</span> <strong>{panicMeter}/100</strong>
+        <span className="field-label">Panic meter</span>{" "}
+        <span className="field-value">{panicMeter}/100</span>
       </p>
     </section>
   );

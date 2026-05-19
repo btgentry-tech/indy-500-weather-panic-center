@@ -53,59 +53,56 @@ export function StationStatus({ station: initialStation }: StationStatusProps) {
   }, []);
 
   return (
-    <section className="panel station-status" aria-label="Station status">
-      <div className="status-row">
-        <span className="radar-pulse" aria-hidden="true" />
-        <span className="status-blink" aria-hidden="true">
-          █
-        </span>
-        <span>{FLAVOR_LINES[flavorIndex]}</span>
-      </div>
-      <p className="status-line">
-        LOCAL TIME (IMS): <strong>{clock}</strong>
+    <section className="station-telemetry" aria-label="Station telemetry">
+      <p className="telemetry-flavor">
+        <span className="radar-pulse radar-pulse-dim" aria-hidden="true" />
+        {FLAVOR_LINES[flavorIndex]}
       </p>
-      <p className="status-line">
-        LAST NOAA CHECK:{" "}
-        {station.lastCheckedAt ? (
-          <strong title={station.lastCheckedAt}>
-            {formatStationTime(station.lastCheckedAt)}
-          </strong>
-        ) : (
-          "NO DATA"
-        )}
-      </p>
-      <p className="status-line">
-        LAST FORECAST CHANGE:{" "}
-        {station.lastForecastChangeAt ? (
-          <strong title={station.lastForecastChangeAt}>
-            {formatStationTime(station.lastForecastChangeAt)}
-          </strong>
-        ) : (
-          "NONE ON RECORD"
-        )}
-        {station.lastForecastChangeSummary ? (
-          <span className="station-change-note">
-            {" "}
-            — {station.lastForecastChangeSummary}
-          </span>
-        ) : null}
-      </p>
-      <p className="status-line">
-        LAST SAVED SNAPSHOT:{" "}
-        {station.lastSnapshotAt ? (
-          <strong title={station.lastSnapshotAt}>
-            {formatStationTime(station.lastSnapshotAt)}
-          </strong>
-        ) : (
-          "NONE"
-        )}
-        {station.lastSnapshotId ? ` — ${station.lastSnapshotId}` : ""}
-      </p>
-      <p className="status-line">
-        POLL CADENCE: <strong>{pollCadenceLabel()}</strong>
-        <span className="vol-sep">|</span>
-        NEXT: <strong>{nextPoll || "—"}</strong>
-      </p>
+      <dl className="telemetry-grid">
+        <div className="telemetry-row">
+          <dt>Local time (IMS)</dt>
+          <dd>{clock || "—"}</dd>
+        </div>
+        <div className="telemetry-row">
+          <dt>Last NOAA check</dt>
+          <dd>
+            {station.lastCheckedAt
+              ? formatStationTime(station.lastCheckedAt)
+              : "NO DATA"}
+          </dd>
+        </div>
+        <div className="telemetry-row">
+          <dt>Last forecast change</dt>
+          <dd>
+            {station.lastForecastChangeAt
+              ? formatStationTime(station.lastForecastChangeAt)
+              : "NONE"}
+            {station.lastForecastChangeSummary ? (
+              <span className="telemetry-note">
+                {station.lastForecastChangeSummary}
+              </span>
+            ) : null}
+          </dd>
+        </div>
+        <div className="telemetry-row">
+          <dt>Last snapshot</dt>
+          <dd>
+            {station.lastSnapshotAt
+              ? formatStationTime(station.lastSnapshotAt)
+              : "NONE"}
+            {station.lastSnapshotId ? (
+              <span className="telemetry-meta">{station.lastSnapshotId}</span>
+            ) : null}
+          </dd>
+        </div>
+        <div className="telemetry-row">
+          <dt>Poll cadence</dt>
+          <dd>
+            {pollCadenceLabel()}
+            <span className="telemetry-meta">Next {nextPoll || "—"}</span>
+          </dd>
+        </div>
+      </dl>
     </section>
   );
 }

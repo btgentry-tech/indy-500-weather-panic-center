@@ -24,35 +24,43 @@ export function PanicHero({
 
   return (
     <section
-      className="panel panic-hero"
+      className="panel panic-hero panel-live"
       aria-label="Current panic status"
     >
       <div className="hero-live-row">
         <span className="live-badge">LIVE</span>
-        <span className="status-blink" aria-hidden="true">
-          █
-        </span>
         <span className="radar-pulse" aria-hidden="true" />
       </div>
       <div
         className={`panic-index-block panic-index-${snapshot.panicIndex}`}
       >
-        <div className="panic-index-headline">
-          <span className="panic-index-caption">PANIC INDEX:</span>
-          <span className="panic-index-fraction">
-            {snapshot.panicIndex}/5
-          </span>
-        </div>
-        <p className="hero-change panic-index-latest">
-          Latest Change ({formatStationTime(changeAt)}):{" "}
-          {truncateChangeLine(changeText)}
+        <p className="panic-index-caption">PANIC INDEX</p>
+        <p
+          className="panic-index-fraction"
+          aria-label={`Panic index ${snapshot.panicIndex} of 5`}
+        >
+          {snapshot.panicIndex}/5
+        </p>
+        <p className="panic-index-mood">
+          {PANIC_INDEX_MOODS[snapshot.panicIndex]}
         </p>
       </div>
-      <p className="mood-line">{PANIC_INDEX_MOODS[snapshot.panicIndex]}</p>
-      <p className="hero-rain">
-        Race Day Rain: <strong>{race.rainPct}%</strong>
-      </p>
-      <TrendIndicator trend={race.trend} />
+      <div className="hero-metrics">
+        <div className="hero-metric">
+          <span className="field-label">Race day rain</span>
+          <span className="field-value">{race.rainPct}%</span>
+        </div>
+        <TrendIndicator trend={race.trend} compact />
+      </div>
+      <div className="hero-incident">
+        <p className="incident-header">
+          <span className="field-label">Latest change</span>
+          <time className="incident-time" dateTime={changeAt}>
+            {formatStationTime(changeAt)}
+          </time>
+        </p>
+        <p className="hero-incident-text">{truncateChangeLine(changeText, 120)}</p>
+      </div>
     </section>
   );
 }
