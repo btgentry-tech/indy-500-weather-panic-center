@@ -12,6 +12,7 @@ import {
   Filler,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import { CHART_AMBER_FILL, CHART_COLORS } from "@/lib/chart-colors";
 import type { ForecastSnapshot } from "@/lib/types";
 import { formatChartLabel, formatStationTime } from "@/lib/format";
 
@@ -35,25 +36,39 @@ const chartOptions = {
   },
   plugins: {
     legend: {
-      labels: { color: "#33ff33", font: { family: "Courier New", size: 11 } },
+      labels: {
+        color: CHART_COLORS.text,
+        font: { family: "Courier New", size: 11 },
+      },
     },
     title: {
-      color: "#ffff00",
+      color: CHART_COLORS.label,
       font: { family: "Courier New", size: 12 },
     },
     tooltip: {
+      titleColor: CHART_COLORS.label,
+      bodyColor: CHART_COLORS.text,
+      backgroundColor: "#0a0a0a",
+      borderColor: CHART_COLORS.grid,
+      borderWidth: 1,
       titleFont: { family: "Courier New" },
       bodyFont: { family: "Courier New" },
     },
   },
   scales: {
     x: {
-      ticks: { color: "#cccccc", font: { family: "Courier New", size: 10 } },
-      grid: { color: "#222222" },
+      ticks: {
+        color: CHART_COLORS.textDim,
+        font: { family: "Courier New", size: 10 },
+      },
+      grid: { color: CHART_COLORS.gridDim },
     },
     y: {
-      ticks: { color: "#cccccc", font: { family: "Courier New", size: 10 } },
-      grid: { color: "#222222" },
+      ticks: {
+        color: CHART_COLORS.textDim,
+        font: { family: "Courier New", size: 10 },
+      },
+      grid: { color: CHART_COLORS.gridDim },
     },
   },
 };
@@ -80,21 +95,21 @@ export function HistoryCharts({ snapshots }: HistoryChartsProps) {
       {
         label: "Carb Day Rain %",
         data: snapshots.map((s) => s.days.carbDay.rainPct),
-        borderColor: "#33ff33",
+        borderColor: CHART_COLORS.green,
         backgroundColor: "transparent",
         tension: 0.2,
       },
       {
         label: "Legends Day Rain %",
         data: snapshots.map((s) => s.days.legendsDay.rainPct),
-        borderColor: "#ffff00",
+        borderColor: CHART_COLORS.amber,
         backgroundColor: "transparent",
         tension: 0.2,
       },
       {
         label: "Race Day Rain %",
         data: snapshots.map((s) => s.days.raceDay.rainPct),
-        borderColor: "#ff3333",
+        borderColor: CHART_COLORS.red,
         backgroundColor: "transparent",
         tension: 0.2,
       },
@@ -107,7 +122,7 @@ export function HistoryCharts({ snapshots }: HistoryChartsProps) {
       {
         label: "PANIC INDEX (1 = low, 5 = high concern)",
         data: snapshots.map((s) => s.panicIndex),
-        borderColor: "#ff3333",
+        borderColor: CHART_COLORS.red,
         stepped: true,
         backgroundColor: "transparent",
       },
@@ -120,13 +135,13 @@ export function HistoryCharts({ snapshots }: HistoryChartsProps) {
       {
         label: "Volatility",
         data: snapshots.map((s) => s.volatility.volatilityScore),
-        borderColor: "#ff3333",
+        borderColor: CHART_COLORS.red,
         backgroundColor: "transparent",
       },
       {
         label: "Stability",
         data: snapshots.map((s) => s.volatility.stabilityScore),
-        borderColor: "#33ff33",
+        borderColor: CHART_COLORS.green,
         backgroundColor: "transparent",
       },
     ],
@@ -143,9 +158,9 @@ export function HistoryCharts({ snapshots }: HistoryChartsProps) {
       {
         label: "Race Day Hourly Rain %",
         data: raceHourly?.map((h) => h.rainPct) ?? [],
-        borderColor: "#ffff00",
+        borderColor: CHART_COLORS.amber,
         fill: true,
-        backgroundColor: "rgba(255,255,0,0.08)",
+        backgroundColor: CHART_AMBER_FILL,
         tension: 0.2,
       },
     ],
@@ -176,7 +191,7 @@ export function HistoryCharts({ snapshots }: HistoryChartsProps) {
                 title: {
                   display: true,
                   text: "Race Weekend Precipitation Probability",
-                  color: "#ffff00",
+                  color: CHART_COLORS.label,
                 },
               },
             }}
