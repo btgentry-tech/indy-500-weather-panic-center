@@ -12,21 +12,17 @@ import { formatStationTime } from "@/lib/format";
 
 interface PanicHeroProps {
   snapshot: ForecastSnapshot;
-  lastForecastChange: string | null;
-  lastForecastChangeAt: string | null;
+  lastMajorShiftAt: string | null;
+  lastMajorShiftSummary: string | null;
 }
 
 export function PanicHero({
   snapshot,
-  lastForecastChange,
-  lastForecastChangeAt,
+  lastMajorShiftAt,
+  lastMajorShiftSummary,
 }: PanicHeroProps) {
-  const changeText =
-    lastForecastChange ??
-    snapshot.lastForecastChange ??
-    "Awaiting the next NOAA forecast revision.";
-  const changeAt = lastForecastChangeAt ?? snapshot.fetchedAt;
   const stability = resolveSnapshotStabilityLevel(snapshot);
+  const hasMajorShift = Boolean(lastMajorShiftAt && lastMajorShiftSummary);
 
   return (
     <section
@@ -37,6 +33,12 @@ export function PanicHero({
         <span className="live-badge">LIVE</span>
         <span className="radar-pulse" aria-hidden="true" />
       </div>
+      <p className="hero-forecast-asof">
+        <span className="field-label">Latest NOAA forecast</span>
+        <time dateTime={snapshot.fetchedAt}>
+          {formatStationTime(snapshot.fetchedAt)}
+        </time>
+      </p>
       <div
         className={`panic-index-block panic-index-${snapshot.panicIndex}`}
       >
@@ -61,15 +63,19 @@ export function PanicHero({
         <p className="hero-stability-note">{stabilityExplanation(stability)}</p>
         <p className="hero-stability-derived">{FORECAST_STABILITY_DISCLAIMER}</p>
       </div>
-      <div className="hero-incident">
-        <p className="incident-header">
-          <span className="field-label">Last forecast change</span>
-          <time className="incident-time" dateTime={changeAt}>
-            {formatStationTime(changeAt)}
-          </time>
-        </p>
-        <p className="hero-incident-text">{truncateChangeLine(changeText, 120)}</p>
-      </div>
+      {hasMajorShift ? (
+        <div className="hero-major-shift">
+          <p className="hero-major-shift-header">
+            <span className="field-label">Last major revision</span>
+            <time className="incident-time" dateTime={lastMajorShiftAt!}>
+              {formatStationTime(lastMajorShiftAt!)}
+            </time>
+          </p>
+          <p className="hero-major-shift-text">
+            {truncateChangeLine(lastMajorShiftSummary, 120)}
+          </p>
+        </div>
+      ) : null}
     </section>
   );
 }

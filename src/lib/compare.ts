@@ -70,9 +70,9 @@ function minorEditorialSummary(panicIndex: PanicIndexLevel): string {
 }
 
 /**
- * Compares consecutive NOAA polls. Every detected grid change is a real forecast
- * update (editorial, changelog, timestamps, notifications). `isMajorChange` only
- * selects stronger alert wording — not whether the update counts.
+ * Compares consecutive NOAA polls. Any grid delta is a forecast refresh (snapshot,
+ * changelog, push). `isMajorChange` is editorial only — stronger copy and the
+ * “last major revision” timestamp, not whether the app updated.
  */
 export function compareForecasts(
   previous: ForecastSnapshot | null,

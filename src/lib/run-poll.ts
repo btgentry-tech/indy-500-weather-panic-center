@@ -121,7 +121,7 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
         ok: true,
         checkedAt,
         outcome: "saved",
-        message: `DRY RUN — would ${dataChanged ? "save" : "refresh"} ${snapshot.id}${wouldNotify ? "; would notify" : ""}`,
+        message: `DRY RUN — would ${dataChanged ? "save" : "skip save"} ${snapshot.id}${wouldNotify ? "; would notify" : ""}`,
         snapshotSaved: false,
         forecastDataChanged: dataChanged,
         forecastChanged: dataChanged,
@@ -135,7 +135,7 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
     let outcome: PollHeartbeat["outcome"] = dataChanged ? "saved" : "checked_no_save";
     let message = dataChanged
       ? `Forecast updated: ${compare.summary}`
-      : "NOAA checked; forecast unchanged — refreshed snapshot timestamp.";
+      : "NOAA checked; forecast unchanged.";
 
     if (dataChanged) {
       persisted = {
@@ -144,10 +144,10 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
       };
       await saveSnapshot(persisted);
       await updateIndex(persisted.id);
-      await updateLatest(persisted.id);
+      await updateLatest(persisted.id, persisted.fetchedAt);
 
-      station.lastForecastChangeAt = checkedAt;
-      station.lastForecastChangeSummary = compare.summary;
+      station.lastSnapshotAt = persisted.fetchedAt;
+      station.lastSnapshotId = persisted.id;
 
       const changelog = await loadChangelog();
       const entry: ChangelogEntry = {
@@ -162,38 +162,69 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
         defconTo: compare.panicIndexTo,
       };
       await appendChangelog(changelog, entry);
-    } else {
-      persisted = {
-        ...snapshot,
-        id: previous!.id,
-        fetchedAt: checkedAt,
-        lastForecastChange: previous!.lastForecastChange,
-      };
-      await saveSnapshot(persisted);
-    }
 
-    station.lastSnapshotAt = checkedAt;
-    station.lastSnapshotId = persisted.id;
+      if (compare.isMajorChange) {
+        station.lastMajorShiftAt = checkedAt;
+        station.lastMajorShiftSummary = compare.summary;
+        station.lastForecastChangeAt = checkedAt;
+        station.lastForecastChangeSummary = compare.summary;
+        persisted = {
+          ...persisted,
+          lastForecastChange: compare.summary,
+        };
+        await saveSnapshot(persisted);
+      }
 
-    let notificationSent = false;
+      let notificationSent = false;
 
-    if (dataChanged && process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
-      const { title, body } = buildForecastChangeNotification(
-        compare,
-        snapshot.panicIndex,
+      if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+        const { title, body } = buildForecastChangeNotification(
+          compare,
+          snapshot.panicIndex,
+          {
+            isMajor: compare.isMajorChange,
+            isInitial: !previous,
+          },
+        );
+        await sendTopicNotification(title, body);
+        notificationSent = true;
+        outcome = "saved_notify";
+        message = `Forecast updated. ${body}`;
+      } else {
+        message = `Forecast updated; notification skipped (no FIREBASE_SERVICE_ACCOUNT_JSON). ${compare.summary}`;
+      }
+
+      await updateStationMeta(station);
+      await writeHeartbeat(
         {
-          isMajor: compare.isMajorChange,
-          isInitial: !previous,
+          at: checkedAt,
+          ok: true,
+          outcome,
+          message,
+          shouldSave: true,
+          hasForecastDataChanged: true,
+          isMajorChange: compare.isMajorChange,
+          snapshotId: persisted.id,
+          panicIndex: snapshot.panicIndex,
         },
+        dryRun,
       );
-      await sendTopicNotification(title, body);
-      notificationSent = true;
-      outcome = "saved_notify";
-      message = `Forecast updated. ${body}`;
-    } else if (dataChanged) {
-      message = `Forecast updated; notification skipped (no FIREBASE_SERVICE_ACCOUNT_JSON). ${compare.summary}`;
+
+      return {
+        ok: true,
+        checkedAt,
+        outcome,
+        message,
+        snapshotSaved: true,
+        snapshotId: persisted.id,
+        forecastDataChanged: true,
+        forecastChanged: true,
+        notificationSent,
+        panicIndex: snapshot.panicIndex,
+      };
     }
 
+    persisted = previous!;
     await updateStationMeta(station);
     await writeHeartbeat(
       {
@@ -201,9 +232,9 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
         ok: true,
         outcome,
         message,
-        shouldSave: dataChanged,
-        hasForecastDataChanged: dataChanged,
-        isMajorChange: compare.isMajorChange,
+        shouldSave: false,
+        hasForecastDataChanged: false,
+        isMajorChange: false,
         snapshotId: persisted.id,
         panicIndex: snapshot.panicIndex,
       },
@@ -215,11 +246,11 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
       checkedAt,
       outcome,
       message,
-      snapshotSaved: true,
+      snapshotSaved: false,
       snapshotId: persisted.id,
-      forecastDataChanged: dataChanged,
-      forecastChanged: dataChanged,
-      notificationSent,
+      forecastDataChanged: false,
+      forecastChanged: false,
+      notificationSent: false,
       panicIndex: snapshot.panicIndex,
     };
   } catch (error) {

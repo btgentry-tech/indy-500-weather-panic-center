@@ -84,26 +84,26 @@ export function StationStatus({ station: initialStation }: StationStatusProps) {
           </dd>
         </div>
         <div className="telemetry-row">
-          <dt>Last forecast change</dt>
-          <dd>
-            {station.lastForecastChangeAt
-              ? formatStationTime(station.lastForecastChangeAt)
-              : "NONE"}
-            {station.lastForecastChangeSummary ? (
-              <span className="telemetry-note">
-                {station.lastForecastChangeSummary}
-              </span>
-            ) : null}
-          </dd>
-        </div>
-        <div className="telemetry-row">
-          <dt>Last snapshot</dt>
+          <dt>Latest NOAA forecast</dt>
           <dd>
             {station.lastSnapshotAt
               ? formatStationTime(station.lastSnapshotAt)
               : "NONE"}
             {station.lastSnapshotId ? (
               <span className="telemetry-meta">{station.lastSnapshotId}</span>
+            ) : null}
+          </dd>
+        </div>
+        <div className="telemetry-row telemetry-row-secondary">
+          <dt>Last major revision</dt>
+          <dd>
+            {station.lastMajorShiftAt
+              ? formatStationTime(station.lastMajorShiftAt)
+              : "NONE YET"}
+            {station.lastMajorShiftSummary ? (
+              <span className="telemetry-note">
+                {station.lastMajorShiftSummary}
+              </span>
             ) : null}
           </dd>
         </div>

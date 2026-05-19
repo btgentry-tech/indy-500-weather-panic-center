@@ -117,32 +117,43 @@ const EMPTY_STATION: StationMeta = {
   lastCheckedAt: null,
   lastSnapshotAt: null,
   lastSnapshotId: null,
-  lastForecastChangeAt: null,
-  lastForecastChangeSummary: null,
+  lastMajorShiftAt: null,
+  lastMajorShiftSummary: null,
 };
 
+/** Align station telemetry with the latest snapshot — single source for forecast time. */
+export function normalizeStationMeta(
+  raw: StationMeta,
+  latestSnapshot: ForecastSnapshot | null,
+): StationMeta {
+  const lastMajorShiftAt =
+    raw.lastMajorShiftAt ?? raw.lastForecastChangeAt ?? null;
+  const lastMajorShiftSummary =
+    raw.lastMajorShiftSummary ?? raw.lastForecastChangeSummary ?? null;
+
+  let lastSnapshotAt = raw.lastSnapshotAt;
+  let lastSnapshotId = raw.lastSnapshotId;
+
+  if (latestSnapshot) {
+    lastSnapshotId = latestSnapshot.id;
+    lastSnapshotAt = latestSnapshot.fetchedAt;
+  }
+
+  return {
+    ...raw,
+    lastSnapshotId,
+    lastSnapshotAt,
+    lastMajorShiftAt,
+    lastMajorShiftSummary,
+  };
+}
+
 export async function loadStationMeta(): Promise<StationMeta> {
-  const meta =
+  const raw =
     (await readJson<StationMeta>(path.join(DATA_DIR, "station.json"))) ??
     { ...EMPTY_STATION };
-
-  if (!meta.lastSnapshotId) {
-    const latest = await loadLatestPointer();
-    if (latest) {
-      meta.lastSnapshotId = latest.snapshotId;
-      meta.lastSnapshotAt = latest.updatedAt;
-    }
-  }
-
-  if (!meta.lastForecastChangeSummary) {
-    const snap = await loadLatestSnapshot();
-    if (snap?.lastForecastChange) {
-      meta.lastForecastChangeSummary = snap.lastForecastChange;
-      meta.lastForecastChangeAt = meta.lastForecastChangeAt ?? snap.fetchedAt;
-    }
-  }
-
-  return meta;
+  const latestSnapshot = await loadLatestSnapshot();
+  return normalizeStationMeta(raw, latestSnapshot);
 }
 
 export async function updateStationMeta(meta: StationMeta): Promise<void> {
@@ -171,10 +182,13 @@ export async function updateIndex(id: string): Promise<void> {
   await writeJson(path.join(DATA_DIR, "index.json"), index);
 }
 
-export async function updateLatest(id: string): Promise<void> {
+export async function updateLatest(
+  id: string,
+  updatedAt: string = new Date().toISOString(),
+): Promise<void> {
   await writeJson(path.join(DATA_DIR, "latest.json"), {
     snapshotId: id,
-    updatedAt: new Date().toISOString(),
+    updatedAt,
   } satisfies LatestPointer);
 }
 

@@ -49,10 +49,16 @@ export interface LocalConditions {
 
 export interface StationMeta {
   lastCheckedAt: string | null;
+  /** Latest forecast snapshot time (from `latest.json` / snapshot `fetchedAt`). */
   lastSnapshotAt: string | null;
   lastSnapshotId: string | null;
-  lastForecastChangeAt: string | null;
-  lastForecastChangeSummary: string | null;
+  /** Editorial layer — last major NOAA shift (≥ thresholds in compare). */
+  lastMajorShiftAt: string | null;
+  lastMajorShiftSummary: string | null;
+  /** @deprecated Written on major shift for legacy JSON; use lastMajorShiftAt. */
+  lastForecastChangeAt?: string | null;
+  /** @deprecated Use lastMajorShiftSummary. */
+  lastForecastChangeSummary?: string | null;
   localConditions?: LocalConditions | null;
 }
 

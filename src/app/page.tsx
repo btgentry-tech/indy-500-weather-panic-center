@@ -30,8 +30,8 @@ export default async function DashboardPage() {
       <AlertSubscribePanel />
       <PanicHero
         snapshot={snapshot}
-        lastForecastChange={station.lastForecastChangeSummary}
-        lastForecastChangeAt={station.lastForecastChangeAt}
+        lastMajorShiftAt={station.lastMajorShiftAt}
+        lastMajorShiftSummary={station.lastMajorShiftSummary}
       />
       <ForecastTable snapshot={snapshot} />
     </>
