@@ -142,7 +142,15 @@ git push -u origin main
 ## Part 5 — Verify notifications
 
 1. On the deployed site, enable alerts (subscribes your device to topic `indy-panic`)
-2. Run GitHub Action **Poll Weather** manually after a forecast change, or run locally:
+2. **REMOVABLE DEBUG** — send a test push without a weather change (requires `.env.local` with `FIREBASE_SERVICE_ACCOUNT_JSON`):
+
+```bash
+npm run notify:test
+```
+
+Expect title **PANIC TEST** and body **Atmospheric notification pipeline operational.** Delete `scripts/notify-test.ts` and the `notify:test` script when done.
+
+3. Run GitHub Action **Poll Weather** manually after a forecast change, or run locally:
 
 ```bash
 npm run poll:dry   # preview only
