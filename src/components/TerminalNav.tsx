@@ -14,7 +14,6 @@ import { IphoneSetupModal } from "@/components/IphoneSetupModal";
 
 const LINKS = [
   { href: "/", label: "DASHBOARD" },
-  { href: "/history", label: "HISTORY" },
   { href: "/timeline", label: "TIMELINE" },
   { href: "/archive", label: "ARCHIVE" },
 ] as const;
