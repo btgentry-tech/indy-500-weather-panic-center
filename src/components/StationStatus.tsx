@@ -95,7 +95,7 @@ export function StationStatus({ station: initialStation }: StationStatusProps) {
           </dd>
         </div>
         <div className="telemetry-row telemetry-row-secondary">
-          <dt>Last major revision</dt>
+          <dt>Latest operational update</dt>
           <dd>
             {station.lastMajorShiftAt
               ? formatStationTime(station.lastMajorShiftAt)

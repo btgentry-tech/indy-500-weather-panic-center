@@ -1,10 +1,12 @@
 import type {
   CompareResult,
+  ChangelogSeverity,
   DayKey,
   ForecastSnapshot,
   NormalizedForecast,
   PanicIndexLevel,
   RaceDayForecast,
+  StormRisk,
 } from "./types";
 import { PANIC_INDEX_MOODS } from "./panic-index";
 import { RACE_DAYS, getRaceDayByKey } from "./race-days";
@@ -18,6 +20,11 @@ const MINOR_FORECAST_SUMMARIES = [
   "Atmospheric wobble detected. Forecast updated.",
   "New NOAA guidance received.",
 ] as const;
+
+interface ScoredLine {
+  score: number;
+  text: string;
+}
 
 function hasStormWording(risk: string): boolean {
   return risk === "ACTIVE" || risk === "ELEVATED";
@@ -69,10 +76,198 @@ function minorEditorialSummary(panicIndex: PanicIndexLevel): string {
   ];
 }
 
+function rainChangeLine(
+  label: string,
+  prevRain: number,
+  nextRain: number,
+): ScoredLine | null {
+  const delta = nextRain - prevRain;
+  if (delta === 0) return null;
+
+  const abs = Math.abs(delta);
+  const score = abs * 2 + (abs >= RAIN_MAJOR_THRESHOLD ? 24 : 0);
+
+  if (delta > 0) {
+    if (abs >= 10) {
+      return {
+        score,
+        text: `${label} conditions worsened as rain odds climbed ${abs}%.`,
+      };
+    }
+    return {
+      score,
+      text: `${label} rain chances ticked upward.`,
+    };
+  }
+
+  if (abs >= 10) {
+    return {
+      score,
+      text: `${label} rain chance dropped ${abs}%.`,
+    };
+  }
+  return {
+    score,
+    text: `${label} improving — rain odds easing.`,
+  };
+}
+
+function stormRiskLine(
+  label: string,
+  prev: StormRisk,
+  next: StormRisk,
+): ScoredLine | null {
+  if (prev === next) return null;
+
+  const flipped =
+    hasStormWording(prev) !== hasStormWording(next);
+  let score = flipped ? 28 : 12;
+
+  if (next === "NONE") {
+    return { score, text: `${label} storm threat easing.` };
+  }
+  if (prev === "NONE" && next === "ELEVATED") {
+    return { score, text: `${label} storm risk building.` };
+  }
+  if (prev === "NONE" && next === "ACTIVE") {
+    return { score, text: `${label} thunderstorm risk upgraded.` };
+  }
+  if (prev === "ACTIVE" && next !== "ACTIVE") {
+    return {
+      score,
+      text: `${label} stabilizing. Thunderstorm wording downgraded.`,
+    };
+  }
+  if (next === "ACTIVE") {
+    return { score, text: `${label} conditions worsened — storm risk upgraded.` };
+  }
+  return { score, text: `${label} storm language adjusted.` };
+}
+
+function combineOperationalLines(lines: ScoredLine[]): string {
+  if (lines.length === 0) return "";
+
+  const ranked = [...lines].sort((a, b) => b.score - a.score);
+  const primary = ranked[0];
+  const secondary = ranked[1];
+
+  if (!secondary || secondary.score < 8) {
+    return primary.text;
+  }
+
+  if (secondary.score < primary.score * 0.45) {
+    return primary.text;
+  }
+
+  const second = secondary.text;
+  const needsPeriod =
+    primary.text.endsWith(".") || primary.text.endsWith("!");
+  const joiner = needsPeriod ? " " : ". ";
+  return `${primary.text}${joiner}${second}`;
+}
+
+function buildOperationalSummary(
+  previous: ForecastSnapshot,
+  currentDays: Record<DayKey, RaceDayForecast>,
+  currentHourly: NormalizedForecast["hourly"],
+  panicIndex: PanicIndexLevel,
+  previousPanicIndex: PanicIndexLevel | undefined,
+  severityRef: { current: ChangelogSeverity },
+): string {
+  const lines: ScoredLine[] = [];
+  let rainWorsening = 0;
+  let rainImproving = 0;
+
+  for (const config of RACE_DAYS) {
+    const key = config.key;
+    const prevDay = previous.days[key];
+    const nextDay = currentDays[key];
+    const delta = nextDay.rainPct - prevDay.rainPct;
+
+    if (delta > 0) rainWorsening += 1;
+    if (delta < 0) rainImproving += 1;
+
+    const rain = rainChangeLine(config.label, prevDay.rainPct, nextDay.rainPct);
+    if (rain) lines.push(rain);
+
+    const storm = stormRiskLine(
+      config.label,
+      prevDay.stormRisk,
+      nextDay.stormRisk,
+    );
+    if (storm) {
+      lines.push(storm);
+      if (storm.score >= 24) severityRef.current = "warning";
+    }
+  }
+
+  const shift = timingShiftHours(previous, {
+    noaaGeneratedAt: "",
+    days: currentDays,
+    hourly: currentHourly,
+  });
+
+  if (shift !== null && shift >= TIMING_SHIFT_HOURS) {
+    const prevStart = findStormWindowStart(previous.hourly);
+    const nextStart = findStormWindowStart(currentHourly);
+    const earlier =
+      prevStart !== null &&
+      nextStart !== null &&
+      nextStart.getTime() < prevStart.getTime();
+    lines.push({
+      score: 26,
+      text: earlier
+        ? "Storm window shifted earlier."
+        : "Storm window shifted later.",
+    });
+    severityRef.current = "warning";
+  }
+
+  const indexChanged =
+    previousPanicIndex !== undefined && previousPanicIndex !== panicIndex;
+
+  if (indexChanged) {
+    const rising = panicIndex > previousPanicIndex!;
+    lines.push({
+      score: 32,
+      text: rising
+        ? `Overall concern rising — panic index now ${panicIndex}/5.`
+        : `Overall concern easing — panic index now ${panicIndex}/5.`,
+    });
+    severityRef.current = panicIndex >= 4 ? "alert" : "warning";
+  }
+
+  if (lines.length === 0 && hourlyRevisionNote(previous, currentHourly)) {
+    return "Hourly slots reshuffled. Timing details still in flux.";
+  }
+
+  if (lines.length === 0) {
+    return minorEditorialSummary(panicIndex);
+  }
+
+  const topScore = lines.reduce((max, line) => Math.max(max, line.score), 0);
+  if (rainImproving >= 2 && rainWorsening === 0 && topScore < 30) {
+    const raceVolatile = currentDays.raceDay.rainPct >= 40;
+    if (raceVolatile) {
+      return "Weekend outlook steadier overall. Race Day remains volatile.";
+    }
+    return "Weekend outlook steadier overall.";
+  }
+
+  if (rainWorsening >= 2 && rainImproving === 0) {
+    const lead = combineOperationalLines(lines);
+    if (!lead.toLowerCase().includes("weekend")) {
+      return `Weekend rain risk climbing. ${lead}`;
+    }
+  }
+
+  return combineOperationalLines(lines);
+}
+
 /**
  * Compares consecutive NOAA polls. Any grid delta is a forecast refresh (snapshot,
  * changelog, push). `isMajorChange` is editorial only — stronger copy and the
- * “last major revision” timestamp, not whether the app updated.
+ * “latest operational update” timestamp, not whether the app updated.
  */
 export function compareForecasts(
   previous: ForecastSnapshot | null,
@@ -82,8 +277,7 @@ export function compareForecasts(
   previousPanicIndex?: PanicIndexLevel,
 ): CompareResult {
   const details: string[] = [];
-  let severity: CompareResult["severity"] = "info";
-  const parts: string[] = [];
+  const severityRef: { current: ChangelogSeverity } = { current: "info" };
 
   if (!previous) {
     return {
@@ -98,7 +292,6 @@ export function compareForecasts(
   }
 
   let rainMajorSwing = false;
-  let improving = false;
 
   for (const config of RACE_DAYS) {
     const key = config.key;
@@ -117,7 +310,6 @@ export function compareForecasts(
 
     if (Math.abs(delta) >= RAIN_MAJOR_THRESHOLD) {
       rainMajorSwing = true;
-      if (delta <= -RAIN_MAJOR_THRESHOLD) improving = true;
     }
 
     if (prevDay.trend !== nextDay.trend) {
@@ -136,15 +328,15 @@ export function compareForecasts(
       details.push(`${config.label} forecast wording revised.`);
     }
 
-    const prevStorm = hasStormWording(prevDay.stormRisk);
-    const nextStorm = hasStormWording(nextDay.stormRisk);
     if (prevDay.stormRisk !== nextDay.stormRisk) {
       details.push(
-        nextStorm
-          ? `${config.label} storm risk elevated (${nextDay.stormRisk}).`
-          : `${config.label} storm risk eased (${nextDay.stormRisk}).`,
+        `${config.label} storm risk ${prevDay.stormRisk} → ${nextDay.stormRisk}.`,
       );
-      if (prevStorm !== nextStorm) severity = "warning";
+      if (
+        hasStormWording(prevDay.stormRisk) !== hasStormWording(nextDay.stormRisk)
+      ) {
+        severityRef.current = "warning";
+      }
     }
   }
 
@@ -170,30 +362,15 @@ export function compareForecasts(
         ? "Storm timing moved earlier."
         : "Storm timing moved later.",
     );
-    severity = "warning";
-    parts.push("Storm timing shifted.");
+    severityRef.current = "warning";
   }
 
   const indexChanged =
     previousPanicIndex !== undefined && previousPanicIndex !== panicIndex;
 
   if (indexChanged) {
-    const rising = panicIndex > previousPanicIndex!;
-    if (rising) {
-      parts.push(`PANIC INDEX elevated to ${panicIndex}.`);
-    } else {
-      parts.push(`PANIC INDEX eased to ${panicIndex}. Conditions improving.`);
-    }
-    severity = panicIndex >= 4 ? "alert" : "warning";
     details.push(`PANIC INDEX ${previousPanicIndex} → ${panicIndex}.`);
-  }
-
-  if (improving && !indexChanged) {
-    parts.push("Forecast improving. Moisture retreating eastward.");
-    severity = "info";
-  } else if (rainMajorSwing && panicIndex >= 4) {
-    parts.push("Atmospheric instability increasing.");
-    severity = "warning";
+    severityRef.current = panicIndex >= 4 ? "alert" : "warning";
   }
 
   const stormRiskFlipped = RACE_DAYS.some((config) => {
@@ -210,14 +387,14 @@ export function compareForecasts(
     stormRiskFlipped ||
     (shift !== null && shift >= TIMING_SHIFT_HOURS);
 
-  let summary: string;
-  if (parts.length > 0) {
-    summary = parts.join(" ");
-  } else if (details.length > 0) {
-    summary = details.slice(0, 2).join(" ");
-  } else {
-    summary = minorEditorialSummary(panicIndex);
-  }
+  const summary = buildOperationalSummary(
+    previous,
+    currentDays,
+    currentHourly,
+    panicIndex,
+    previousPanicIndex,
+    severityRef,
+  );
 
   const notificationTitle = indexChanged
     ? `PANIC INDEX: ${panicIndex}/5`
@@ -232,7 +409,7 @@ export function compareForecasts(
   return {
     isMajorChange,
     details,
-    severity,
+    severity: severityRef.current,
     summary,
     panicIndexFrom: indexChanged ? previousPanicIndex : undefined,
     panicIndexTo: indexChanged ? panicIndex : undefined,

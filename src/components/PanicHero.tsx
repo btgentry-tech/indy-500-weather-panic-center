@@ -66,13 +66,13 @@ export function PanicHero({
       {hasMajorShift ? (
         <div className="hero-major-shift">
           <p className="hero-major-shift-header">
-            <span className="field-label">Last major revision</span>
+            <span className="field-label">Latest operational update</span>
             <time className="incident-time" dateTime={lastMajorShiftAt!}>
               {formatStationTime(lastMajorShiftAt!)}
             </time>
           </p>
           <p className="hero-major-shift-text">
-            {truncateChangeLine(lastMajorShiftSummary, 120)}
+            {truncateChangeLine(lastMajorShiftSummary, 160)}
           </p>
         </div>
       ) : null}
