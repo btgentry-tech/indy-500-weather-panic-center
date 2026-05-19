@@ -3,8 +3,9 @@
   "fetchedAt": "2026-05-18T15:00:00.000Z",
   "noaaGeneratedAt": "2026-05-18T18:45:29+00:00",
   "defcon": 3,
+  "panicIndex": 3,
   "panicMeter": 52,
-  "mood": "Monitoring situation",
+  "mood": "Monitoring storm timing.",
   "forecastStability": 78,
   "lastForecastChange": "Monitoring station online. Baseline forecast captured.",
   "days": {

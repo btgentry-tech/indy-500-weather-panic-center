@@ -10,11 +10,11 @@ import type {
 import { RACE_DAYS } from "./race-days";
 
 export const PANIC_INDEX_MOODS: Record<PanicIndexLevel, string> = {
-  5: "Ideal grilling weather",
-  4: "Minor atmospheric nonsense",
-  3: "Monitoring situation",
-  2: "Dangerous moisture developments",
-  1: "Race control pacing internally",
+  5: "Track drying possible.",
+  4: "Conditions mostly quiet.",
+  3: "Monitoring storm timing.",
+  2: "Conditions unstable.",
+  1: "Radar situation evolving.",
 };
 
 /** @deprecated Use PANIC_INDEX_MOODS */

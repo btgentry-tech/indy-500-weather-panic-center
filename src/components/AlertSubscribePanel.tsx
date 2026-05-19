@@ -2,11 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { getClientMessaging, getVapidKey } from "@/lib/firebase-client";
+import { ALERTS_ARMED_KEY } from "@/lib/alerts-storage";
 import { onMessage } from "firebase/messaging";
 
 type AlertState = "offline" | "requesting" | "armed" | "denied" | "failed";
-
-const STORAGE_KEY = "alerts-armed";
 
 function isIos(): boolean {
   if (typeof navigator === "undefined") return false;
@@ -31,7 +30,7 @@ export function AlertSubscribePanel() {
     if (
       typeof window !== "undefined" &&
       Notification.permission === "granted" &&
-      localStorage.getItem(STORAGE_KEY) === "1"
+      localStorage.getItem(ALERTS_ARMED_KEY) === "1"
     ) {
       setState("armed");
     }
@@ -48,25 +47,22 @@ export function AlertSubscribePanel() {
       .then((messaging) => {
         unsubscribe = onMessage(messaging, (payload) => {
           const body =
-            payload.notification?.body ??
-            "Atmospheric conditions revised.";
+            payload.notification?.body ?? "Forecast revised again.";
           setForegroundMsg(body);
         });
       })
-      .catch(() => {
-        /* Firebase not configured in dev */
-      });
+      .catch(() => {});
 
     return () => unsubscribe?.();
   }, []);
 
   async function enableAlerts() {
     setState("requesting");
-    setStatus("Requesting atmospheric alert clearance...");
+    setStatus("Enabling alerts...");
 
     try {
       if (!("Notification" in window)) {
-        throw new Error("This terminal does not support notifications.");
+        throw new Error("Notifications not supported.");
       }
 
       if (isIos() && !isStandalonePwa()) {
@@ -82,7 +78,7 @@ export function AlertSubscribePanel() {
       const permission = await Notification.requestPermission();
       if (permission !== "granted") {
         setState("denied");
-        throw new Error("Alert clearance denied.");
+        throw new Error("Notification permission denied.");
       }
 
       const registration = await navigator.serviceWorker.register("/sw.js");
@@ -112,42 +108,42 @@ export function AlertSubscribePanel() {
         throw new Error(body.error ?? "Subscription failed.");
       }
 
-      localStorage.setItem(STORAGE_KEY, "1");
+      localStorage.setItem(ALERTS_ARMED_KEY, "1");
+      window.dispatchEvent(new Event("storage"));
       setState("armed");
-      setStatus(
-        "Subscribed to indy-panic topic. Atmospheric alerts armed.",
-      );
+      setStatus("Subscribed to indy-panic topic.");
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : "Unknown subscription error.";
+        error instanceof Error ? error.message : "Subscription failed.";
       if (Notification.permission === "denied") {
         setState("denied");
       } else {
         setState("failed");
       }
-      setStatus(`FAILED: ${message}`);
+      setStatus(message);
     }
   }
 
+  if (state === "armed") {
+    return (
+      <p className="alert-collapsed status-line">
+        ALERTS ARMED — monitoring indy-panic topic
+      </p>
+    );
+  }
+
   const statusLabel =
-    state === "armed"
-      ? "ALERTS ARMED"
-      : state === "denied"
-        ? "ALERTS DENIED"
-        : state === "requesting"
-          ? "ARMING..."
-          : "ALERTS OFFLINE";
+    state === "denied"
+      ? "ALERTS DENIED"
+      : state === "requesting"
+        ? "ARMING..."
+        : "ALERTS OFFLINE";
 
   return (
-    <section
-      className={`panel alert-panel ${state === "armed" ? "alert-panel-armed" : ""}`}
-      aria-label="Atmospheric alert subscription"
-    >
-      <h2 className="alert-panel-header">
-        *** ATMOSPHERIC ALERT SUBSCRIPTION ***
-      </h2>
+    <section className="panel alert-panel" aria-label="Panic alerts">
+      <h2 className="alert-panel-header">ENABLE PANIC ALERTS</h2>
       <p
-        className={`alert-status ${state === "armed" ? "alert-status-armed" : "alert-status-offline"}`}
+        className={`alert-status ${state === "offline" ? "alert-status-offline" : ""}`}
       >
         {statusLabel}
       </p>
@@ -156,23 +152,22 @@ export function AlertSubscribePanel() {
           <strong>DESKTOP:</strong> Enable browser notifications when prompted.
         </p>
         <p>
-          <strong>IPHONE:</strong> Add to Home Screen first, then reopen
-          monitoring station to enable alerts.
+          <strong>IPHONE:</strong> Add to Home Screen first, then reopen this
+          app to enable alerts.
         </p>
       </div>
       {isIos() && !isStandalonePwa() && (
         <p className="severity-warning ios-warning">
-          STANDALONE PWA REQUIRED ON iOS — install to home screen before
-          subscribing.
+          iOS requires Home Screen install before alerts will work.
         </p>
       )}
       <button
         type="button"
         className="btn-terminal btn-alert"
         onClick={enableAlerts}
-        disabled={state === "requesting" || state === "armed"}
+        disabled={state === "requesting"}
       >
-        [ SUBSCRIBE TO ALERTS ]
+        [ ENABLE PANIC ALERTS ]
       </button>
       {status && <p className="status-line alert-feedback">{status}</p>}
       {foregroundMsg && (

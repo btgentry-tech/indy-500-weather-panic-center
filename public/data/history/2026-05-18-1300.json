@@ -3,8 +3,9 @@
   "fetchedAt": "2026-05-18T17:00:00.000Z",
   "noaaGeneratedAt": "2026-05-18T21:16:57+00:00",
   "defcon": 3,
+  "panicIndex": 3,
   "panicMeter": 48,
-  "mood": "Monitoring situation",
+  "mood": "Monitoring storm timing.",
   "forecastStability": 74,
   "lastForecastChange": "Forecast improving. Moisture retreating eastward.",
   "days": {

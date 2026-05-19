@@ -120,7 +120,7 @@ export function compareForecasts(
     if (direction === "elevated") {
       parts.push(`PANIC INDEX elevated to ${panicIndex}.`);
     } else {
-      parts.push(`PANIC INDEX stabilizing at ${panicIndex}.`);
+      parts.push(`PANIC INDEX stabilizing at ${panicIndex}. Forecast improving.`);
     }
     severity = panicIndex <= 2 ? "alert" : "warning";
     details.push(`PANIC INDEX ${previousPanicIndex} → ${panicIndex}.`);

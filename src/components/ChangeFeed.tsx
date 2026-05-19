@@ -21,7 +21,7 @@ export function ChangeFeed({ entries, limit = 20 }: ChangeFeedProps) {
 
   return (
     <section className="panel">
-      <h2 className="panel-title">Forecast Change Feed</h2>
+      <h2 className="panel-title">What Changed?</h2>
       {visible.length === 0 ? (
         <p className="status-line">No atmospheric revisions logged.</p>
       ) : (

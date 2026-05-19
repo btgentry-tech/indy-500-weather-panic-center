@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { formatClockNow, formatStationTime } from "@/lib/format";
 
 const FLAVOR_LINES = [
+  "Checking latest forecast…",
   "Monitoring station online.",
-  "Forecast stability deteriorating.",
-  "Unauthorized optimism discouraged.",
-  "Atmospheric confidence low.",
-  "Moisture developments under observation.",
+  "Forecast revised again.",
+  "Monitoring storm timing.",
+  "Forecast stability low.",
+  "Radar situation evolving.",
 ];
 
 interface StationStatusProps {
@@ -19,44 +20,48 @@ interface StationStatusProps {
 export function StationStatus({ lastSync, snapshotId }: StationStatusProps) {
   const [clock, setClock] = useState("");
   const [flavorIndex, setFlavorIndex] = useState(0);
+  const [checking, setChecking] = useState(false);
 
   useEffect(() => {
     setClock(formatClockNow());
     const clockTimer = setInterval(() => setClock(formatClockNow()), 1000);
     const flavorTimer = setInterval(
       () => setFlavorIndex((i) => (i + 1) % FLAVOR_LINES.length),
-      8000,
+      6000,
     );
+    const checkTimer = setInterval(() => {
+      setChecking(true);
+      setTimeout(() => setChecking(false), 800);
+    }, 45000);
     return () => {
       clearInterval(clockTimer);
       clearInterval(flavorTimer);
+      clearInterval(checkTimer);
     };
   }, []);
 
   return (
     <section className="panel station-status" aria-label="Station status">
       <div className="status-row">
+        <span className="radar-pulse" aria-hidden="true" />
         <span className="status-blink" aria-hidden="true">
           █
         </span>
-        <span>{FLAVOR_LINES[flavorIndex]}</span>
+        <span>
+          {checking ? "Checking latest forecast…" : FLAVOR_LINES[flavorIndex]}
+        </span>
       </div>
       <p className="status-line">
         LOCAL TIME (IMS): <strong>{clock}</strong>
       </p>
       <p className="status-line">
-        LAST NOAA SYNC:{" "}
+        LAST SYNC:{" "}
         {lastSync ? (
-          <>
-            <strong>{formatStationTime(lastSync)}</strong>
-            {snapshotId ? ` — snapshot ${snapshotId}` : ""}
-          </>
+          <strong title={lastSync}>{formatStationTime(lastSync)}</strong>
         ) : (
-          "NO DATA ON RECORD"
+          "NO DATA"
         )}
-      </p>
-      <p className="status-line">
-        NEXT SCHEDULED POLL: top of hour UTC (GitHub Actions)
+        {snapshotId ? ` — ${snapshotId}` : ""}
       </p>
     </section>
   );

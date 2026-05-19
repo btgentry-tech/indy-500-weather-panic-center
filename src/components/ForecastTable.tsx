@@ -1,5 +1,10 @@
 import { RACE_DAYS } from "@/lib/race-days";
+import {
+  stabilityDisplayLabel,
+  stormDisplayLabel,
+} from "@/lib/labels";
 import type { ForecastSnapshot } from "@/lib/types";
+import { TrendIndicator } from "./TrendIndicator";
 
 interface ForecastTableProps {
   snapshot: ForecastSnapshot;
@@ -8,32 +13,40 @@ interface ForecastTableProps {
 export function ForecastTable({ snapshot }: ForecastTableProps) {
   return (
     <section className="panel">
-      <h2 className="panel-title">Current Forecast Table</h2>
+      <h2 className="panel-title">Race Weekend Forecast</h2>
       <div className="table-scroll">
       <table className="data">
         <thead>
           <tr>
             <th>Event</th>
             <th>Rain %</th>
-            <th>Storm Risk</th>
-            <th>High Temp</th>
-            <th>Confidence</th>
+            <th>Storms</th>
+            <th>High</th>
+            <th>Forecast Stability</th>
             <th>Trend</th>
           </tr>
         </thead>
         <tbody>
           {RACE_DAYS.map((config) => {
             const day = snapshot.days[config.key];
-            const stormClass =
-              day.stormRisk === "ACTIVE" ? "severity-alert" : "";
+            const stormLabel = stormDisplayLabel(day.stormRisk, day.rainPct);
+            const stability = stabilityDisplayLabel(
+              day.confidence,
+              day.trend,
+              config.key === "raceDay"
+                ? snapshot.volatility.volatilityScore
+                : undefined,
+            );
             return (
               <tr key={config.key}>
                 <td>{day.label}</td>
                 <td>{day.rainPct}%</td>
-                <td className={stormClass}>{day.stormRisk}</td>
-                <td>{day.highTemp}°F</td>
-                <td>{day.confidence}</td>
-                <td>{day.trend}</td>
+                <td>{stormLabel}</td>
+                <td>{day.highTemp}°</td>
+                <td>{stability}</td>
+                <td>
+                  <TrendIndicator trend={day.trend} inline />
+                </td>
               </tr>
             );
           })}

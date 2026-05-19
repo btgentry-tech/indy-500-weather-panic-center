@@ -3,10 +3,11 @@
   "fetchedAt": "2026-05-18T19:00:00.000Z",
   "noaaGeneratedAt": "2026-05-18T23:16:57+00:00",
   "defcon": 2,
+  "panicIndex": 2,
   "panicMeter": 61,
-  "mood": "Dangerous moisture developments",
+  "mood": "Conditions unstable.",
   "forecastStability": 68,
-  "lastForecastChange": "DEFCON elevated to 2. Storm timing moved earlier.",
+  "lastForecastChange": "PANIC INDEX elevated to 2. Storm timing moved earlier.",
   "days": {
     "carbDay": {
       "label": "Carb Day",

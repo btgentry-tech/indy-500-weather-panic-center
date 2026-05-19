@@ -9,12 +9,15 @@ export default async function HistoryPage() {
 
   return (
     <>
-      <AsciiHeader />
+      <AsciiHeader
+        compact
+        pageHint="How rain % and panic index shifted over time"
+      />
       <section className="panel">
-        <h2 className="panel-title">Forecast History Charts</h2>
+        <h2 className="panel-title">Forecast History</h2>
         <p className="status-line">
-          {snapshots.length} snapshot(s) on record. Forecast confidence may
-          deteriorate without warning.
+          {snapshots.length} revision(s) on record. Hover charts for full
+          timestamps.
         </p>
       </section>
       {snapshots.length === 0 ? (

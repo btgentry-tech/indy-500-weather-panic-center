@@ -386,6 +386,224 @@ table.data tr:nth-child(even) {
   margin-bottom: 16px;
 }
 
+/* Compact header */
+.site-header-compact {
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--border);
+}
+
+.site-title {
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  margin: 0 0 4px;
+  color: var(--text);
+}
+
+.site-header {
+  margin-bottom: 12px;
+}
+
+/* Hero */
+.panic-hero {
+  margin-bottom: 16px;
+}
+
+.hero-live-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.live-badge {
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  border: 1px solid var(--text);
+  padding: 2px 6px;
+  animation: blink 2s step-end infinite;
+}
+
+.hero-rain {
+  font-size: 18px;
+  margin: 8px 0;
+}
+
+.hero-updated,
+.hero-change {
+  color: var(--text-dim);
+  font-size: 13px;
+  margin: 6px 0;
+}
+
+.hero-change {
+  color: var(--text);
+}
+
+/* Trends */
+.trend-indicator {
+  font-weight: 600;
+  text-transform: lowercase;
+}
+
+.trend-line {
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.trend-worse {
+  color: var(--alert);
+}
+
+.trend-better {
+  color: var(--text);
+}
+
+.trend-stable {
+  color: var(--warn);
+}
+
+/* Volatility strip */
+.volatility-strip .volatility-line {
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.vol-sep {
+  color: var(--text-dim);
+  margin: 0 6px;
+}
+
+/* Nav extras */
+.nav-btn-briefing {
+  min-height: 44px;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: inherit;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.nav-btn-briefing:hover {
+  color: var(--warn);
+  border-color: var(--border);
+}
+
+.nav-alerts-armed {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  color: var(--text);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  border: 1px solid var(--text);
+}
+
+.alert-collapsed {
+  border: 1px solid var(--text);
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  text-align: center;
+  color: var(--text);
+}
+
+.briefing-drawer {
+  margin-bottom: 12px;
+}
+
+/* Radar pulse */
+.radar-pulse {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--text);
+  border-radius: 50%;
+  animation: radar-pulse 2s ease-out infinite;
+}
+
+@keyframes radar-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(51, 255, 51, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(51, 255, 51, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(51, 255, 51, 0);
+  }
+}
+
+/* Incident reports */
+.incident-list {
+  margin-top: 12px;
+}
+
+.incident-report {
+  border: 1px solid var(--border);
+  margin-bottom: 8px;
+  background: #050505;
+}
+
+.incident-improving {
+  border-left: 4px solid var(--text);
+}
+
+.incident-worsening {
+  border-left: 4px solid var(--alert);
+}
+
+.incident-uncertain {
+  border-left: 4px solid var(--warn);
+}
+
+.incident-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 12px 10px;
+  min-height: 48px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.incident-summary::-webkit-details-marker {
+  display: none;
+}
+
+.incident-summary::before {
+  content: "▶ ";
+  color: var(--warn);
+  flex-shrink: 0;
+}
+
+.incident-report[open] .incident-summary::before {
+  content: "▼ ";
+}
+
+.incident-time {
+  color: var(--warn);
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.incident-headline {
+  flex: 1;
+  min-width: 200px;
+}
+
+.incident-body {
+  padding: 0 12px 12px 28px;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
 /* Mobile */
 @media (max-width: 600px) {
   html,
@@ -411,7 +629,23 @@ table.data tr:nth-child(even) {
   }
 
   .panic-index-level {
-    font-size: 32px;
+    font-size: 38px;
+  }
+
+  .hero-rain {
+    font-size: 20px;
+  }
+
+  .feed-summary {
+    font-size: 15px;
+  }
+
+  .panel {
+    margin-bottom: 20px;
+  }
+
+  .chart-panel .panel-title {
+    font-size: 13px;
   }
 
   table.data {

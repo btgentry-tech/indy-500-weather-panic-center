@@ -1,10 +1,10 @@
 # INDY 500 WEATHER PANIC CENTER
 
-Atmospheric Monitoring Division — unofficial race weekend forecast bunker.
+Unofficial race-week forecast watch for Indianapolis Motor Speedway.
 
-Tracks NOAA forecasts for Indianapolis Motor Speedway (`39.7950, -86.2347`), stores hourly snapshots as JSON, computes PANIC INDEX escalation levels, and sends Firebase topic push notifications when forecasts change materially.
+Tracks NOAA forecasts for the speedway (`39.7950, -86.2347`), stores hourly snapshots as JSON, computes a PANIC INDEX, and sends push notifications when forecasts change materially.
 
-**Not** affiliated with IMS, NWS, or Doug Boles (he is merely pacing internally).
+**Not** affiliated with IMS or NWS.
 
 ## Stack
 
@@ -21,9 +21,10 @@ Tracks NOAA forecasts for Indianapolis Motor Speedway (`39.7950, -86.2347`), sto
 
 | Route | Purpose |
 |-------|---------|
-| `/` | Panic index dashboard, forecast table, change feed |
+| `/` | Panic index, race day rain, change feed, weekend forecast |
 | `/history` | Rain %, panic index, volatility charts |
-| `/timeline` | Snapshot log (weather git history) |
+| `/timeline` | Incident log of each forecast snapshot |
+| `/archive` | Historic Indy weather lore (placeholder) |
 
 ## Commands
 
@@ -36,17 +37,17 @@ npm run poll         # fetch NOAA, save snapshot, maybe notify
 
 ## Environment variables
 
-See [`.env.example`](.env.example). Full click-by-click setup: **[SETUP.md](SETUP.md)**.
+See [`.env.example`](.env.example). Full setup: **[SETUP.md](SETUP.md)**.
 
 ## PANIC INDEX levels
 
-| Level | Mood |
-|-------|------|
-| 5 | Ideal grilling weather |
-| 4 | Minor atmospheric nonsense |
-| 3 | Monitoring situation |
-| 2 | Dangerous moisture developments |
-| 1 | Race control pacing internally |
+| Level | Typical read |
+|-------|----------------|
+| 5 | Quiet — track drying possible |
+| 4 | Mostly quiet |
+| 3 | Monitoring storm timing |
+| 2 | Conditions unstable |
+| 1 | Radar situation evolving |
 
 ## 2026 race weekend dates
 
@@ -57,8 +58,6 @@ See [`.env.example`](.env.example). Full click-by-click setup: **[SETUP.md](SETU
 ## Data format
 
 Snapshots: `public/data/history/YYYY-MM-DD-HHmm.json`
-
-See seed files for example structure.
 
 ## License
 

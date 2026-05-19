@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "INDY 500 WEATHER PANIC CENTER",
     short_name: "Panic Center",
     description:
-      "Atmospheric monitoring division for Indianapolis 500 race weekend.",
+      "Race week forecast watch for Indianapolis 500 weekend weather.",
     start_url: "/",
     display: "standalone",
     background_color: "#000000",

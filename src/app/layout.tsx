@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { IntroPanel } from "@/components/IntroPanel";
 import { StationStatus } from "@/components/StationStatus";
 import { TerminalNav } from "@/components/TerminalNav";
 import { loadLatestPointer } from "@/lib/data";
@@ -8,7 +7,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "INDY 500 WEATHER PANIC CENTER",
   description:
-    "Atmospheric monitoring for Indianapolis Motor Speedway race weekend.",
+    "Race week forecast watch for Indianapolis Motor Speedway.",
   applicationName: "Indy Weather Panic Center",
   appleWebApp: {
     capable: true,
@@ -35,7 +34,6 @@ export default async function RootLayout({
       <body>
         <div className="shell">
           <TerminalNav />
-          <IntroPanel />
           {children}
           <StationStatus
             lastSync={latest?.updatedAt ?? null}
@@ -44,6 +42,8 @@ export default async function RootLayout({
           <footer className="status-line site-footer">
             NOAA grid IND/55,70 — unofficial fan bunker — not affiliated with
             IMS/NWS
+            <br />
+            <a href="/archive">Atmospheric Incident Archive</a> — forthcoming
           </footer>
         </div>
       </body>
