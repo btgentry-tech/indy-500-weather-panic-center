@@ -1,15 +1,15 @@
 {
-  "lastCheckedAt": "2026-05-19T17:05:19.038Z",
+  "lastCheckedAt": "2026-05-19T17:26:16.670Z",
   "lastSnapshotAt": "2026-05-19T16:37:22.148Z",
   "lastSnapshotId": "2026-05-19-0430",
   "lastForecastChangeAt": "2026-05-19T00:01:46.030Z",
   "lastForecastChangeSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
   "localConditions": {
     "temperatureF": 82,
-    "condition": "PARTLY CLOUDY",
+    "condition": "MOSTLY CLEAR",
     "windDirection": "SW",
-    "windSpeedMph": 50,
-    "observedAt": "2026-05-19T16:40:00+00:00"
+    "windSpeedMph": 58,
+    "observedAt": "2026-05-19T17:10:00+00:00"
   },
   "lastMajorShiftAt": "2026-05-19T00:01:46.030Z",
   "lastMajorShiftSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
