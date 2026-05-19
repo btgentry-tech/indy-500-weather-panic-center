@@ -1088,7 +1088,6 @@ table.data .row-race-day .col-rain {
   font-size: var(--text-base);
   line-height: var(--line-dense);
   color: var(--text);
-  max-width: 40em;
 }
 
 .weather-archive-disclaimer {
@@ -1164,14 +1163,13 @@ table.data .row-race-day .col-rain {
   font-size: var(--text-md);
   line-height: var(--line-dense);
   color: var(--text);
-  max-width: 42em;
 }
 
 .weather-archive-meta {
   margin: 0 0 var(--space-4);
   display: grid;
   gap: var(--space-2);
-  max-width: 28em;
+  width: 100%;
 }
 
 .weather-archive-meta-row {
@@ -1204,7 +1202,6 @@ table.data .row-race-day .col-rain {
   font-size: var(--text-base);
   line-height: var(--line-base);
   color: var(--text-dim);
-  max-width: 42em;
 }
 
 .weather-archive-footer {
