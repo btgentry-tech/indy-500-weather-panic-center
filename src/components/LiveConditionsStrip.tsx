@@ -67,7 +67,7 @@ export function LiveConditionsStrip({
               <span className="conditions-sep" aria-hidden="true">
                 •
               </span>
-              <span className="conditions-value conditions-wind">{wind}</span>
+              <span className="conditions-value">{wind}</span>
             </>
           ) : null}
         </p>

@@ -772,12 +772,6 @@ table.data .row-race-day .col-rain {
   color: var(--text-active);
 }
 
-.conditions-wind {
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--text-bright);
-}
-
 .conditions-sep {
   color: var(--text-muted);
   font-weight: 400;
