@@ -1,6 +1,7 @@
 import { AsciiHeader } from "@/components/AsciiHeader";
 import { AlertSubscribePanel } from "@/components/AlertSubscribePanel";
 import { ForecastTable } from "@/components/ForecastTable";
+import { RainOverTimeChart } from "@/components/charts/RainOverTimeChart";
 import { PanicHero } from "@/components/PanicHero";
 import { compareForecasts } from "@/lib/compare";
 import { loadAllSnapshots, loadLatestSnapshot } from "@/lib/data";
@@ -44,6 +45,7 @@ export default async function DashboardPage() {
       <AlertSubscribePanel />
       <PanicHero snapshot={snapshot} revisionSummary={revisionSummary} />
       <ForecastTable snapshot={snapshot} previous={previous} />
+      {history.length > 0 ? <RainOverTimeChart snapshots={history} /> : null}
     </>
   );
 }

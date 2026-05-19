@@ -15,6 +15,7 @@ import { Line } from "react-chartjs-2";
 import { CHART_AMBER_FILL, CHART_COLORS } from "@/lib/chart-colors";
 import type { ForecastSnapshot } from "@/lib/types";
 import { formatChartLabel, formatStationTime } from "@/lib/format";
+import { baseChartOptions } from "./chart-options";
 
 ChartJS.register(
   CategoryScale,
@@ -27,57 +28,11 @@ ChartJS.register(
   Filler,
 );
 
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  interaction: {
-    mode: "index" as const,
-    intersect: false,
-  },
-  plugins: {
-    legend: {
-      labels: {
-        color: CHART_COLORS.text,
-        font: { family: "Courier New", size: 11 },
-      },
-    },
-    title: {
-      color: CHART_COLORS.label,
-      font: { family: "Courier New", size: 12 },
-    },
-    tooltip: {
-      titleColor: CHART_COLORS.label,
-      bodyColor: CHART_COLORS.text,
-      backgroundColor: "#0a0a0a",
-      borderColor: CHART_COLORS.grid,
-      borderWidth: 1,
-      titleFont: { family: "Courier New" },
-      bodyFont: { family: "Courier New" },
-    },
-  },
-  scales: {
-    x: {
-      ticks: {
-        color: CHART_COLORS.textDim,
-        font: { family: "Courier New", size: 10 },
-      },
-      grid: { color: CHART_COLORS.gridDim },
-    },
-    y: {
-      ticks: {
-        color: CHART_COLORS.textDim,
-        font: { family: "Courier New", size: 10 },
-      },
-      grid: { color: CHART_COLORS.gridDim },
-    },
-  },
-};
-
 function labelsFromSnapshots(snapshots: ForecastSnapshot[]): string[] {
   return snapshots.map((s) => formatChartLabel(s.fetchedAt));
 }
 
-function tooltipTitle(snapshots: ForecastSnapshot[]) {
+function tooltipTitle(snapshots: ForecastSnapshot[]): string[] {
   return snapshots.map((s) => formatStationTime(s.fetchedAt));
 }
 
@@ -88,33 +43,6 @@ interface HistoryChartsProps {
 export function HistoryCharts({ snapshots }: HistoryChartsProps) {
   const labels = labelsFromSnapshots(snapshots);
   const tooltips = tooltipTitle(snapshots);
-
-  const rainData = {
-    labels,
-    datasets: [
-      {
-        label: "Carb Day Rain %",
-        data: snapshots.map((s) => s.days.carbDay.rainPct),
-        borderColor: CHART_COLORS.green,
-        backgroundColor: "transparent",
-        tension: 0.2,
-      },
-      {
-        label: "Legends Day Rain %",
-        data: snapshots.map((s) => s.days.legendsDay.rainPct),
-        borderColor: CHART_COLORS.amber,
-        backgroundColor: "transparent",
-        tension: 0.2,
-      },
-      {
-        label: "Race Day Rain %",
-        data: snapshots.map((s) => s.days.raceDay.rainPct),
-        borderColor: CHART_COLORS.red,
-        backgroundColor: "transparent",
-        tension: 0.2,
-      },
-    ],
-  };
 
   const panicIndexData = {
     labels,
@@ -158,47 +86,23 @@ export function HistoryCharts({ snapshots }: HistoryChartsProps) {
   return (
     <>
       <section className="panel chart-panel">
-        <h2 className="panel-title">Rain % Over Time</h2>
-        <div style={{ height: 220 }}>
-          <Line
-            data={rainData}
-            options={{
-              ...chartOptions,
-              plugins: {
-                ...chartOptions.plugins,
-                tooltip: {
-                  ...chartOptions.plugins.tooltip,
-                  callbacks: tooltipCallbacks,
-                },
-                title: {
-                  display: true,
-                  text: "Race Weekend Precipitation Probability",
-                  color: CHART_COLORS.label,
-                },
-              },
-            }}
-          />
-        </div>
-      </section>
-
-      <section className="panel chart-panel">
         <h2 className="panel-title">PANIC INDEX Over Time</h2>
-        <div style={{ height: 220 }}>
+        <div className="chart-canvas" style={{ height: 220 }}>
           <Line
             data={panicIndexData}
             options={{
-              ...chartOptions,
+              ...baseChartOptions,
               plugins: {
-                ...chartOptions.plugins,
+                ...baseChartOptions.plugins,
                 tooltip: {
-                  ...chartOptions.plugins.tooltip,
+                  ...baseChartOptions.plugins.tooltip,
                   callbacks: tooltipCallbacks,
                 },
               },
               scales: {
-                ...chartOptions.scales,
+                ...baseChartOptions.scales,
                 y: {
-                  ...chartOptions.scales.y,
+                  ...baseChartOptions.scales.y,
                   min: 1,
                   max: 5,
                 },
@@ -208,11 +112,10 @@ export function HistoryCharts({ snapshots }: HistoryChartsProps) {
         </div>
       </section>
 
-
       <section className="panel chart-panel">
         <h2 className="panel-title">Race Day Hourly Precipitation</h2>
-        <div style={{ height: 220 }}>
-          <Line data={hourlyData} options={chartOptions} />
+        <div className="chart-canvas" style={{ height: 220 }}>
+          <Line data={hourlyData} options={baseChartOptions} />
         </div>
       </section>
     </>
