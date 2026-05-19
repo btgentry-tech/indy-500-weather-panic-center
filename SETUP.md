@@ -160,10 +160,10 @@ Vercel only hosts the site. **Polling runs on GitHub Actions** (free every 15 mi
 2. Send a **manual test push** (no forecast change required):
 
 ```bash
-npm run notify:test
+npm run notify:test:local   # loads .env.local
 ```
 
-Or in GitHub: **Actions** → **Test Push Notification** → **Run workflow**.
+Or in GitHub: **Actions** → **Test Push Notification** → **Run workflow** (uses repo secrets; no `.env.local` needed).
 
 3. Put the app in the background (or close it) and wait for the OS notification. If the app is open in the foreground, you may only see the in-app `INCOMING:` line instead.
 

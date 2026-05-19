@@ -11,7 +11,8 @@
     "lint": "eslint",
     "poll": "node --import tsx scripts/poll-weather.ts --force-window",
     "poll:dry": "node --import tsx scripts/poll-weather.ts --dry-run --force-window",
-    "notify:test": "node --env-file=.env.local --import tsx scripts/send-test-notification.ts"
+    "notify:test": "node --import tsx scripts/send-test-notification.ts",
+    "notify:test:local": "node --env-file=.env.local --import tsx scripts/send-test-notification.ts"
   },
   "dependencies": {
     "chart.js": "^4.5.1",
