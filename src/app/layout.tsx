@@ -48,7 +48,7 @@ export default async function RootLayout({
             NOAA grid IND/55,70 — unofficial fan bunker — not affiliated with
             IMS/NWS
             <br />
-            <a href="/archive">Atmospheric Incident Archive</a>
+            <a href="/archive">Notable Weather Events</a>
           </footer>
         </div>
       </body>

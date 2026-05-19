@@ -1,5 +1,6 @@
 import { AsciiHeader } from "@/components/AsciiHeader";
-import { ARCHIVE_INCIDENTS } from "@/lib/archive-incidents";
+import { WeatherArchiveEntry } from "@/components/WeatherArchiveEntry";
+import { NOTABLE_WEATHER_EVENTS } from "@/lib/notable-weather-events";
 import Link from "next/link";
 
 export const revalidate = 900;
@@ -7,23 +8,25 @@ export const revalidate = 900;
 export default function ArchivePage() {
   return (
     <>
-      <AsciiHeader compact pageHint="Historic Indy 500 weather incidents" />
-      <section className="panel">
-        <h2 className="panel-title">Atmospheric Incident Archive</h2>
-        <p className="status-line">
-          Documented race-week weather disruptions at Indianapolis Motor
-          Speedway. Unofficial reference — verify against primary sources.
-        </p>
-        <ul className="archive-list">
-          {ARCHIVE_INCIDENTS.map((incident) => (
-            <li key={incident.year} className="archive-item">
-              <span className="archive-year">{incident.year}</span>
-              <strong className="archive-title">{incident.title}</strong>
-              <p className="archive-note">{incident.note}</p>
-            </li>
+      <AsciiHeader compact pageHint="Historical Indianapolis 500 weather log" />
+      <section className="panel weather-archive-panel">
+        <header className="weather-archive-intro">
+          <h2 className="weather-archive-title">NOTABLE WEATHER EVENTS</h2>
+          <p className="weather-archive-subtitle">
+            Major weather disruptions, delays, and atmospheric incidents in
+            Indianapolis 500 history.
+          </p>
+          <p className="weather-archive-disclaimer">
+            Unofficial fan reference — verify against official IMS historical
+            records.
+          </p>
+        </header>
+        <div className="weather-archive-log">
+          {NOTABLE_WEATHER_EVENTS.map((event) => (
+            <WeatherArchiveEntry key={event.year} event={event} />
           ))}
-        </ul>
-        <p className="status-line">
+        </div>
+        <p className="status-line weather-archive-footer">
           <Link href="/">Return to dashboard</Link>
         </p>
       </section>
