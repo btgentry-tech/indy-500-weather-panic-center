@@ -119,6 +119,8 @@ Production polling runs on **Vercel Cron**, not GitHub schedule. You can still r
 
 ```bash
 curl -s "https://YOUR-APP.vercel.app/api/internal/poll-weather?secret=YOUR_CRON_SECRET" | jq
+# Or hit the primary handler directly:
+# curl -s "https://YOUR-APP.vercel.app/api/poll-weather?secret=YOUR_CRON_SECRET" | jq
 ```
 
 Expect JSON with `checkedAt`, `snapshotSaved`, `notificationSent`, `panicIndex`, etc.

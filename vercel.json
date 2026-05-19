@@ -1,4 +1,10 @@
 {
+  "rewrites": [
+    {
+      "source": "/api/internal/poll-weather",
+      "destination": "/api/poll-weather"
+    }
+  ],
   "crons": [
     {
       "path": "/api/internal/poll-weather",
