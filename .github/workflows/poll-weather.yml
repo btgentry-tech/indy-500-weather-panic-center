@@ -2,9 +2,8 @@ name: Poll Weather
 
 on:
   schedule:
-    # Every 15 minutes (UTC). GitHub may delay scheduled runs on inactive repos.
     - cron: "*/15 * * * *"
-  workflow_dispatch:
+  workflow_dispatch: # manual "Run workflow" from Actions tab
 
 permissions:
   contents: write
