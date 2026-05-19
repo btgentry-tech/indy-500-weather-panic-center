@@ -1,73 +1,73 @@
 import { CHART_COLORS } from "./chart-colors";
 import { RACE_DAYS } from "./race-days";
-import type { ForecastSnapshot, HourlyPoint } from "./types";
+import type { DayKey, ForecastSnapshot, HourlyPoint } from "./types";
 
-const DAY_SHORT: Record<string, string> = {
-  carbDay: "Carb",
-  legendsDay: "Leg",
-  raceDay: "Race",
-};
-
-function windowHourly(
+function rainAtHour(
   hourly: HourlyPoint[],
   date: string,
-  startHour: number,
-  endHour: number,
-): HourlyPoint[] {
-  return hourly
-    .filter((h) => {
-      if (!h.time.includes(date)) return false;
-      const hour = Number.parseInt(h.time.slice(11, 13), 10);
-      return hour >= startHour && hour <= endHour;
-    })
-    .sort((a, b) => a.time.localeCompare(b.time));
+  hour: number,
+): number | null {
+  const match = hourly.find((h) => {
+    if (!h.time.includes(date)) return false;
+    const hHour = Number.parseInt(h.time.slice(11, 13), 10);
+    return hHour === hour;
+  });
+  return match?.rainPct ?? null;
 }
 
-function axisLabel(time: string, dayShort: string): string {
-  return `${dayShort} ${time.slice(11, 16)}`;
+/** Shared clock-hour axis spanning all event windows (e.g. 06:00–18:00). */
+function sharedWindowHours(): number[] {
+  const start = Math.min(...RACE_DAYS.map((d) => d.windowStartHour));
+  const end = Math.max(...RACE_DAYS.map((d) => d.windowEndHour));
+  const hours: number[] = [];
+  for (let h = start; h <= end; h += 1) {
+    hours.push(h);
+  }
+  return hours;
 }
 
-export function hasEventDayHourlyData(snapshot: ForecastSnapshot): boolean {
-  return RACE_DAYS.some((config) => {
-    const points = windowHourly(
-      snapshot.hourly,
-      config.date,
-      config.windowStartHour,
-      config.windowEndHour,
-    );
-    return points.length > 0;
+function formatHourLabel(hour: number): string {
+  return `${hour.toString().padStart(2, "0")}:00`;
+}
+
+function seriesForDay(
+  hourly: HourlyPoint[],
+  key: DayKey,
+  hours: number[],
+): (number | null)[] {
+  const config = RACE_DAYS.find((d) => d.key === key);
+  if (!config) return hours.map(() => null);
+
+  return hours.map((hour) => {
+    if (hour < config.windowStartHour || hour > config.windowEndHour) {
+      return null;
+    }
+    return rainAtHour(hourly, config.date, hour);
   });
 }
 
+export function hasEventDayHourlyData(snapshot: ForecastSnapshot): boolean {
+  const hours = sharedWindowHours();
+  return RACE_DAYS.some((config) =>
+    hours.some(
+      (hour) =>
+        hour >= config.windowStartHour &&
+        hour <= config.windowEndHour &&
+        rainAtHour(snapshot.hourly, config.date, hour) !== null,
+    ),
+  );
+}
+
 export function buildEventDayPrecipitationChartData(snapshot: ForecastSnapshot) {
-  const labels: string[] = [];
-  const carb: (number | null)[] = [];
-  const legends: (number | null)[] = [];
-  const race: (number | null)[] = [];
-
-  for (const config of RACE_DAYS) {
-    const points = windowHourly(
-      snapshot.hourly,
-      config.date,
-      config.windowStartHour,
-      config.windowEndHour,
-    );
-    const short = DAY_SHORT[config.key] ?? config.label;
-
-    for (const point of points) {
-      labels.push(axisLabel(point.time, short));
-      carb.push(config.key === "carbDay" ? point.rainPct : null);
-      legends.push(config.key === "legendsDay" ? point.rainPct : null);
-      race.push(config.key === "raceDay" ? point.rainPct : null);
-    }
-  }
+  const hours = sharedWindowHours();
+  const labels = hours.map(formatHourLabel);
 
   return {
     labels,
     datasets: [
       {
         label: "Carb Day Rain %",
-        data: carb,
+        data: seriesForDay(snapshot.hourly, "carbDay", hours),
         borderColor: CHART_COLORS.green,
         backgroundColor: "transparent",
         tension: 0.2,
@@ -75,7 +75,7 @@ export function buildEventDayPrecipitationChartData(snapshot: ForecastSnapshot) 
       },
       {
         label: "Legends Day Rain %",
-        data: legends,
+        data: seriesForDay(snapshot.hourly, "legendsDay", hours),
         borderColor: CHART_COLORS.amber,
         backgroundColor: "transparent",
         tension: 0.2,
@@ -83,7 +83,7 @@ export function buildEventDayPrecipitationChartData(snapshot: ForecastSnapshot) 
       },
       {
         label: "Race Day Rain %",
-        data: race,
+        data: seriesForDay(snapshot.hourly, "raceDay", hours),
         borderColor: CHART_COLORS.red,
         backgroundColor: "transparent",
         tension: 0.2,
