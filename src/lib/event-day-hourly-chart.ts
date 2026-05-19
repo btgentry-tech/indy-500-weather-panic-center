@@ -1,4 +1,5 @@
 import { CHART_COLORS } from "./chart-colors";
+import { formatEventWindowHour } from "./format";
 import { RACE_DAYS } from "./race-days";
 import type { DayKey, ForecastSnapshot, HourlyPoint } from "./types";
 
@@ -24,10 +25,6 @@ function sharedWindowHours(): number[] {
     hours.push(h);
   }
   return hours;
-}
-
-function formatHourLabel(hour: number): string {
-  return `${hour.toString().padStart(2, "0")}:00`;
 }
 
 function seriesForDay(
@@ -60,7 +57,7 @@ export function hasEventDayHourlyData(snapshot: ForecastSnapshot): boolean {
 
 export function buildEventDayPrecipitationChartData(snapshot: ForecastSnapshot) {
   const hours = sharedWindowHours();
-  const labels = hours.map(formatHourLabel);
+  const labels = hours.map(formatEventWindowHour);
 
   return {
     labels,

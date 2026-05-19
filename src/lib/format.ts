@@ -78,3 +78,15 @@ export function formatClockNow(): string {
     hour12: true,
   }).format(new Date());
 }
+
+/** Clock hour on event-day chart axis (e.g. 6 → "6:00 AM"). */
+export function formatEventWindowHour(hour: number): string {
+  const padded = hour.toString().padStart(2, "0");
+  const date = new Date(`2026-05-22T${padded}:00:00-04:00`);
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: TZ,
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  }).format(date);
+}
