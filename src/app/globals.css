@@ -291,12 +291,7 @@ a:hover {
 
 /* ── Panic hero (overall story) ── */
 .panic-hero {
-  margin-bottom: var(--space-4);
-  padding: var(--space-4) var(--space-4) var(--space-3);
-}
-
-.dashboard-overall {
-  border-color: var(--border-live);
+  margin-bottom: var(--space-3);
 }
 
 .dashboard-breakdown {
@@ -401,9 +396,8 @@ a:hover {
 
 .hero-revision {
   margin-top: var(--space-3);
-  padding: var(--space-3);
-  border: 1px solid var(--border-dim);
-  background: transparent;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-dim);
 }
 
 .hero-revision-header {

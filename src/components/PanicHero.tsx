@@ -21,7 +21,7 @@ export function PanicHero({ snapshot, revisionSummary }: PanicHeroProps) {
 
   return (
     <section
-      className="panel panic-hero panel-live dashboard-overall"
+      className="panel panic-hero"
       aria-label="Overall race-week weather status"
     >
       <div className="hero-live-row">
