@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
+import { normalizeLegacyPanicIndex } from "./panic-index";
 import type {
   ChangelogEntry,
   ChangelogFile,
@@ -7,6 +8,7 @@ import type {
   ForecastSnapshot,
   LatestPointer,
   RawForecastSnapshot,
+  StationMeta,
 } from "./types";
 
 export const DATA_DIR = path.join(process.cwd(), "public", "data");
@@ -17,10 +19,15 @@ export function historyPath(id: string): string {
 }
 
 export function normalizeSnapshot(raw: RawForecastSnapshot): ForecastSnapshot {
-  const panicIndex = raw.panicIndex ?? raw.defcon ?? 3;
+  const rawLevel = raw.panicIndex ?? raw.defcon ?? 3;
+  const panicIndex =
+    raw.panicScale === 2
+      ? (rawLevel as ForecastSnapshot["panicIndex"])
+      : normalizeLegacyPanicIndex(rawLevel);
   return {
     ...raw,
     panicIndex,
+    panicScale: 2,
     defcon: panicIndex,
   };
 }
@@ -39,6 +46,7 @@ export function snapshotForDisk(
   return {
     ...snapshot,
     panicIndex: snapshot.panicIndex,
+    panicScale: 2,
     defcon: snapshot.panicIndex,
   };
 }
@@ -87,6 +95,42 @@ export async function loadAllSnapshots(): Promise<ForecastSnapshot[]> {
     if (snap) snapshots.push(snap);
   }
   return snapshots;
+}
+
+const EMPTY_STATION: StationMeta = {
+  lastCheckedAt: null,
+  lastSnapshotAt: null,
+  lastSnapshotId: null,
+  lastForecastChangeAt: null,
+  lastForecastChangeSummary: null,
+};
+
+export async function loadStationMeta(): Promise<StationMeta> {
+  const meta =
+    (await readJson<StationMeta>(path.join(DATA_DIR, "station.json"))) ??
+    { ...EMPTY_STATION };
+
+  if (!meta.lastSnapshotId) {
+    const latest = await loadLatestPointer();
+    if (latest) {
+      meta.lastSnapshotId = latest.snapshotId;
+      meta.lastSnapshotAt = latest.updatedAt;
+    }
+  }
+
+  if (!meta.lastForecastChangeSummary) {
+    const snap = await loadLatestSnapshot();
+    if (snap?.lastForecastChange) {
+      meta.lastForecastChangeSummary = snap.lastForecastChange;
+      meta.lastForecastChangeAt = meta.lastForecastChangeAt ?? snap.fetchedAt;
+    }
+  }
+
+  return meta;
+}
+
+export async function updateStationMeta(meta: StationMeta): Promise<void> {
+  await writeJson(path.join(DATA_DIR, "station.json"), meta);
 }
 
 export async function loadChangelog(): Promise<ChangelogFile> {

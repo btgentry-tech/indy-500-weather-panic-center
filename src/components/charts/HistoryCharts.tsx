@@ -105,7 +105,7 @@ export function HistoryCharts({ snapshots }: HistoryChartsProps) {
     labels,
     datasets: [
       {
-        label: "PANIC INDEX (1 = highest concern)",
+        label: "PANIC INDEX (1 = low, 5 = high concern)",
         data: snapshots.map((s) => s.panicIndex),
         borderColor: "#ff3333",
         stepped: true,

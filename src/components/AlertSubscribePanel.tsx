@@ -150,11 +150,7 @@ export function AlertSubscribePanel() {
   }
 
   if (state === "armed") {
-    return (
-      <p className="alert-collapsed status-line">
-        ALERTS ARMED — monitoring indy-panic topic
-      </p>
-    );
+    return null;
   }
 
   if (state === "unsupported") {

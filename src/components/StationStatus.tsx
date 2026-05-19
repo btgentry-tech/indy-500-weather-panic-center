@@ -3,26 +3,23 @@
 import { useEffect, useState } from "react";
 import { formatClockNow, formatStationTime } from "@/lib/format";
 import { formatNextPollUtc, pollCadenceLabel } from "@/lib/polling";
+import type { StationMeta } from "@/lib/types";
 
 const FLAVOR_LINES = [
-  "Checking latest forecast…",
   "Monitoring station online.",
-  "Forecast revised again.",
-  "Monitoring storm timing.",
-  "Forecast stability low.",
-  "Radar situation evolving.",
+  "Forecast watch active.",
+  "NOAA grid polled on schedule.",
+  "Awaiting next check window.",
 ];
 
 interface StationStatusProps {
-  lastSync: string | null;
-  snapshotId: string | null;
+  station: StationMeta;
 }
 
-export function StationStatus({ lastSync, snapshotId }: StationStatusProps) {
+export function StationStatus({ station }: StationStatusProps) {
   const [clock, setClock] = useState("");
   const [nextPoll, setNextPoll] = useState("");
   const [flavorIndex, setFlavorIndex] = useState(0);
-  const [checking, setChecking] = useState(false);
 
   useEffect(() => {
     setClock(formatClockNow());
@@ -31,17 +28,12 @@ export function StationStatus({ lastSync, snapshotId }: StationStatusProps) {
     const pollTimer = setInterval(() => setNextPoll(formatNextPollUtc()), 30_000);
     const flavorTimer = setInterval(
       () => setFlavorIndex((i) => (i + 1) % FLAVOR_LINES.length),
-      6000,
+      8000,
     );
-    const checkTimer = setInterval(() => {
-      setChecking(true);
-      setTimeout(() => setChecking(false), 800);
-    }, 45000);
     return () => {
       clearInterval(clockTimer);
       clearInterval(pollTimer);
       clearInterval(flavorTimer);
-      clearInterval(checkTimer);
     };
   }, []);
 
@@ -52,27 +44,52 @@ export function StationStatus({ lastSync, snapshotId }: StationStatusProps) {
         <span className="status-blink" aria-hidden="true">
           █
         </span>
-        <span>
-          {checking ? "Checking latest forecast…" : FLAVOR_LINES[flavorIndex]}
-        </span>
+        <span>{FLAVOR_LINES[flavorIndex]}</span>
       </div>
       <p className="status-line">
         LOCAL TIME (IMS): <strong>{clock}</strong>
       </p>
       <p className="status-line">
-        LAST SYNC:{" "}
-        {lastSync ? (
-          <strong title={lastSync}>{formatStationTime(lastSync)}</strong>
+        LAST NOAA CHECK:{" "}
+        {station.lastCheckedAt ? (
+          <strong title={station.lastCheckedAt}>
+            {formatStationTime(station.lastCheckedAt)}
+          </strong>
         ) : (
           "NO DATA"
         )}
-        {snapshotId ? ` — ${snapshotId}` : ""}
+      </p>
+      <p className="status-line">
+        LAST FORECAST CHANGE:{" "}
+        {station.lastForecastChangeAt ? (
+          <strong title={station.lastForecastChangeAt}>
+            {formatStationTime(station.lastForecastChangeAt)}
+          </strong>
+        ) : (
+          "NONE ON RECORD"
+        )}
+        {station.lastForecastChangeSummary ? (
+          <span className="station-change-note">
+            {" "}
+            — {station.lastForecastChangeSummary}
+          </span>
+        ) : null}
+      </p>
+      <p className="status-line">
+        LAST SAVED SNAPSHOT:{" "}
+        {station.lastSnapshotAt ? (
+          <strong title={station.lastSnapshotAt}>
+            {formatStationTime(station.lastSnapshotAt)}
+          </strong>
+        ) : (
+          "NONE"
+        )}
+        {station.lastSnapshotId ? ` — ${station.lastSnapshotId}` : ""}
       </p>
       <p className="status-line">
         POLL CADENCE: <strong>{pollCadenceLabel()}</strong>
-      </p>
-      <p className="status-line">
-        NEXT SCHEDULED POLL: <strong>{nextPoll || "—"}</strong>
+        <span className="vol-sep">|</span>
+        NEXT: <strong>{nextPoll || "—"}</strong>
       </p>
     </section>
   );

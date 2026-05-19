@@ -56,6 +56,7 @@ export function buildSnapshot(
     fetchedAt: fetchedAt.toISOString(),
     noaaGeneratedAt: forecast.noaaGeneratedAt,
     panicIndex,
+    panicScale: 2,
     defcon: panicIndex,
     panicMeter,
     mood: PANIC_INDEX_MOODS[panicIndex],

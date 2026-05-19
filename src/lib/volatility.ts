@@ -1,6 +1,7 @@
 import type {
   DayKey,
   ForecastSnapshot,
+  RecordVolatilityStats,
   VolatilityStats,
 } from "./types";
 import { RACE_DAYS } from "./race-days";
@@ -77,6 +78,39 @@ export function computeForecastStability(
   if (history.length === 0) return 100;
   return computeVolatility(history, history[history.length - 1])
     .stabilityScore;
+}
+
+export function computeRecordVolatility(
+  history: ForecastSnapshot[],
+  totalRevisions: number,
+): RecordVolatilityStats {
+  const latest = history[history.length - 1];
+  const latestVol = latest
+    ? computeVolatility(history, latest)
+    : {
+        changes24h: 0,
+        largestRainSwing: 0,
+        stabilityScore: 100,
+        volatilityScore: 0,
+      };
+
+  let largestRainSwingRecord = 0;
+  for (let i = 1; i < history.length; i++) {
+    for (const key of DAY_KEYS) {
+      const swing = Math.abs(
+        history[i].days[key].rainPct - history[i - 1].days[key].rainPct,
+      );
+      largestRainSwingRecord = Math.max(largestRainSwingRecord, swing);
+    }
+  }
+
+  return {
+    totalRevisions,
+    changes24h: latestVol.changes24h,
+    largestRainSwingRecord,
+    latestRainSwing: latestVol.largestRainSwing,
+    stabilityScore: latest?.forecastStability ?? 100,
+  };
 }
 
 export function summarizeSnapshotDelta(

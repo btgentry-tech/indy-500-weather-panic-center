@@ -75,7 +75,7 @@ export function TerminalNav() {
           );
         })}
         {alertsArmed && (
-          <span className="nav-alerts-armed">ALERTS ARMED</span>
+          <span className="nav-alerts-armed">ALERTS ACTIVE</span>
         )}
       </div>
     </nav>

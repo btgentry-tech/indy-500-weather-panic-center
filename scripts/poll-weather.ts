@@ -4,9 +4,11 @@ import {
   loadAllSnapshots,
   loadChangelog,
   loadLatestSnapshot,
+  loadStationMeta,
   saveSnapshot,
   updateIndex,
   updateLatest,
+  updateStationMeta,
 } from "../src/lib/data";
 import { sendTopicNotification } from "../src/lib/firebase-admin";
 import { fetchNoaaForecast } from "../src/lib/noaa";
@@ -15,7 +17,7 @@ import {
   buildSnapshot,
   shouldPersistSnapshot,
 } from "../src/lib/snapshot-builder";
-import type { ChangelogEntry } from "../src/lib/types";
+import type { ChangelogEntry, StationMeta } from "../src/lib/types";
 
 const dryRun = process.argv.includes("--dry-run");
 /** Bypass April–May window check (GitHub Actions) */
@@ -26,6 +28,13 @@ async function main() {
     console.log("Outside polling window. Exiting cleanly.");
     return;
   }
+
+  const checkedAt = new Date().toISOString();
+  const priorStation = await loadStationMeta();
+  const station: StationMeta = {
+    ...priorStation,
+    lastCheckedAt: checkedAt,
+  };
 
   const forecast = await fetchNoaaForecast();
   const history = await loadAllSnapshots();
@@ -44,7 +53,11 @@ async function main() {
     !previous || shouldPersistSnapshot(previous, snapshot);
 
   if (!shouldSave) {
+    if (!dryRun) {
+      await updateStationMeta(station);
+    }
     console.log("No material forecast change. Snapshot not saved.");
+    console.log(`NOAA checked at ${checkedAt}`);
     return;
   }
 
@@ -59,7 +72,13 @@ async function main() {
   await updateIndex(snapshot.id);
   await updateLatest(snapshot.id);
 
+  station.lastSnapshotAt = snapshot.fetchedAt;
+  station.lastSnapshotId = snapshot.id;
+
   if (compare.hasMeaningfulChange) {
+    station.lastForecastChangeAt = snapshot.fetchedAt;
+    station.lastForecastChangeSummary = compare.summary;
+
     const changelog = await loadChangelog();
     const entry: ChangelogEntry = {
       at: snapshot.fetchedAt,
@@ -88,6 +107,8 @@ async function main() {
   } else {
     console.log("Snapshot saved; no notification (immaterial revision).");
   }
+
+  await updateStationMeta(station);
 
   console.log(
     `Snapshot saved: ${snapshot.id} (PANIC INDEX ${snapshot.panicIndex})`,

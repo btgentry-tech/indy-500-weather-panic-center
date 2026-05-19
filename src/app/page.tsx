@@ -1,16 +1,23 @@
 import { AsciiHeader } from "@/components/AsciiHeader";
 import { AlertSubscribePanel } from "@/components/AlertSubscribePanel";
-import { ChangeFeed } from "@/components/ChangeFeed";
 import { ForecastTable } from "@/components/ForecastTable";
 import { PanicHero } from "@/components/PanicHero";
 import { VolatilityStrip } from "@/components/VolatilityStrip";
-import { loadChangelog, loadLatestSnapshot } from "@/lib/data";
+import {
+  loadAllSnapshots,
+  loadChangelog,
+  loadLatestSnapshot,
+  loadStationMeta,
+} from "@/lib/data";
+import { computeRecordVolatility } from "@/lib/volatility";
 
 export const dynamic = "force-static";
 
 export default async function DashboardPage() {
   const snapshot = await loadLatestSnapshot();
+  const station = await loadStationMeta();
   const changelog = await loadChangelog();
+  const history = await loadAllSnapshots();
 
   if (!snapshot) {
     return (
@@ -26,18 +33,22 @@ export default async function DashboardPage() {
     );
   }
 
+  const recordStats = computeRecordVolatility(
+    history,
+    changelog.entries.length,
+  );
+
   return (
     <>
       <AsciiHeader compact />
       <AlertSubscribePanel />
-      <PanicHero snapshot={snapshot} />
-      <ChangeFeed entries={changelog.entries} />
-      <ForecastTable snapshot={snapshot} />
-      <VolatilityStrip
-        volatility={snapshot.volatility}
-        forecastStability={snapshot.forecastStability}
-        panicMeter={snapshot.panicMeter}
+      <PanicHero
+        snapshot={snapshot}
+        lastForecastChange={station.lastForecastChangeSummary}
+        lastForecastChangeAt={station.lastForecastChangeAt}
       />
+      <ForecastTable snapshot={snapshot} />
+      <VolatilityStrip record={recordStats} panicMeter={snapshot.panicMeter} />
     </>
   );
 }

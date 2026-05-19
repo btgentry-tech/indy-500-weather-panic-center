@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { StationStatus } from "@/components/StationStatus";
 import { TerminalNav } from "@/components/TerminalNav";
-import { loadLatestPointer } from "@/lib/data";
+import { loadStationMeta } from "@/lib/data";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -27,7 +27,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const latest = await loadLatestPointer();
+  const station = await loadStationMeta();
 
   return (
     <html lang="en">
@@ -35,15 +35,12 @@ export default async function RootLayout({
         <div className="shell">
           <TerminalNav />
           {children}
-          <StationStatus
-            lastSync={latest?.updatedAt ?? null}
-            snapshotId={latest?.snapshotId ?? null}
-          />
+          <StationStatus station={station} />
           <footer className="status-line site-footer">
             NOAA grid IND/55,70 — unofficial fan bunker — not affiliated with
             IMS/NWS
             <br />
-            <a href="/archive">Atmospheric Incident Archive</a> — forthcoming
+            <a href="/archive">Atmospheric Incident Archive</a>
           </footer>
         </div>
       </body>

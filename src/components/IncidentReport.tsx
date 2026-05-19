@@ -21,8 +21,8 @@ function incidentTone(
   ) {
     return "worsening";
   }
-  if (current.panicIndex < previous.panicIndex) return "worsening";
-  if (current.panicIndex > previous.panicIndex) return "improving";
+  if (current.panicIndex > previous.panicIndex) return "worsening";
+  if (current.panicIndex < previous.panicIndex) return "improving";
   if (current.days.raceDay.rainPct > previous.days.raceDay.rainPct + 5) {
     return "worsening";
   }

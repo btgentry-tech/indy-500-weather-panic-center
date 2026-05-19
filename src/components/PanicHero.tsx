@@ -1,15 +1,25 @@
 import type { ForecastSnapshot } from "@/lib/types";
-import { getPanicIndexLabel } from "@/lib/panic-index";
+import { getPanicIndexLabel, PANIC_INDEX_MOODS } from "@/lib/panic-index";
 import { truncateChangeLine } from "@/lib/labels";
 import { formatStationTime } from "@/lib/format";
 import { TrendIndicator } from "./TrendIndicator";
 
 interface PanicHeroProps {
   snapshot: ForecastSnapshot;
+  lastForecastChange: string | null;
+  lastForecastChangeAt: string | null;
 }
 
-export function PanicHero({ snapshot }: PanicHeroProps) {
+export function PanicHero({
+  snapshot,
+  lastForecastChange,
+  lastForecastChangeAt,
+}: PanicHeroProps) {
   const race = snapshot.days.raceDay;
+  const changeText =
+    lastForecastChange ??
+    snapshot.lastForecastChange ??
+    PANIC_INDEX_MOODS[snapshot.panicIndex];
 
   return (
     <section
@@ -28,17 +38,23 @@ export function PanicHero({ snapshot }: PanicHeroProps) {
       >
         {getPanicIndexLabel(snapshot.panicIndex)}
       </div>
+      <p className="mood-line">{PANIC_INDEX_MOODS[snapshot.panicIndex]}</p>
       <p className="hero-rain">
         Race Day Rain: <strong>{race.rainPct}%</strong>
       </p>
       <TrendIndicator trend={race.trend} />
-      <p className="hero-updated">
-        Last updated: {formatStationTime(snapshot.fetchedAt)}
-      </p>
       <p className="hero-change">
-        {truncateChangeLine(
-          snapshot.lastForecastChange ?? snapshot.mood,
-        )}
+        Latest change: {truncateChangeLine(changeText)}
+        {lastForecastChangeAt ? (
+          <span className="hero-change-time">
+            {" "}
+            ({formatStationTime(lastForecastChangeAt)})
+          </span>
+        ) : null}
+      </p>
+      <p className="hero-updated status-line">
+        Snapshot {snapshot.id} — saved{" "}
+        {formatStationTime(snapshot.fetchedAt)}
       </p>
     </section>
   );

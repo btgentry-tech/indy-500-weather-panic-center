@@ -1,26 +1,28 @@
-import type { VolatilityStats } from "@/lib/types";
+import type { RecordVolatilityStats } from "@/lib/types";
 
 interface VolatilityStripProps {
-  volatility: VolatilityStats;
-  forecastStability: number;
+  record: RecordVolatilityStats;
   panicMeter: number;
 }
 
-export function VolatilityStrip({
-  volatility,
-  forecastStability,
-  panicMeter,
-}: VolatilityStripProps) {
+export function VolatilityStrip({ record, panicMeter }: VolatilityStripProps) {
   return (
     <section className="panel volatility-strip" aria-label="Forecast volatility">
       <h2 className="panel-title">How Unstable Has It Been?</h2>
       <p className="volatility-line">
-        <span>Revisions (24h):</span> <strong>{volatility.changes24h}</strong>
+        <span>Total revisions on record:</span>{" "}
+        <strong>{record.totalRevisions}</strong>
         <span className="vol-sep">|</span>
-        <span>Largest rain swing:</span>{" "}
-        <strong>{volatility.largestRainSwing}%</strong>
+        <span>Revisions (24h):</span> <strong>{record.changes24h}</strong>
+      </p>
+      <p className="volatility-line">
+        <span>Largest rain swing (record):</span>{" "}
+        <strong>{record.largestRainSwingRecord}%</strong>
         <span className="vol-sep">|</span>
-        <span>Stability:</span> <strong>{forecastStability}%</strong>
+        <span>Latest rain swing:</span>{" "}
+        <strong>{record.latestRainSwing}%</strong>
+        <span className="vol-sep">|</span>
+        <span>Stability:</span> <strong>{record.stabilityScore}%</strong>
         <span className="vol-sep">|</span>
         <span>Panic meter:</span> <strong>{panicMeter}/100</strong>
       </p>

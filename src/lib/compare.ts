@@ -115,21 +115,20 @@ export function compareForecasts(
     previousPanicIndex !== undefined && previousPanicIndex !== panicIndex;
 
   if (indexChanged) {
-    const direction =
-      panicIndex < previousPanicIndex! ? "elevated" : "stabilizing";
-    if (direction === "elevated") {
+    const rising = panicIndex > previousPanicIndex!;
+    if (rising) {
       parts.push(`PANIC INDEX elevated to ${panicIndex}.`);
     } else {
-      parts.push(`PANIC INDEX stabilizing at ${panicIndex}. Forecast improving.`);
+      parts.push(`PANIC INDEX eased to ${panicIndex}. Conditions improving.`);
     }
-    severity = panicIndex <= 2 ? "alert" : "warning";
+    severity = panicIndex >= 4 ? "alert" : "warning";
     details.push(`PANIC INDEX ${previousPanicIndex} → ${panicIndex}.`);
   }
 
   if (improving && !indexChanged) {
     parts.push("Forecast improving. Moisture retreating eastward.");
     severity = "info";
-  } else if (rainSwing && panicIndex <= 3) {
+  } else if (rainSwing && panicIndex >= 4) {
     parts.push("Atmospheric instability increasing.");
     severity = "warning";
   }

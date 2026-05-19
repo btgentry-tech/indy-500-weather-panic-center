@@ -33,11 +33,29 @@ export interface VolatilityStats {
   volatilityScore: number;
 }
 
+export interface RecordVolatilityStats {
+  totalRevisions: number;
+  changes24h: number;
+  largestRainSwingRecord: number;
+  latestRainSwing: number;
+  stabilityScore: number;
+}
+
+export interface StationMeta {
+  lastCheckedAt: string | null;
+  lastSnapshotAt: string | null;
+  lastSnapshotId: string | null;
+  lastForecastChangeAt: string | null;
+  lastForecastChangeSummary: string | null;
+}
+
 export interface ForecastSnapshot {
   id: string;
   fetchedAt: string;
   noaaGeneratedAt: string;
   panicIndex: PanicIndexLevel;
+  /** 2 = 1 calm / 5 high concern; omit on legacy snapshots */
+  panicScale?: number;
   /** Legacy field — kept in sync when writing */
   defcon?: PanicIndexLevel;
   panicMeter: number;
@@ -95,5 +113,6 @@ export interface NormalizedForecast {
 /** Raw snapshot shape from disk (may use legacy defcon field) */
 export type RawForecastSnapshot = Omit<ForecastSnapshot, "panicIndex"> & {
   panicIndex?: PanicIndexLevel;
+  panicScale?: number;
   defcon?: PanicIndexLevel;
 };
