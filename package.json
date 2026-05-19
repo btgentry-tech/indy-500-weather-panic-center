@@ -6,7 +6,7 @@
     "predev": "node scripts/generate-firebase-config.mjs",
     "dev": "next dev",
     "prebuild": "node scripts/generate-firebase-config.mjs",
-    "build": "next build --webpack",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "poll": "node --import tsx scripts/poll-weather.ts --force-window",

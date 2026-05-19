@@ -22,8 +22,8 @@ export default async function DashboardPage() {
         <AlertSubscribePanel />
         <section className="panel">
           <p className="severity-alert">
-            NO SNAPSHOT DATA. Wait for the next Vercel poll (every 15 min) or
-            trigger /api/poll-weather manually.
+            NO SNAPSHOT DATA. Wait for GitHub Actions (every 15 min) or run{" "}
+            <code>npm run poll</code>.
           </p>
         </section>
       </>

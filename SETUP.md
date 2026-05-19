@@ -87,48 +87,55 @@ git commit -m "Initial panic center deployment"
 git push -u origin main
 ```
 
-### GitHub Actions (optional manual poll only)
+### GitHub Actions secrets
 
-Production polling runs on **Vercel Cron**, not GitHub schedule. You can still run **Actions → Poll Weather (manual)** if you add a `BLOB_READ_WRITE_TOKEN` secret (same token as Vercel).
+1. Repo → **Settings** → **Secrets and variables** → **Actions**
+2. Add:
+
+| Secret | Required | Notes |
+|--------|----------|-------|
+| `NOAA_USER_AGENT` | Yes | Same as `.env.local` |
+| `FIREBASE_SERVICE_ACCOUNT_JSON` | For push | Full service account JSON |
+| `FCM_TOPIC` | Optional | Default `indy-panic` |
+
+### Allow workflow to push commits
+
+1. **Settings** → **Actions** → **General**
+2. **Workflow permissions** → **Read and write permissions**
+3. Save
+
+### Enable scheduled workflows
+
+**Settings** → **Actions** → **General** → ensure Actions and scheduled workflows are enabled.
+
+### Test the 15-minute poll
+
+1. **Actions** → **Poll Weather** → **Run workflow**
+2. Wait for green checkmark
+3. Confirm a new commit on `main` like `chore(weather): poll …`
+4. Check `public/data/station.json` — `lastCheckedAt` should update every run
 
 ---
 
 ## Part 4 — Deploy to Vercel
 
+Vercel only hosts the site. **Polling runs on GitHub Actions** (free every 15 minutes).
+
 1. Go to [https://vercel.com](https://vercel.com) → sign in
-2. **Add New** → **Project**
-3. Import your GitHub repo `indy-500-weather-panic-center`
-4. Framework: **Next.js** (auto-detected)
-5. **Storage** → create a **Blob** store and connect it to the project (auto-adds `BLOB_READ_WRITE_TOKEN`)
-6. **Settings** → **Environment Variables** — add every variable from `.env.local`, plus:
+2. **Add New** → **Project** → import `indy-500-weather-panic-center`
+3. Framework: **Next.js** (auto-detected)
+4. **Environment Variables** — add from `.env.local` (Firebase client + admin for subscribe API):
 
-| Variable | Required | Notes |
-|----------|----------|-------|
-| `CRON_SECRET` | Yes | Long random string; Vercel Cron sends `Authorization: Bearer …` |
-| `NOAA_USER_AGENT` | Yes | `(indy-panic-center, you@email.com)` |
-| `FIREBASE_SERVICE_ACCOUNT_JSON` | For push | Full service account JSON |
-| `FCM_TOPIC` | Optional | Default `indy-panic` |
-| `NEXT_PUBLIC_FIREBASE_*` | Yes | Web app config |
-| `NEXT_PUBLIC_FIREBASE_VAPID_KEY` | Yes | Web push key |
-| `BLOB_READ_WRITE_TOKEN` | Yes | Auto-set when Blob store is linked |
+| Variable | Required on Vercel |
+|----------|-------------------|
+| `NEXT_PUBLIC_FIREBASE_*` | Yes (alerts PWA) |
+| `NEXT_PUBLIC_FIREBASE_VAPID_KEY` | Yes |
+| `FIREBASE_SERVICE_ACCOUNT_JSON` | Yes (`/api/subscribe`) |
+| `FCM_TOPIC` | Optional |
 
-7. Click **Deploy**
-8. **Settings** → **Cron Jobs** — confirm `/api/poll-weather` every 15 minutes (from `vercel.json`)
-9. **Settings** → **General** → leave **Output Directory** blank (do not set `out` — that disables API routes)
+`NOAA_USER_AGENT` is **not** required on Vercel (only in GitHub Actions).
 
-### Test poll manually
-
-```bash
-curl -s "https://YOUR-APP.vercel.app/api/poll-weather?secret=YOUR_CRON_SECRET" | jq
-```
-
-Expect JSON with `checkedAt`, `snapshotSaved`, `notificationSent`, `panicIndex`, etc.
-
-### Verify cron is firing
-
-1. Vercel → **Logs** → filter path `/api/poll-weather` — entries every ~15 min
-2. Site **Last NOAA check** should advance (may lag one ISR cycle; client refresh hits `/api/data/station`)
-3. Vercel → **Storage** → **Blob** → files under `weather-data/`
+5. Click **Deploy** — each `chore(weather): poll …` push to `main` triggers a redeploy
 
 ### Install on phone (iPhone)
 
@@ -150,7 +157,7 @@ Expect JSON with `checkedAt`, `snapshotSaved`, `notificationSent`, `panicIndex`,
 ## Part 5 — Verify notifications
 
 1. On the deployed site, enable alerts (subscribes your device to topic `indy-panic`)
-2. Trigger a poll (`curl` above) or run locally after a forecast change:
+2. Run **Poll Weather** on GitHub Actions after a forecast change, or locally:
 
 ```bash
 npm run poll:dry   # preview only
@@ -168,9 +175,9 @@ npm run poll       # saves snapshot + may notify
 | NOAA errors | Set `NOAA_USER_AGENT` with a real contact email |
 | Subscribe API 500 | Check `FIREBASE_SERVICE_ACCOUNT_JSON` on Vercel |
 | No push on iPhone | Must use Home Screen installed PWA, not Safari tab |
-| Empty dashboard | Link Vercel Blob, set `CRON_SECRET`, trigger `/api/poll-weather` |
-| API routes 404 | Clear Vercel **Output Directory** (must be empty for Next.js serverless) |
-| Last NOAA check stuck | Check Vercel Cron logs; confirm `CRON_SECRET` + Blob token |
+| Empty dashboard | Run `npm run poll` or wait for GitHub Actions |
+| Last NOAA check stuck | Check **Actions** → Poll Weather; enable scheduled workflows |
+| No `chore(weather)` commits | Verify `NOAA_USER_AGENT` secret; check workflow logs |
 | Service worker errors | Run `npm run prebuild` after changing Firebase env vars; push requires production build (`npm run build && npm start`) — dev mode disables PWA |
 | Alerts show OFFLINE after subscribe | Check Vercel env vars; confirm `/sw.js` loads on deployed site |
 
@@ -180,10 +187,8 @@ npm run poll       # saves snapshot + may notify
 
 | What | Path |
 |------|------|
-| Live data (production) | Vercel Blob `weather-data/*` |
-| Seed / local dev data | `public/data/*` |
+| Snapshots / station meta | `public/data/*` |
 | Poll logic | `src/lib/run-poll.ts` |
-| Cron endpoint | `src/app/api/poll-weather/route.ts` |
 | Poll CLI | `npm run poll` |
-| Optional manual GHA | `.github/workflows/poll-weather.yml` |
+| Scheduled poll | `.github/workflows/poll-weather.yml` |
 | FCM handlers (imported into PWA SW) | `public/fcm-handlers.js` |

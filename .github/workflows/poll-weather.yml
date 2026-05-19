@@ -1,26 +1,90 @@
-# Optional manual poll — production uses Vercel Cron (/api/poll-weather).
-name: Poll Weather (manual)
+name: Poll Weather
 
 on:
+  schedule:
+    - cron: "*/15 * * * *"
   workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: poll-weather
+  cancel-in-progress: false
 
 jobs:
   poll:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: npm
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Poll NOAA (writes to Vercel Blob when token set)
+      - name: Verify secrets
         env:
-          BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
+          NOAA_USER_AGENT: ${{ secrets.NOAA_USER_AGENT }}
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+        run: |
+          if [ -z "$NOAA_USER_AGENT" ]; then
+            echo "::error::NOAA_USER_AGENT secret is not set. Poll will fail."
+            exit 1
+          fi
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT_JSON" ]; then
+            echo "::warning::FIREBASE_SERVICE_ACCOUNT_JSON not set — snapshots will save but no FCM push."
+          fi
+
+      - name: Poll NOAA and update snapshots
+        env:
           NOAA_USER_AGENT: ${{ secrets.NOAA_USER_AGENT }}
           FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
           FCM_TOPIC: ${{ secrets.FCM_TOPIC }}
         run: npm run poll
+
+      - name: Commit and push data changes
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add public/data
+          if git diff --staged --quiet; then
+            echo "No data changes to commit."
+            exit 0
+          fi
+
+          git status
+          git diff --staged --stat
+          git commit -m "chore(weather): poll $(date -u +%Y-%m-%d-%H%M)"
+
+          MAX_ATTEMPTS=3
+          for attempt in $(seq 1 "$MAX_ATTEMPTS"); do
+            echo "Sync and push attempt ${attempt}/${MAX_ATTEMPTS}…"
+            git fetch origin main
+
+            if ! git rebase origin/main; then
+              echo "::error::Rebase onto origin/main failed (likely merge conflict in public/data)."
+              git rebase --abort || true
+              exit 1
+            fi
+
+            if git push origin HEAD:main; then
+              echo "Pushed to main."
+              exit 0
+            fi
+
+            echo "Push rejected (non-fast-forward). Refetching before retry…"
+            sleep 3
+          done
+
+          echo "::error::Failed to push after ${MAX_ATTEMPTS} attempts."
+          exit 1

@@ -1,11 +1,7 @@
+import fs from "fs/promises";
 import path from "path";
 import { resolveSnapshotStabilityLevel } from "./forecast-stability";
 import { normalizeLegacyPanicIndex } from "./panic-index";
-import {
-  DATA_DIR,
-  readStorageJson,
-  writeStorageJson,
-} from "./storage";
 import type {
   ChangelogEntry,
   ChangelogFile,
@@ -16,12 +12,11 @@ import type {
   StationMeta,
 } from "./types";
 
-export { DATA_DIR } from "./storage";
-
+export const DATA_DIR = path.join(process.cwd(), "public", "data");
 export const HISTORY_DIR = path.join(DATA_DIR, "history");
 
 export function historyPath(id: string): string {
-  return `history/${id}.json`;
+  return path.join(HISTORY_DIR, `${id}.json`);
 }
 
 export function normalizeSnapshot(raw: RawForecastSnapshot): ForecastSnapshot {
@@ -70,23 +65,30 @@ export function snapshotForDisk(
   };
 }
 
-export async function readJson<T>(relativePath: string): Promise<T | null> {
-  return readStorageJson<T>(relativePath);
+export async function readJson<T>(filePath: string): Promise<T | null> {
+  try {
+    const raw = await fs.readFile(filePath, "utf8");
+    return JSON.parse(raw) as T;
+  } catch {
+    return null;
+  }
 }
 
-export async function writeJson(
-  relativePath: string,
-  data: unknown,
-): Promise<void> {
-  await writeStorageJson(relativePath, data);
+export async function writeJson(filePath: string, data: unknown): Promise<void> {
+  await fs.mkdir(path.dirname(filePath), { recursive: true });
+  await fs.writeFile(filePath, `${JSON.stringify(data, null, 2)}\n`, "utf8");
 }
 
 export async function loadIndex(): Promise<DataIndex> {
-  return (await readJson<DataIndex>("index.json")) ?? { snapshots: [] };
+  return (
+    (await readJson<DataIndex>(path.join(DATA_DIR, "index.json"))) ?? {
+      snapshots: [],
+    }
+  );
 }
 
 export async function loadLatestPointer(): Promise<LatestPointer | null> {
-  return readJson<LatestPointer>("latest.json");
+  return readJson<LatestPointer>(path.join(DATA_DIR, "latest.json"));
 }
 
 export async function loadLatestSnapshot(): Promise<ForecastSnapshot | null> {
@@ -121,7 +123,8 @@ const EMPTY_STATION: StationMeta = {
 
 export async function loadStationMeta(): Promise<StationMeta> {
   const meta =
-    (await readJson<StationMeta>("station.json")) ?? { ...EMPTY_STATION };
+    (await readJson<StationMeta>(path.join(DATA_DIR, "station.json"))) ??
+    { ...EMPTY_STATION };
 
   if (!meta.lastSnapshotId) {
     const latest = await loadLatestPointer();
@@ -143,13 +146,14 @@ export async function loadStationMeta(): Promise<StationMeta> {
 }
 
 export async function updateStationMeta(meta: StationMeta): Promise<void> {
-  await writeJson("station.json", meta);
+  await writeJson(path.join(DATA_DIR, "station.json"), meta);
 }
 
 export async function loadChangelog(): Promise<ChangelogFile> {
-  const file = (await readJson<ChangelogFile>("changelog.json")) ?? {
-    entries: [],
-  };
+  const file =
+    (await readJson<ChangelogFile>(path.join(DATA_DIR, "changelog.json"))) ?? {
+      entries: [],
+    };
   return {
     entries: file.entries.map(normalizeChangelogEntry),
   };
@@ -164,11 +168,11 @@ export async function updateIndex(id: string): Promise<void> {
   if (!index.snapshots.includes(id)) {
     index.snapshots.push(id);
   }
-  await writeJson("index.json", index);
+  await writeJson(path.join(DATA_DIR, "index.json"), index);
 }
 
 export async function updateLatest(id: string): Promise<void> {
-  await writeJson("latest.json", {
+  await writeJson(path.join(DATA_DIR, "latest.json"), {
     snapshotId: id,
     updatedAt: new Date().toISOString(),
   } satisfies LatestPointer);
@@ -180,7 +184,7 @@ export async function appendChangelog(
 ): Promise<void> {
   changelog.entries.unshift(entry);
   changelog.entries = changelog.entries.slice(0, 200);
-  await writeJson("changelog.json", changelog);
+  await writeJson(path.join(DATA_DIR, "changelog.json"), changelog);
 }
 
 export function publicDataUrl(relative: string): string {

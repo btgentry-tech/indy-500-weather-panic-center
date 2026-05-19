@@ -1,4 +1,4 @@
-/** Vercel Cron poll cadence */
+/** GitHub Actions poll cadence */
 export const POLL_INTERVAL_MINUTES = 15;
 
 export function pollCadenceLabel(): string {

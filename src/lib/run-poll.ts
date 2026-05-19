@@ -9,13 +9,15 @@ import {
   updateIndex,
   updateLatest,
   updateStationMeta,
+  writeJson,
+  DATA_DIR,
 } from "./data";
 import { sendTopicNotification } from "./firebase-admin";
 import { fetchLocalConditionsSafe, fetchNoaaForecast } from "./noaa";
 import { isWithinPollingWindow } from "./race-days";
 import { buildSnapshot, shouldPersistSnapshot } from "./snapshot-builder";
-import { seedBlobFromPublicIfEmpty, writeStorageJson } from "./storage";
 import type { ChangelogEntry, PollHeartbeat, StationMeta } from "./types";
+import path from "path";
 
 export interface PollRunLog {
   ok: boolean;
@@ -27,7 +29,6 @@ export interface PollRunLog {
   forecastChanged: boolean;
   notificationSent: boolean;
   panicIndex?: number;
-  seededFromPublic?: boolean;
   error?: string;
 }
 
@@ -39,14 +40,12 @@ export interface RunPollOptions {
 
 async function writeHeartbeat(hb: PollHeartbeat, dryRun: boolean): Promise<void> {
   if (dryRun) return;
-  await writeStorageJson("poll-heartbeat.json", hb);
+  await writeJson(path.join(DATA_DIR, "poll-heartbeat.json"), hb);
 }
 
 export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog> {
   const { forceWindow = false, dryRun = false } = options;
   const checkedAt = new Date().toISOString();
-
-  const seededFromPublic = await seedBlobFromPublicIfEmpty();
 
   const priorStation = await loadStationMeta();
   let station: StationMeta = {
@@ -75,7 +74,6 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
       snapshotSaved: false,
       forecastChanged: false,
       notificationSent: false,
-      seededFromPublic,
     };
   }
 
@@ -127,7 +125,6 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
         forecastChanged: compare.hasMeaningfulChange,
         notificationSent: false,
         panicIndex: snapshot.panicIndex,
-        seededFromPublic,
       };
     }
 
@@ -142,7 +139,6 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
         notificationSent: false,
         panicIndex: snapshot.panicIndex,
         snapshotId: snapshot.id,
-        seededFromPublic,
       };
     }
 
@@ -214,7 +210,6 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
       forecastChanged: compare.hasMeaningfulChange,
       notificationSent,
       panicIndex: snapshot.panicIndex,
-      seededFromPublic,
     };
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : String(error);
@@ -244,7 +239,6 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
       forecastChanged: false,
       notificationSent: false,
       error: errMsg,
-      seededFromPublic,
     };
   }
 }
