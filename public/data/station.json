@@ -1,5 +1,5 @@
 {
-  "lastCheckedAt": "2026-05-19T08:29:59.685Z",
+  "lastCheckedAt": "2026-05-19T11:41:50.237Z",
   "lastSnapshotAt": "2026-05-19T08:30:00.032Z",
   "lastSnapshotId": "2026-05-19-0430",
   "lastForecastChangeAt": "2026-05-19T00:01:46.030Z",
@@ -7,8 +7,8 @@
   "localConditions": {
     "temperatureF": 66,
     "condition": "PARTLY CLOUDY",
-    "windDirection": "S",
-    "windSpeedMph": 17,
-    "observedAt": "2026-05-19T08:15:00+00:00"
+    "windDirection": "N",
+    "windSpeedMph": 0,
+    "observedAt": "2026-05-19T11:20:00+00:00"
   }
 }
