@@ -49,6 +49,24 @@ export interface StationMeta {
   lastForecastChangeSummary: string | null;
 }
 
+/** Written every poll run for pipeline diagnostics (GitHub Actions). */
+export interface PollHeartbeat {
+  at: string;
+  ok: boolean;
+  outcome:
+    | "checked_no_save"
+    | "saved"
+    | "saved_notify"
+    | "outside_window"
+    | "error";
+  message: string;
+  shouldSave?: boolean;
+  hasMeaningfulChange?: boolean;
+  snapshotId?: string;
+  panicIndex?: number;
+  error?: string;
+}
+
 export interface ForecastSnapshot {
   id: string;
   fetchedAt: string;

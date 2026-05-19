@@ -2,7 +2,7 @@ import { AsciiHeader } from "@/components/AsciiHeader";
 import { IncidentReport } from "@/components/IncidentReport";
 import { loadAllSnapshots } from "@/lib/data";
 
-export const dynamic = "force-static";
+export const revalidate = 900;
 
 export default async function TimelinePage() {
   const snapshots = await loadAllSnapshots();

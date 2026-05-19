@@ -11,7 +11,7 @@ import {
 } from "@/lib/data";
 import { computeRecordVolatility } from "@/lib/volatility";
 
-export const dynamic = "force-static";
+export const revalidate = 900;
 
 export default async function DashboardPage() {
   const snapshot = await loadLatestSnapshot();

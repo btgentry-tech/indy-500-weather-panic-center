@@ -2,7 +2,7 @@ import { AsciiHeader } from "@/components/AsciiHeader";
 import { ARCHIVE_INCIDENTS } from "@/lib/archive-incidents";
 import Link from "next/link";
 
-export const dynamic = "force-static";
+export const revalidate = 900;
 
 export default function ArchivePage() {
   return (

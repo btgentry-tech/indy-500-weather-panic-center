@@ -52,7 +52,12 @@ export function getRaceDayByKey(key: DayKey): RaceDayConfig {
 }
 
 export function isWithinPollingWindow(date = new Date()): boolean {
-  const iso = date.toISOString().slice(0, 10);
+  const iso = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Indiana/Indianapolis",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
   return iso >= POLLING_START && iso <= POLLING_END;
 }
 

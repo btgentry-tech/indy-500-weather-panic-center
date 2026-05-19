@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   },
 };
 
+/** Revalidate every 15 minutes so committed poll data appears without a full redeploy. */
+export const revalidate = 900;
+
 export const viewport: Viewport = {
   themeColor: "#000000",
   width: "device-width",

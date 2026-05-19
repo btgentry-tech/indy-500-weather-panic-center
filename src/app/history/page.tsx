@@ -2,7 +2,7 @@ import { AsciiHeader } from "@/components/AsciiHeader";
 import { HistoryChartsClient } from "@/components/charts/HistoryChartsClient";
 import { loadAllSnapshots } from "@/lib/data";
 
-export const dynamic = "force-static";
+export const revalidate = 900;
 
 export default async function HistoryPage() {
   const snapshots = await loadAllSnapshots();

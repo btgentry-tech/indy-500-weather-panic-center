@@ -108,7 +108,13 @@ git push -u origin main
 
 1. **Actions** tab → **Poll Weather** → **Run workflow**
 2. Wait for green checkmark
-3. Open **Code** tab → check `public/data/history/` for a new JSON file
+3. Confirm a new commit on `main` like `chore(weather): poll …` (if this never appears, the pipeline is not pushing)
+4. Check `public/data/poll-heartbeat.json` — `lastCheckedAt` / `station.json` should update every run
+5. On a material forecast change, expect a new file in `public/data/history/` and optionally an FCM push
+
+### Enable scheduled workflows
+
+Repo **Settings** → **Actions** → **General** → ensure Actions are enabled and scheduled workflows are allowed.
 
 ---
 

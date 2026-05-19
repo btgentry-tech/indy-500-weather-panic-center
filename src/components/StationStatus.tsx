@@ -16,10 +16,25 @@ interface StationStatusProps {
   station: StationMeta;
 }
 
-export function StationStatus({ station }: StationStatusProps) {
+export function StationStatus({ station: initialStation }: StationStatusProps) {
+  const [station, setStation] = useState(initialStation);
   const [clock, setClock] = useState("");
   const [nextPoll, setNextPoll] = useState("");
   const [flavorIndex, setFlavorIndex] = useState(0);
+
+  useEffect(() => {
+    const refreshStation = () => {
+      fetch(`/data/station.json?ts=${Date.now()}`, { cache: "no-store" })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data: StationMeta | null) => {
+          if (data?.lastCheckedAt) setStation(data);
+        })
+        .catch(() => {});
+    };
+    refreshStation();
+    const stationTimer = setInterval(refreshStation, 60_000);
+    return () => clearInterval(stationTimer);
+  }, []);
 
   useEffect(() => {
     setClock(formatClockNow());

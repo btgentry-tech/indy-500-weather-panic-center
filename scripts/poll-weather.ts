@@ -9,6 +9,8 @@ import {
   updateIndex,
   updateLatest,
   updateStationMeta,
+  writeJson,
+  DATA_DIR,
 } from "../src/lib/data";
 import { sendTopicNotification } from "../src/lib/firebase-admin";
 import { fetchNoaaForecast } from "../src/lib/noaa";
@@ -17,102 +19,162 @@ import {
   buildSnapshot,
   shouldPersistSnapshot,
 } from "../src/lib/snapshot-builder";
-import type { ChangelogEntry, StationMeta } from "../src/lib/types";
+import type { ChangelogEntry, PollHeartbeat, StationMeta } from "../src/lib/types";
+import path from "path";
 
 const dryRun = process.argv.includes("--dry-run");
 /** Bypass April–May window check (GitHub Actions) */
 const forceWindow = process.argv.includes("--force-window");
 
-async function main() {
-  if (!forceWindow && !isWithinPollingWindow()) {
-    console.log("Outside polling window. Exiting cleanly.");
+function log(msg: string): void {
+  console.log(`[poll] ${msg}`);
+}
+
+async function writeHeartbeat(hb: PollHeartbeat): Promise<void> {
+  if (dryRun) {
+    log(`heartbeat (dry-run): ${JSON.stringify(hb)}`);
     return;
   }
+  await writeJson(path.join(DATA_DIR, "poll-heartbeat.json"), hb);
+}
 
+async function main() {
   const checkedAt = new Date().toISOString();
   const priorStation = await loadStationMeta();
-  const station: StationMeta = {
+  let station: StationMeta = {
     ...priorStation,
     lastCheckedAt: checkedAt,
   };
 
-  const forecast = await fetchNoaaForecast();
-  const history = await loadAllSnapshots();
-  const previous = await loadLatestSnapshot();
-  const snapshot = buildSnapshot(forecast, history);
+  if (!forceWindow && !isWithinPollingWindow()) {
+    log("Outside polling window (America/Indiana). Exiting.");
+    await updateStationMeta(station);
+    await writeHeartbeat({
+      at: checkedAt,
+      ok: true,
+      outcome: "outside_window",
+      message: "Outside April–May polling window.",
+    });
+    return;
+  }
 
-  const compare = compareForecasts(
-    previous,
-    snapshot.days,
-    snapshot.hourly,
-    snapshot.panicIndex,
-    previous?.panicIndex,
-  );
+  try {
+    log("Fetching NOAA forecast…");
+    const forecast = await fetchNoaaForecast();
+    const history = await loadAllSnapshots();
+    const previous = await loadLatestSnapshot();
+    const snapshot = buildSnapshot(forecast, history);
 
-  const shouldSave =
-    !previous || shouldPersistSnapshot(previous, snapshot);
+    const compare = compareForecasts(
+      previous,
+      snapshot.days,
+      snapshot.hourly,
+      snapshot.panicIndex,
+      previous?.panicIndex,
+    );
 
-  if (!shouldSave) {
-    if (!dryRun) {
+    const shouldSave =
+      !previous || shouldPersistSnapshot(previous, snapshot);
+
+    log(
+      `compare: shouldSave=${shouldSave} meaningful=${compare.hasMeaningfulChange} panic=${snapshot.panicIndex}`,
+    );
+
+    if (!shouldSave) {
       await updateStationMeta(station);
+      await writeHeartbeat({
+        at: checkedAt,
+        ok: true,
+        outcome: "checked_no_save",
+        message: "NOAA checked; no material forecast change.",
+        shouldSave: false,
+        hasMeaningfulChange: compare.hasMeaningfulChange,
+        panicIndex: snapshot.panicIndex,
+      });
+      log("No material forecast change. Snapshot not saved.");
+      return;
     }
-    console.log("No material forecast change. Snapshot not saved.");
-    console.log(`NOAA checked at ${checkedAt}`);
-    return;
-  }
 
-  if (dryRun) {
-    console.log("DRY RUN — would save snapshot:", snapshot.id);
-    console.log("Notify:", compare.hasMeaningfulChange);
-    console.log("Compare:", compare);
-    return;
-  }
+    if (dryRun) {
+      log(`DRY RUN — would save: ${snapshot.id}`);
+      log(`DRY RUN — notify: ${compare.hasMeaningfulChange}`);
+      return;
+    }
 
-  await saveSnapshot(snapshot);
-  await updateIndex(snapshot.id);
-  await updateLatest(snapshot.id);
+    await saveSnapshot(snapshot);
+    await updateIndex(snapshot.id);
+    await updateLatest(snapshot.id);
 
-  station.lastSnapshotAt = snapshot.fetchedAt;
-  station.lastSnapshotId = snapshot.id;
+    station.lastSnapshotAt = snapshot.fetchedAt;
+    station.lastSnapshotId = snapshot.id;
 
-  if (compare.hasMeaningfulChange) {
-    station.lastForecastChangeAt = snapshot.fetchedAt;
-    station.lastForecastChangeSummary = compare.summary;
+    let outcome: PollHeartbeat["outcome"] = "saved";
+    let message = `Snapshot saved: ${snapshot.id}`;
 
-    const changelog = await loadChangelog();
-    const entry: ChangelogEntry = {
-      at: snapshot.fetchedAt,
-      snapshotId: snapshot.id,
-      severity: compare.severity,
-      summary: compare.summary,
-      details: compare.details,
-      panicIndexFrom: compare.panicIndexFrom,
-      panicIndexTo: compare.panicIndexTo,
-      defconFrom: compare.panicIndexFrom,
-      defconTo: compare.panicIndexTo,
-    };
-    await appendChangelog(changelog, entry);
+    if (compare.hasMeaningfulChange) {
+      station.lastForecastChangeAt = snapshot.fetchedAt;
+      station.lastForecastChangeSummary = compare.summary;
 
-    if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
-      await sendTopicNotification(
-        compare.notificationTitle,
-        compare.notificationBody,
-      );
-      console.log("Notification dispatched to topic.");
+      const changelog = await loadChangelog();
+      const entry: ChangelogEntry = {
+        at: snapshot.fetchedAt,
+        snapshotId: snapshot.id,
+        severity: compare.severity,
+        summary: compare.summary,
+        details: compare.details,
+        panicIndexFrom: compare.panicIndexFrom,
+        panicIndexTo: compare.panicIndexTo,
+        defconFrom: compare.panicIndexFrom,
+        defconTo: compare.panicIndexTo,
+      };
+      await appendChangelog(changelog, entry);
+
+      if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+        await sendTopicNotification(
+          compare.notificationTitle,
+          compare.notificationBody,
+        );
+        outcome = "saved_notify";
+        message = `Snapshot saved; notification sent. ${compare.summary}`;
+        log("Notification dispatched to topic.");
+      } else {
+        message = `Snapshot saved; notification skipped (no FIREBASE_SERVICE_ACCOUNT_JSON).`;
+        log("Skipping notification — FIREBASE_SERVICE_ACCOUNT_JSON not set.");
+      }
     } else {
-      console.log(
-        "Skipping notification — FIREBASE_SERVICE_ACCOUNT_JSON not set.",
-      );
+      log("Snapshot saved; no notification (immaterial revision).");
     }
-  } else {
-    console.log("Snapshot saved; no notification (immaterial revision).");
+
+    await updateStationMeta(station);
+    await writeHeartbeat({
+      at: checkedAt,
+      ok: true,
+      outcome,
+      message,
+      shouldSave: true,
+      hasMeaningfulChange: compare.hasMeaningfulChange,
+      snapshotId: snapshot.id,
+      panicIndex: snapshot.panicIndex,
+    });
+
+    log(`Done. PANIC INDEX ${snapshot.panicIndex}`);
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : String(error);
+    log(`ERROR: ${errMsg}`);
+    try {
+      await updateStationMeta(station);
+    } catch {
+      /* best effort */
+    }
+    await writeHeartbeat({
+      at: checkedAt,
+      ok: false,
+      outcome: "error",
+      message: errMsg,
+      error: errMsg,
+    });
+    throw error;
   }
-
-  await updateStationMeta(station);
-
-  console.log(
-    `Snapshot saved: ${snapshot.id} (PANIC INDEX ${snapshot.panicIndex})`,
-  );
 }
 
 main().catch((error) => {
