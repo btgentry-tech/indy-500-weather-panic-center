@@ -14,13 +14,6 @@ import { RACE_DAYS, getRaceDayByKey } from "./race-days";
 const RAIN_MAJOR_THRESHOLD = 15;
 const TIMING_SHIFT_HOURS = 2;
 
-/** Light FCM / editorial copy for routine NOAA grid revisions. */
-const MINOR_FORECAST_SUMMARIES = [
-  "Forecast refreshed. Minor NOAA revision detected.",
-  "Atmospheric wobble detected. Forecast updated.",
-  "New NOAA guidance received.",
-] as const;
-
 interface ScoredLine {
   score: number;
   text: string;
@@ -68,12 +61,6 @@ function hourlyRevisionNote(
     }
   }
   return false;
-}
-
-function minorEditorialSummary(panicIndex: PanicIndexLevel): string {
-  return MINOR_FORECAST_SUMMARIES[
-    panicIndex % MINOR_FORECAST_SUMMARIES.length
-  ];
 }
 
 function rainChangeLine(
@@ -242,7 +229,7 @@ function buildOperationalSummary(
   }
 
   if (lines.length === 0) {
-    return minorEditorialSummary(panicIndex);
+    return "NOAA guidance updated.";
   }
 
   const topScore = lines.reduce((max, line) => Math.max(max, line.score), 0);
@@ -264,11 +251,7 @@ function buildOperationalSummary(
   return combineOperationalLines(lines);
 }
 
-/**
- * Compares consecutive NOAA polls. Any grid delta is a forecast refresh (snapshot,
- * changelog, push). `isMajorChange` is editorial only — stronger copy and the
- * “latest operational update” timestamp, not whether the app updated.
- */
+/** Compares consecutive NOAA polls; every grid delta gets the same treatment. */
 export function compareForecasts(
   previous: ForecastSnapshot | null,
   currentDays: Record<DayKey, RaceDayForecast>,
@@ -281,7 +264,6 @@ export function compareForecasts(
 
   if (!previous) {
     return {
-      isMajorChange: true,
       details: ["Initial atmospheric baseline recorded."],
       severity: "info",
       summary: "Monitoring station online. Baseline forecast captured.",
@@ -290,8 +272,6 @@ export function compareForecasts(
       notificationBody: `PANIC INDEX: ${panicIndex}/5. ${PANIC_INDEX_MOODS[panicIndex]}.`,
     };
   }
-
-  let rainMajorSwing = false;
 
   for (const config of RACE_DAYS) {
     const key = config.key;
@@ -306,10 +286,6 @@ export function compareForecasts(
       details.push(
         `${config.label} rain ${prevRain}% → ${nextRain}% (${direction}).`,
       );
-    }
-
-    if (Math.abs(delta) >= RAIN_MAJOR_THRESHOLD) {
-      rainMajorSwing = true;
     }
 
     if (prevDay.trend !== nextDay.trend) {
@@ -373,20 +349,6 @@ export function compareForecasts(
     severityRef.current = panicIndex >= 4 ? "alert" : "warning";
   }
 
-  const stormRiskFlipped = RACE_DAYS.some((config) => {
-    const key = config.key;
-    return (
-      hasStormWording(previous.days[key].stormRisk) !==
-      hasStormWording(currentDays[key].stormRisk)
-    );
-  });
-
-  const isMajorChange =
-    rainMajorSwing ||
-    indexChanged ||
-    stormRiskFlipped ||
-    (shift !== null && shift >= TIMING_SHIFT_HOURS);
-
   const summary = buildOperationalSummary(
     previous,
     currentDays,
@@ -400,14 +362,10 @@ export function compareForecasts(
     ? `PANIC INDEX: ${panicIndex}/5`
     : "Forecast Update";
 
-  const notificationBody = isMajorChange
-    ? summary.length > 180
-      ? `${summary.slice(0, 177)}...`
-      : summary
-    : minorEditorialSummary(panicIndex);
+  const notificationBody =
+    summary.length > 180 ? `${summary.slice(0, 177)}...` : summary;
 
   return {
-    isMajorChange,
     details,
     severity: severityRef.current,
     summary,
@@ -424,22 +382,6 @@ export function buildNotificationCopy(
   return {
     title: result.notificationTitle,
     body: result.notificationBody,
-  };
-}
-
-/** FCM copy: dramatic alert for major/initial changes, lighter tone for routine revisions. */
-export function buildForecastChangeNotification(
-  compare: CompareResult,
-  panicIndex: PanicIndexLevel,
-  options: { isMajor: boolean; isInitial: boolean },
-): { title: string; body: string } {
-  if (options.isInitial || options.isMajor) {
-    return buildNotificationCopy(compare);
-  }
-
-  return {
-    title: "Forecast Update",
-    body: minorEditorialSummary(panicIndex),
   };
 }
 

@@ -1,7 +1,4 @@
-import {
-  buildForecastChangeNotification,
-  compareForecasts,
-} from "./compare";
+import { buildNotificationCopy, compareForecasts } from "./compare";
 import {
   appendChangelog,
   loadAllSnapshots,
@@ -165,29 +162,10 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
       };
       await appendChangelog(changelog, entry);
 
-      if (compare.isMajorChange) {
-        station.lastMajorShiftAt = checkedAt;
-        station.lastMajorShiftSummary = compare.summary;
-        station.lastForecastChangeAt = checkedAt;
-        station.lastForecastChangeSummary = compare.summary;
-        persisted = {
-          ...persisted,
-          lastForecastChange: compare.summary,
-        };
-        await saveSnapshot(persisted);
-      }
-
       let notificationSent = false;
 
       if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
-        const { title, body } = buildForecastChangeNotification(
-          compare,
-          snapshot.panicIndex,
-          {
-            isMajor: compare.isMajorChange,
-            isInitial: !previous,
-          },
-        );
+        const { title, body } = buildNotificationCopy(compare);
         await sendTopicNotification(title, body);
         notificationSent = true;
         outcome = "saved_notify";
@@ -205,7 +183,6 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
           message,
           shouldSave: true,
           hasForecastDataChanged: true,
-          isMajorChange: compare.isMajorChange,
           snapshotId: persisted.id,
           panicIndex: snapshot.panicIndex,
         },
@@ -236,7 +213,6 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
         message,
         shouldSave: false,
         hasForecastDataChanged: false,
-        isMajorChange: false,
         snapshotId: persisted.id,
         panicIndex: snapshot.panicIndex,
       },

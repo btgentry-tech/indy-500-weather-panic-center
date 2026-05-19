@@ -438,14 +438,14 @@ a:hover {
   font-variant-numeric: tabular-nums;
 }
 
-.hero-major-shift {
+.hero-revision {
   margin-top: var(--space-3);
   padding: var(--space-3);
   border: 1px solid var(--border-dim);
   background: transparent;
 }
 
-.hero-major-shift-header {
+.hero-revision-header {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -454,29 +454,16 @@ a:hover {
   margin: 0 0 var(--space-2);
 }
 
-.hero-major-shift-header .field-label {
+.hero-revision-header .field-label {
   font-size: var(--text-xs);
   color: var(--text-muted);
 }
 
-.hero-major-shift-text {
+.hero-revision-text {
   margin: 0;
   font-size: var(--text-sm);
   color: var(--text-dim);
   line-height: var(--line-dense);
-}
-
-.hero-major-escalation {
-  margin: var(--space-3) 0 0;
-  padding-top: var(--space-2);
-  border-top: 1px solid var(--border-dim);
-  font-size: var(--text-xs);
-  color: var(--text-muted);
-  line-height: var(--line-dense);
-}
-
-.hero-major-escalation .field-label {
-  font-size: var(--text-xs);
 }
 
 .incident-header {

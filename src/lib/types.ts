@@ -55,13 +55,6 @@ export interface StationMeta {
   /** Latest revision summary — any NOAA grid change (matches latest snapshot). */
   lastOperationalUpdateAt: string | null;
   lastOperationalUpdateSummary: string | null;
-  /** Last major escalation only (≥ thresholds in compare). */
-  lastMajorShiftAt: string | null;
-  lastMajorShiftSummary: string | null;
-  /** @deprecated Written on major shift for legacy JSON; use lastMajorShiftAt. */
-  lastForecastChangeAt?: string | null;
-  /** @deprecated Use lastMajorShiftSummary. */
-  lastForecastChangeSummary?: string | null;
   localConditions?: LocalConditions | null;
 }
 
@@ -79,8 +72,6 @@ export interface PollHeartbeat {
   shouldSave?: boolean;
   /** Grid differed from previous snapshot. */
   hasForecastDataChanged?: boolean;
-  /** Stronger alert tier for this revision. */
-  isMajorChange?: boolean;
   snapshotId?: string;
   panicIndex?: number;
   error?: string;
@@ -134,8 +125,6 @@ export interface LatestPointer {
 }
 
 export interface CompareResult {
-  /** Stronger alert wording — not a separate “counts as update” gate. */
-  isMajorChange: boolean;
   details: string[];
   severity: ChangelogSeverity;
   summary: string;

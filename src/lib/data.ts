@@ -119,8 +119,6 @@ const EMPTY_STATION: StationMeta = {
   lastSnapshotId: null,
   lastOperationalUpdateAt: null,
   lastOperationalUpdateSummary: null,
-  lastMajorShiftAt: null,
-  lastMajorShiftSummary: null,
 };
 
 /** Align station telemetry with the latest snapshot — single source for forecast time. */
@@ -128,11 +126,6 @@ export function normalizeStationMeta(
   raw: StationMeta,
   latestSnapshot: ForecastSnapshot | null,
 ): StationMeta {
-  const lastMajorShiftAt =
-    raw.lastMajorShiftAt ?? raw.lastForecastChangeAt ?? null;
-  const lastMajorShiftSummary =
-    raw.lastMajorShiftSummary ?? raw.lastForecastChangeSummary ?? null;
-
   let lastSnapshotAt = raw.lastSnapshotAt;
   let lastSnapshotId = raw.lastSnapshotId;
   let lastOperationalUpdateAt = raw.lastOperationalUpdateAt ?? null;
@@ -153,8 +146,6 @@ export function normalizeStationMeta(
     lastSnapshotAt,
     lastOperationalUpdateAt,
     lastOperationalUpdateSummary,
-    lastMajorShiftAt,
-    lastMajorShiftSummary,
   };
 }
 

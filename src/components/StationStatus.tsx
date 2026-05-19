@@ -145,19 +145,6 @@ export function StationStatus({ station: initialStation }: StationStatusProps) {
             ) : null}
           </dd>
         </div>
-        {station.lastMajorShiftAt &&
-        station.lastMajorShiftSummary &&
-        station.lastMajorShiftAt !== station.lastOperationalUpdateAt ? (
-          <div className="telemetry-row telemetry-row-secondary">
-            <dt>Last major escalation</dt>
-            <dd>
-              {formatStationTime(station.lastMajorShiftAt)}
-              <span className="telemetry-note">
-                {station.lastMajorShiftSummary}
-              </span>
-            </dd>
-          </div>
-        ) : null}
         <div className="telemetry-row">
           <dt>Poll cadence</dt>
           <dd>

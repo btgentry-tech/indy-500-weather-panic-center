@@ -12,24 +12,12 @@ import { formatStationTime } from "@/lib/format";
 
 interface PanicHeroProps {
   snapshot: ForecastSnapshot;
-  lastMajorShiftAt: string | null;
-  lastMajorShiftSummary: string | null;
 }
 
-export function PanicHero({
-  snapshot,
-  lastMajorShiftAt,
-  lastMajorShiftSummary,
-}: PanicHeroProps) {
+export function PanicHero({ snapshot }: PanicHeroProps) {
   const stability = resolveSnapshotStabilityLevel(snapshot);
   const revisionAt = snapshot.fetchedAt;
   const revisionText = snapshot.lastForecastChange;
-  const showRevision = Boolean(revisionText);
-
-  const majorIsSeparate =
-    Boolean(lastMajorShiftAt && lastMajorShiftSummary) &&
-    (lastMajorShiftAt !== revisionAt ||
-      lastMajorShiftSummary !== revisionText);
 
   return (
     <section
@@ -70,27 +58,17 @@ export function PanicHero({
         <p className="hero-stability-note">{stabilityExplanation(stability)}</p>
         <p className="hero-stability-derived">{FORECAST_STABILITY_DISCLAIMER}</p>
       </div>
-      {showRevision ? (
-        <div className="hero-major-shift">
-          <p className="hero-major-shift-header">
+      {revisionText ? (
+        <div className="hero-revision">
+          <p className="hero-revision-header">
             <span className="field-label">Latest operational update</span>
             <time className="incident-time" dateTime={revisionAt}>
               {formatStationTime(revisionAt)}
             </time>
           </p>
-          <p className="hero-major-shift-text">
+          <p className="hero-revision-text">
             {truncateChangeLine(revisionText, 160)}
           </p>
-          {majorIsSeparate ? (
-            <p className="hero-major-escalation">
-              <span className="field-label">Last major escalation</span>{" "}
-              <time dateTime={lastMajorShiftAt!}>
-                {formatStationTime(lastMajorShiftAt!)}
-              </time>
-              {" — "}
-              {truncateChangeLine(lastMajorShiftSummary, 100)}
-            </p>
-          ) : null}
         </div>
       ) : null}
     </section>
