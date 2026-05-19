@@ -9,15 +9,11 @@ export interface TrendDisplay {
 export function getTrendDisplay(trend: TrendArrow): TrendDisplay {
   switch (trend) {
     case "↑":
-      return { arrow: "↑", label: "Worsening", className: "trend-worse" };
+      return { arrow: "↑", label: "Rain rising", className: "trend-worse" };
     case "↓":
-      return { arrow: "↓", label: "Improving", className: "trend-better" };
+      return { arrow: "↓", label: "Rain easing", className: "trend-better" };
     default:
-      return {
-        arrow: "→",
-        label: "Holding Steady",
-        className: "trend-stable",
-      };
+      return { arrow: "→", label: "Holding", className: "trend-stable" };
   }
 }
 

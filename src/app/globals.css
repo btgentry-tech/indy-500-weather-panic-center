@@ -289,10 +289,22 @@ a:hover {
   color: var(--text-muted);
 }
 
-/* ── Panic hero ── */
+/* ── Panic hero (overall story) ── */
 .panic-hero {
   margin-bottom: var(--space-4);
   padding: var(--space-4) var(--space-4) var(--space-3);
+}
+
+.dashboard-overall {
+  border-color: var(--border-live);
+}
+
+.dashboard-breakdown {
+  margin-top: 0;
+}
+
+.dashboard-breakdown .panel-title {
+  letter-spacing: 0.08em;
 }
 
 .hero-live-row {
@@ -404,56 +416,7 @@ a:hover {
   margin: 0 0 var(--space-3);
   font-size: var(--text-sm);
   color: var(--text-muted);
-}
-
-table.data .col-stability {
-  font-weight: 600;
-  font-size: var(--text-sm);
-}
-
-table.data .col-stability.stability-calm {
-  color: var(--text-active);
-}
-
-table.data .col-stability.stability-mid {
-  color: var(--warn);
-}
-
-table.data .col-stability.stability-high {
-  color: var(--alert);
-}
-
-.hero-metrics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4) var(--space-5);
-  margin-bottom: var(--space-4);
-}
-
-.hero-metric {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.hero-metric .field-value {
-  font-size: var(--text-lg);
-}
-
-.hero-forecast-asof {
-  margin: var(--space-2) 0 0;
-  font-size: var(--text-xs);
-  color: var(--text-muted);
-}
-
-.hero-forecast-asof time {
-  font-variant-numeric: tabular-nums;
-}
-
-.trend-metric .field-value {
-  font-size: var(--text-base);
-  text-transform: lowercase;
-  font-weight: 700;
+  max-width: 36em;
 }
 
 .hero-incident {
@@ -1356,11 +1319,6 @@ table.data .row-race-day .col-rain {
 
   .panic-index-level {
     font-size: 38px;
-  }
-
-  .hero-metrics {
-    flex-direction: column;
-    gap: var(--space-3);
   }
 
   .feed-summary {

@@ -9,7 +9,6 @@ import {
 } from "@/lib/forecast-stability";
 import { truncateChangeLine } from "@/lib/labels";
 import { formatStationTime } from "@/lib/format";
-import { TrendIndicator } from "./TrendIndicator";
 
 interface PanicHeroProps {
   snapshot: ForecastSnapshot;
@@ -22,7 +21,6 @@ export function PanicHero({
   lastForecastChange,
   lastForecastChangeAt,
 }: PanicHeroProps) {
-  const race = snapshot.days.raceDay;
   const changeText =
     lastForecastChange ??
     snapshot.lastForecastChange ??
@@ -32,8 +30,8 @@ export function PanicHero({
 
   return (
     <section
-      className="panel panic-hero panel-live"
-      aria-label="Current panic status"
+      className="panel panic-hero panel-live dashboard-overall"
+      aria-label="Overall race-week weather status"
     >
       <div className="hero-live-row">
         <span className="live-badge">LIVE</span>
@@ -42,7 +40,7 @@ export function PanicHero({
       <div
         className={`panic-index-block panic-index-${snapshot.panicIndex}`}
       >
-        <p className="panic-index-caption">PANIC INDEX</p>
+        <p className="panic-index-caption">Panic index</p>
         <p
           className="panic-index-fraction"
           aria-label={`Panic index ${snapshot.panicIndex} of 5`}
@@ -54,7 +52,7 @@ export function PanicHero({
         </p>
       </div>
       <div className="hero-stability-block">
-        <span className="field-label">Forecast stability</span>
+        <span className="field-label">Overall NOAA stability</span>
         <p
           className={`hero-stability-value ${stabilityCssClass(stability)}`}
         >
@@ -62,19 +60,6 @@ export function PanicHero({
         </p>
         <p className="hero-stability-note">{stabilityExplanation(stability)}</p>
         <p className="hero-stability-derived">{FORECAST_STABILITY_DISCLAIMER}</p>
-      </div>
-      <div className="hero-metrics">
-        <div className="hero-metric">
-          <span className="field-label">Race day rain</span>
-          <span className="field-value field-value-live">{race.rainPct}%</span>
-        </div>
-        <TrendIndicator trend={race.trend} compact />
-        <p className="hero-forecast-asof">
-          <span className="field-label">Forecast as of</span>{" "}
-          <time dateTime={snapshot.fetchedAt}>
-            {formatStationTime(snapshot.fetchedAt)}
-          </time>
-        </p>
       </div>
       <div className="hero-incident">
         <p className="incident-header">

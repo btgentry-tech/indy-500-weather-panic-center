@@ -2,19 +2,13 @@ import { AsciiHeader } from "@/components/AsciiHeader";
 import { AlertSubscribePanel } from "@/components/AlertSubscribePanel";
 import { ForecastTable } from "@/components/ForecastTable";
 import { PanicHero } from "@/components/PanicHero";
-import {
-  loadAllSnapshots,
-  loadLatestSnapshot,
-  loadStationMeta,
-} from "@/lib/data";
+import { loadLatestSnapshot, loadStationMeta } from "@/lib/data";
 
 export const revalidate = 900;
 
 export default async function DashboardPage() {
   const snapshot = await loadLatestSnapshot();
   const station = await loadStationMeta();
-  const history = await loadAllSnapshots();
-
   if (!snapshot) {
     return (
       <>
@@ -39,7 +33,7 @@ export default async function DashboardPage() {
         lastForecastChange={station.lastForecastChangeSummary}
         lastForecastChangeAt={station.lastForecastChangeAt}
       />
-      <ForecastTable snapshot={snapshot} history={history} />
+      <ForecastTable snapshot={snapshot} />
     </>
   );
 }
