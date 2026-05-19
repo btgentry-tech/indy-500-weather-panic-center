@@ -1,6 +1,16 @@
 {
   "entries": [
     {
+      "at": "2026-05-19T00:01:46.030Z",
+      "snapshotId": "2026-05-18-2001",
+      "severity": "info",
+      "summary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
+      "details": [
+        "Race Day precipitation probability revised downward (44% → 26%).",
+        "Storm timing moved earlier."
+      ]
+    },
+    {
       "at": "2026-05-18T19:00:00.000Z",
       "snapshotId": "2026-05-18-1500",
       "severity": "warning",
