@@ -107,8 +107,7 @@ export function AlertSubscribePanel() {
         : "ALERTS OFFLINE";
 
   return (
-    <section className="panel alert-panel" aria-label="Panic alerts">
-      <h2 className="alert-panel-header">ENABLE PANIC ALERTS</h2>
+    <section className="panel alert-panel" aria-label="Weather alerts">
       <p
         className={`alert-status ${state === "offline" ? "alert-status-offline" : ""}`}
       >
@@ -125,7 +124,7 @@ export function AlertSubscribePanel() {
         onClick={enableAlerts}
         disabled={state === "requesting"}
       >
-        [ ENABLE PANIC ALERTS ]
+        [ ENABLE WEATHER ALERTS ]
       </button>
       {status && <p className="status-line alert-feedback">{status}</p>}
       {foregroundMsg && (
