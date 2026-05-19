@@ -33,30 +33,39 @@ export function getFirebaseAdminApp(): App {
   return app;
 }
 
+/** Empty `FCM_TOPIC` env (e.g. unset GitHub secret) falls back to default. */
+export function resolveFcmTopic(override?: string): string {
+  const configured = (override ?? process.env.FCM_TOPIC)?.trim();
+  return configured || FCM_TOPIC_DEFAULT;
+}
+
 export async function subscribeTokenToTopic(
   token: string,
-  topic = process.env.FCM_TOPIC ?? FCM_TOPIC_DEFAULT,
+  topic?: string,
 ): Promise<void> {
+  const resolved = resolveFcmTopic(topic);
   const messaging = getMessaging(getFirebaseAdminApp());
-  await messaging.subscribeToTopic([token], topic);
+  await messaging.subscribeToTopic([token], resolved);
 }
 
 export async function unsubscribeTokenFromTopic(
   token: string,
-  topic = process.env.FCM_TOPIC ?? FCM_TOPIC_DEFAULT,
+  topic?: string,
 ): Promise<void> {
+  const resolved = resolveFcmTopic(topic);
   const messaging = getMessaging(getFirebaseAdminApp());
-  await messaging.unsubscribeFromTopic([token], topic);
+  await messaging.unsubscribeFromTopic([token], resolved);
 }
 
 export async function sendTopicNotification(
   title: string,
   body: string,
-  topic = process.env.FCM_TOPIC ?? FCM_TOPIC_DEFAULT,
+  topic?: string,
 ): Promise<void> {
+  const resolved = resolveFcmTopic(topic);
   const messaging = getMessaging(getFirebaseAdminApp());
   await messaging.send({
-    topic,
+    topic: resolved,
     notification: { title, body },
     webpush: {
       notification: {
