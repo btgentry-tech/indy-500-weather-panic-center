@@ -80,11 +80,6 @@ export function RainOverTimeChart({ snapshots }: RainOverTimeChartProps) {
                   },
                 },
               },
-              title: {
-                display: true,
-                text: "Rain forecast changes",
-                color: CHART_COLORS.label,
-              },
             },
           }}
         />

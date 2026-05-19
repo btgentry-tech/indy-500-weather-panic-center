@@ -11,7 +11,6 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { CHART_COLORS } from "@/lib/chart-colors";
 import {
   buildEventDayPrecipitationChartData,
   hasEventDayHourlyData,
@@ -59,11 +58,6 @@ export function EventDayPrecipitationChart({
             ...baseChartOptions,
             plugins: {
               ...baseChartOptions.plugins,
-              title: {
-                display: true,
-                text: CHART_TITLE,
-                color: CHART_COLORS.label,
-              },
             },
           }}
         />

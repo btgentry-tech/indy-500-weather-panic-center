@@ -9,14 +9,15 @@ export const baseChartOptions = {
   },
   plugins: {
     legend: {
+      position: "top" as const,
+      align: "start" as const,
       labels: {
         color: CHART_COLORS.text,
         font: { family: "Courier New", size: 11 },
       },
     },
     title: {
-      color: CHART_COLORS.label,
-      font: { family: "Courier New", size: 12 },
+      display: false,
     },
     tooltip: {
       titleColor: CHART_COLORS.label,
