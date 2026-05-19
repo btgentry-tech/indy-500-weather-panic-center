@@ -31,7 +31,7 @@ export function IphoneSetupModal({ open, onClose }: IphoneSetupModalProps) {
           <li>Tap the Share button.</li>
           <li>Tap &ldquo;Add to Home Screen.&rdquo;</li>
           <li>Open &ldquo;Indy 500 Weather&rdquo; from your Home Screen.</li>
-          <li>Tap ENABLE PANIC ALERTS again.</li>
+          <li>Tap ENABLE WEATHER ALERTS again.</li>
         </ol>
         <p className="alert-modal-note">
           iPhone web push only works from the Home Screen app, not a normal

@@ -117,7 +117,7 @@ export function AlertSubscribePanel() {
           onClick={handleEnableClick}
           disabled={state === "requesting"}
         >
-          [ ENABLE PANIC ALERTS ]
+          [ ENABLE WEATHER ALERTS ]
         </button>
         {status && <p className="status-line alert-feedback">{status}</p>}
         {foregroundMsg && (
