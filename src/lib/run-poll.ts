@@ -1,4 +1,7 @@
-import { compareForecasts } from "./compare";
+import {
+  buildForecastChangeNotification,
+  compareForecasts,
+} from "./compare";
 import {
   appendChangelog,
   loadAllSnapshots,
@@ -15,8 +18,16 @@ import {
 import { sendTopicNotification } from "./firebase-admin";
 import { fetchLocalConditionsSafe, fetchNoaaForecast } from "./noaa";
 import { isWithinPollingWindow } from "./race-days";
-import { buildSnapshot, shouldPersistSnapshot } from "./snapshot-builder";
-import type { ChangelogEntry, PollHeartbeat, StationMeta } from "./types";
+import {
+  buildSnapshot,
+  hasForecastDataChanged,
+} from "./snapshot-builder";
+import type {
+  ChangelogEntry,
+  ForecastSnapshot,
+  PollHeartbeat,
+  StationMeta,
+} from "./types";
 import path from "path";
 
 export interface PollRunLog {
@@ -26,6 +37,7 @@ export interface PollRunLog {
   message: string;
   snapshotSaved: boolean;
   snapshotId?: string;
+  forecastDataChanged: boolean;
   forecastChanged: boolean;
   notificationSent: boolean;
   panicIndex?: number;
@@ -72,6 +84,7 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
       outcome: "outside_window",
       message: "Outside April–May polling window.",
       snapshotSaved: false,
+      forecastDataChanged: false,
       forecastChanged: false,
       notificationSent: false,
     };
@@ -87,7 +100,8 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
 
     const history = await loadAllSnapshots();
     const previous = await loadLatestSnapshot();
-    const snapshot = buildSnapshot(forecast, history);
+    const fetchedAt = new Date(checkedAt);
+    const snapshot = buildSnapshot(forecast, history, fetchedAt, previous);
 
     const compare = compareForecasts(
       previous,
@@ -97,44 +111,19 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
       previous?.panicIndex,
     );
 
-    const shouldSave =
-      !previous || shouldPersistSnapshot(previous, snapshot);
-
-    if (!shouldSave) {
-      if (!dryRun) {
-        await updateStationMeta(station);
-        await writeHeartbeat(
-          {
-            at: checkedAt,
-            ok: true,
-            outcome: "checked_no_save",
-            message: "NOAA checked; no material forecast change.",
-            shouldSave: false,
-            hasMeaningfulChange: compare.hasMeaningfulChange,
-            panicIndex: snapshot.panicIndex,
-          },
-          dryRun,
-        );
-      }
-      return {
-        ok: true,
-        checkedAt,
-        outcome: "checked_no_save",
-        message: "NOAA checked; no material forecast change.",
-        snapshotSaved: false,
-        forecastChanged: compare.hasMeaningfulChange,
-        notificationSent: false,
-        panicIndex: snapshot.panicIndex,
-      };
-    }
+    const dataChanged =
+      !previous || hasForecastDataChanged(previous, snapshot);
 
     if (dryRun) {
+      const wouldNotify =
+        dataChanged && Boolean(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
       return {
         ok: true,
         checkedAt,
         outcome: "saved",
-        message: `DRY RUN — would save ${snapshot.id}`,
+        message: `DRY RUN — would ${dataChanged ? "save" : "refresh"} ${snapshot.id}${wouldNotify ? "; would notify" : ""}`,
         snapshotSaved: false,
+        forecastDataChanged: dataChanged,
         forecastChanged: compare.hasMeaningfulChange,
         notificationSent: false,
         panicIndex: snapshot.panicIndex,
@@ -142,25 +131,44 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
       };
     }
 
-    await saveSnapshot(snapshot);
-    await updateIndex(snapshot.id);
-    await updateLatest(snapshot.id);
+    let persisted: ForecastSnapshot;
+    let outcome: PollHeartbeat["outcome"] = dataChanged ? "saved" : "checked_no_save";
+    let message = dataChanged
+      ? `Snapshot saved: ${snapshot.id}`
+      : "NOAA checked; forecast unchanged — refreshed snapshot timestamp.";
 
-    station.lastSnapshotAt = snapshot.fetchedAt;
-    station.lastSnapshotId = snapshot.id;
+    if (dataChanged) {
+      persisted = snapshot;
+      await saveSnapshot(persisted);
+      await updateIndex(persisted.id);
+      await updateLatest(persisted.id);
+    } else {
+      persisted = {
+        ...snapshot,
+        id: previous!.id,
+        fetchedAt: checkedAt,
+        lastForecastChange: previous!.lastForecastChange,
+      };
+      await saveSnapshot(persisted);
+    }
 
-    let outcome: PollHeartbeat["outcome"] = "saved";
-    let message = `Snapshot saved: ${snapshot.id}`;
+    station.lastSnapshotAt = checkedAt;
+    station.lastSnapshotId = persisted.id;
+
     let notificationSent = false;
 
+    // Meaningful forecast change — editorial summaries, changelog, hero timestamps only.
     if (compare.hasMeaningfulChange) {
-      station.lastForecastChangeAt = snapshot.fetchedAt;
+      station.lastForecastChangeAt = checkedAt;
       station.lastForecastChangeSummary = compare.summary;
+
+      persisted = { ...persisted, lastForecastChange: compare.summary };
+      await saveSnapshot(persisted);
 
       const changelog = await loadChangelog();
       const entry: ChangelogEntry = {
-        at: snapshot.fetchedAt,
-        snapshotId: snapshot.id,
+        at: checkedAt,
+        snapshotId: persisted.id,
         severity: compare.severity,
         summary: compare.summary,
         details: compare.details,
@@ -170,19 +178,26 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
         defconTo: compare.panicIndexTo,
       };
       await appendChangelog(changelog, entry);
+    }
 
-      if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
-        await sendTopicNotification(
-          compare.notificationTitle,
-          compare.notificationBody,
-        );
-        outcome = "saved_notify";
-        message = `Snapshot saved; notification sent. ${compare.summary}`;
-        notificationSent = true;
-      } else {
-        message =
-          "Snapshot saved; notification skipped (no FIREBASE_SERVICE_ACCOUNT_JSON).";
-      }
+    // Any forecast data change — FCM push (after snapshot is persisted; skipped when grid is identical).
+    if (dataChanged && process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+      const { title, body } = buildForecastChangeNotification(
+        compare,
+        snapshot.panicIndex,
+        {
+          meaningful: compare.hasMeaningfulChange,
+          isInitial: !previous,
+        },
+      );
+      await sendTopicNotification(title, body);
+      notificationSent = true;
+      outcome = "saved_notify";
+      message = compare.hasMeaningfulChange
+        ? `Meaningful forecast change. ${compare.summary}`
+        : `Forecast data changed. ${body}`;
+    } else if (compare.hasMeaningfulChange) {
+      message = `Meaningful change logged; notification skipped (no FIREBASE_SERVICE_ACCOUNT_JSON). ${compare.summary}`;
     }
 
     await updateStationMeta(station);
@@ -192,9 +207,10 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
         ok: true,
         outcome,
         message,
-        shouldSave: true,
+        shouldSave: dataChanged,
+        hasForecastDataChanged: dataChanged,
         hasMeaningfulChange: compare.hasMeaningfulChange,
-        snapshotId: snapshot.id,
+        snapshotId: persisted.id,
         panicIndex: snapshot.panicIndex,
       },
       dryRun,
@@ -206,7 +222,8 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
       outcome,
       message,
       snapshotSaved: true,
-      snapshotId: snapshot.id,
+      snapshotId: persisted.id,
+      forecastDataChanged: dataChanged,
       forecastChanged: compare.hasMeaningfulChange,
       notificationSent,
       panicIndex: snapshot.panicIndex,
@@ -236,6 +253,7 @@ export async function runPoll(options: RunPollOptions = {}): Promise<PollRunLog>
       outcome: "error",
       message: errMsg,
       snapshotSaved: false,
+      forecastDataChanged: false,
       forecastChanged: false,
       notificationSent: false,
       error: errMsg,

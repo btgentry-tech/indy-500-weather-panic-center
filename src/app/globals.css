@@ -440,6 +440,16 @@ table.data .col-stability.stability-high {
   font-size: var(--text-lg);
 }
 
+.hero-forecast-asof {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.hero-forecast-asof time {
+  font-variant-numeric: tabular-nums;
+}
+
 .trend-metric .field-value {
   font-size: var(--text-base);
   text-transform: lowercase;

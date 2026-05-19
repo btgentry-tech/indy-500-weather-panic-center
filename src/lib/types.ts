@@ -68,6 +68,9 @@ export interface PollHeartbeat {
     | "error";
   message: string;
   shouldSave?: boolean;
+  /** Grid differed from previous snapshot (FCM trigger). */
+  hasForecastDataChanged?: boolean;
+  /** Editorial/changelog threshold met. */
   hasMeaningfulChange?: boolean;
   snapshotId?: string;
   panicIndex?: number;

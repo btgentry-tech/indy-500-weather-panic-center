@@ -11,6 +11,12 @@ import { RACE_DAYS, getRaceDayByKey } from "./race-days";
 const RAIN_THRESHOLD = 15;
 const TIMING_SHIFT_HOURS = 2;
 
+/** Light FCM body when the grid changed but editorial thresholds were not met. */
+const MINOR_FORECAST_NOTIFICATION_BODIES = [
+  "Forecast updated. Minor NOAA revision detected.",
+  "Forecast refreshed. Small atmospheric wobble detected.",
+] as const;
+
 function hasStormWording(risk: string): boolean {
   return risk === "ACTIVE" || risk === "ELEVATED";
 }
@@ -36,6 +42,15 @@ function timingShiftHours(
   return Math.abs(nextStart.getTime() - prevStart.getTime()) / (1000 * 60 * 60);
 }
 
+/**
+ * Meaningful forecast change — higher bar for editorial summaries, changelog, and
+ * "last meaningful change" timestamps (≥15% rain swing, panic index shift, storm
+ * wording toggle, ≥2h storm-timing shift).
+ *
+ * Any forecast data change (`hasForecastDataChanged`) is a lower bar: any grid
+ * field delta (rain, temp, storm risk, hourly slots, derived trends, panic index).
+ * Push notifications fire on any data change, not only meaningful change.
+ */
 export function compareForecasts(
   previous: ForecastSnapshot | null,
   currentDays: Record<DayKey, { rainPct: number; stormRisk: string }>,
@@ -169,6 +184,26 @@ export function buildNotificationCopy(
   return {
     title: result.notificationTitle,
     body: result.notificationBody,
+  };
+}
+
+/** FCM copy: dramatic alert for meaningful/initial changes, lighter tone for minor grid revisions. */
+export function buildForecastChangeNotification(
+  compare: CompareResult,
+  panicIndex: PanicIndexLevel,
+  options: { meaningful: boolean; isInitial: boolean },
+): { title: string; body: string } {
+  if (options.isInitial || options.meaningful) {
+    return buildNotificationCopy(compare);
+  }
+
+  const body =
+    MINOR_FORECAST_NOTIFICATION_BODIES[
+      panicIndex % MINOR_FORECAST_NOTIFICATION_BODIES.length
+    ];
+  return {
+    title: "Forecast Update",
+    body,
   };
 }
 

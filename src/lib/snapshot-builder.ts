@@ -4,17 +4,66 @@ import {
   computePanicIndex,
   PANIC_INDEX_MOODS,
 } from "./panic-index";
-import type { ForecastSnapshot, NormalizedForecast } from "./types";
+import type {
+  DayKey,
+  ForecastSnapshot,
+  HourlyPoint,
+  NormalizedForecast,
+} from "./types";
 import { computeSnapshotStabilityLevel } from "./forecast-stability";
 import { computeVolatility } from "./volatility";
 import { formatSnapshotId } from "./race-days";
 
+function hourlyForecastChanged(
+  previous: HourlyPoint[],
+  next: HourlyPoint[],
+): boolean {
+  if (previous.length !== next.length) return true;
+  for (let i = 0; i < previous.length; i++) {
+    if (previous[i].rainPct !== next[i].rainPct) return true;
+    if (previous[i].hasStormWording !== next[i].hasStormWording) return true;
+    if (previous[i].shortForecast !== next[i].shortForecast) return true;
+  }
+  return false;
+}
+
+/**
+ * Any forecast data change — lower bar than meaningful change. Triggers a new
+ * snapshot history entry and FCM when rain, temp, storm risk, hourly slots,
+ * derived trends, or panic index differ from the previous poll.
+ */
+export function hasForecastDataChanged(
+  previous: ForecastSnapshot,
+  next: ForecastSnapshot,
+): boolean {
+  if (previous.panicIndex !== next.panicIndex) return true;
+
+  for (const key of ["carbDay", "legendsDay", "raceDay"] as const) {
+    const prevDay = previous.days[key];
+    const nextDay = next.days[key];
+    if (
+      prevDay.rainPct !== nextDay.rainPct ||
+      prevDay.stormRisk !== nextDay.stormRisk ||
+      prevDay.highTemp !== nextDay.highTemp ||
+      prevDay.shortForecast !== nextDay.shortForecast
+    ) {
+      return true;
+    }
+  }
+
+  if (hourlyForecastChanged(previous.hourly, next.hourly)) return true;
+
+  return false;
+}
+
 export function buildSnapshot(
   forecast: NormalizedForecast,
   history: ForecastSnapshot[],
-  fetchedAt = new Date(),
+  fetchedAt: Date = new Date(),
+  previousOverride?: ForecastSnapshot | null,
 ): ForecastSnapshot {
-  const previous = history[history.length - 1];
+  const previous =
+    previousOverride ?? history[history.length - 1] ?? null;
   const id = formatSnapshotId(fetchedAt);
 
   const days = buildRaceDayRows(forecast, previous?.days);
@@ -27,7 +76,7 @@ export function buildSnapshot(
   const forecastStability = volatility.stabilityScore;
 
   const compare = compareForecasts(
-    previous ?? null,
+    previous,
     days,
     forecast.hourly,
     panicIndex,
@@ -53,22 +102,11 @@ export function buildSnapshot(
   };
 }
 
+/** @deprecated Use hasForecastDataChanged — kept for callers/tests. */
 export function shouldPersistSnapshot(
   previous: ForecastSnapshot | null,
   next: ForecastSnapshot,
 ): boolean {
   if (!previous) return true;
-  if (previous.panicIndex !== next.panicIndex) return true;
-
-  for (const key of ["carbDay", "legendsDay", "raceDay"] as const) {
-    if (
-      previous.days[key].rainPct !== next.days[key].rainPct ||
-      previous.days[key].stormRisk !== next.days[key].stormRisk ||
-      previous.days[key].highTemp !== next.days[key].highTemp
-    ) {
-      return true;
-    }
-  }
-
-  return false;
+  return hasForecastDataChanged(previous, next);
 }

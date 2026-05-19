@@ -84,7 +84,7 @@ export function StationStatus({ station: initialStation }: StationStatusProps) {
           </dd>
         </div>
         <div className="telemetry-row">
-          <dt>Last forecast change</dt>
+          <dt>Last meaningful forecast change</dt>
           <dd>
             {station.lastForecastChangeAt
               ? formatStationTime(station.lastForecastChangeAt)

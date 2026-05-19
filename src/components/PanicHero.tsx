@@ -22,10 +22,13 @@ export function PanicHero({
   lastForecastChangeAt,
 }: PanicHeroProps) {
   const race = snapshot.days.raceDay;
+  const hasMeaningfulChange =
+    Boolean(lastForecastChangeAt) &&
+    Boolean(lastForecastChange ?? snapshot.lastForecastChange);
   const changeText =
     lastForecastChange ??
     snapshot.lastForecastChange ??
-    PANIC_INDEX_MOODS[snapshot.panicIndex];
+    "No meaningful forecast shift since the last editorial update.";
   const changeAt = lastForecastChangeAt ?? snapshot.fetchedAt;
   const stability = resolveSnapshotStabilityLevel(snapshot);
 
@@ -70,17 +73,24 @@ export function PanicHero({
           <span className="field-value field-value-live">{race.rainPct}%</span>
         </div>
         <TrendIndicator trend={race.trend} compact />
+        <p className="hero-forecast-asof">
+          <span className="field-label">Forecast as of</span>{" "}
+          <time dateTime={snapshot.fetchedAt}>
+            {formatStationTime(snapshot.fetchedAt)}
+          </time>
+        </p>
       </div>
       <div className="hero-incident">
         <p className="incident-header">
-          <span className="field-label">Latest change</span>
-          <time className="incident-time" dateTime={changeAt}>
-            {formatStationTime(changeAt)}
-          </time>
+          <span className="field-label">Last meaningful change</span>
+          {hasMeaningfulChange ? (
+            <time className="incident-time" dateTime={changeAt}>
+              {formatStationTime(changeAt)}
+            </time>
+          ) : null}
         </p>
         <p className="hero-incident-text">{truncateChangeLine(changeText, 120)}</p>
       </div>
     </section>
   );
 }
-
