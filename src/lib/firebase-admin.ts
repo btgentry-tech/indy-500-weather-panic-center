@@ -41,6 +41,14 @@ export async function subscribeTokenToTopic(
   await messaging.subscribeToTopic([token], topic);
 }
 
+export async function unsubscribeTokenFromTopic(
+  token: string,
+  topic = process.env.FCM_TOPIC ?? FCM_TOPIC_DEFAULT,
+): Promise<void> {
+  const messaging = getMessaging(getFirebaseAdminApp());
+  await messaging.unsubscribeFromTopic([token], topic);
+}
+
 export async function sendTopicNotification(
   title: string,
   body: string,

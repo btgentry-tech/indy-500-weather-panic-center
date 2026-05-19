@@ -563,6 +563,19 @@ table.data tr:nth-child(even) {
   color: var(--text);
 }
 
+.alert-armed-strip {
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.btn-alert-compact {
+  min-height: 40px;
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
 /* Radar pulse */
 .radar-pulse {
   width: 14px;
