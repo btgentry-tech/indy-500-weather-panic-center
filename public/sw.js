@@ -1,4 +1,4 @@
-/* FCM service worker — background push for Indy Panic Center */
+/* FCM service worker — background push for Indy Panic Center (v2) */
 /* fcm-handlers registers push/messaging handlers during initial evaluation */
 importScripts("/fcm-handlers.js");
 

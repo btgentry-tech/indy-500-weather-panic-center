@@ -1,5 +1,6 @@
 import type { ForecastSnapshot } from "@/lib/types";
 import { formatIncidentTime } from "@/lib/format";
+import { PANIC_INDEX_MOODS } from "@/lib/panic-index";
 import { summarizeSnapshotDelta } from "@/lib/volatility";
 
 type IncidentTone = "improving" | "worsening" | "uncertain";
@@ -51,7 +52,8 @@ export function IncidentReport({ snapshot, previous }: IncidentReportProps) {
       </summary>
       <div className="incident-body">
         <p>
-          PANIC INDEX: {snapshot.panicIndex}/5 — {snapshot.mood}
+          PANIC INDEX: {snapshot.panicIndex}/5 —{" "}
+          {PANIC_INDEX_MOODS[snapshot.panicIndex]}
         </p>
         <p>
           Carb {snapshot.days.carbDay.rainPct}% | Legends{" "}

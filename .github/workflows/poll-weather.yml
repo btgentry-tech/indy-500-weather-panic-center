@@ -4,6 +4,15 @@ on:
   schedule:
     - cron: "*/15 * * * *"
   workflow_dispatch:
+  # Run once when poll/notification logic changes land so production data matches new code.
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/poll-weather.yml"
+      - "src/lib/run-poll.ts"
+      - "src/lib/compare.ts"
+      - "src/lib/snapshot-builder.ts"
+      - "src/lib/panic-index.ts"
 
 permissions:
   contents: write
