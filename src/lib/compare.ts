@@ -55,7 +55,7 @@ export function compareForecasts(
       summary: "Monitoring station online. Baseline forecast captured.",
       panicIndexTo: panicIndex,
       notificationTitle: "Panic Center Online",
-      notificationBody: `PANIC INDEX: ${panicIndex}. ${PANIC_INDEX_MOODS[panicIndex]}.`,
+      notificationBody: `PANIC INDEX: ${panicIndex}/5. ${PANIC_INDEX_MOODS[panicIndex]}.`,
     };
   }
 
@@ -145,7 +145,7 @@ export function compareForecasts(
       : details[0] ?? "Forecast update recorded.";
 
   const notificationTitle = indexChanged
-    ? `PANIC INDEX: ${panicIndex}`
+    ? `PANIC INDEX: ${panicIndex}/5`
     : "Forecast Update";
 
   const notificationBody =

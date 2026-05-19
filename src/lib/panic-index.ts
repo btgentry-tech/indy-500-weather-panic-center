@@ -167,7 +167,15 @@ export function buildRaceDayRows(
 }
 
 export function getPanicIndexLabel(level: PanicIndexLevel): string {
-  return `PANIC INDEX: ${level}`;
+  return `PANIC INDEX: ${level}/5`;
+}
+
+/** Terminal-style segmented severity meter for display (e.g. [ ■ ■ ■ ■ □ ]) */
+export function formatPanicMeter(level: PanicIndexLevel): string {
+  const segments = Array.from({ length: 5 }, (_, i) =>
+    i < level ? "■" : "□",
+  ).join(" ");
+  return `[ ${segments} ]`;
 }
 
 /** @deprecated Use getPanicIndexLabel */

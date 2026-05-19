@@ -148,16 +148,84 @@ a {
 }
 
 /* Panic index */
-.panic-index-level {
-  font-size: 42px;
+.panic-index-block {
+  margin-bottom: 10px;
+}
+
+.panic-index-headline {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-bottom: 6px;
+}
+
+.panic-index-caption {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.panic-index-fraction {
+  font-size: 48px;
   line-height: 1;
   font-weight: 600;
-  margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+
+.panic-index-meter {
+  margin: 0 0 8px;
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: 0.14em;
+}
+
+.meter-bracket {
+  color: var(--text-dim);
+}
+
+.meter-seg {
+  display: inline-block;
+  width: 1.1em;
+  text-align: center;
+}
+
+.meter-seg-empty {
+  color: var(--text-dim);
+}
+
+.panic-index-block.panic-index-1 .panic-index-fraction,
+.panic-index-block.panic-index-2 .panic-index-fraction,
+.panic-index-block.panic-index-1 .meter-seg-filled,
+.panic-index-block.panic-index-2 .meter-seg-filled {
+  color: var(--text);
+}
+
+.panic-index-block.panic-index-3 .panic-index-fraction,
+.panic-index-block.panic-index-3 .meter-seg-filled {
+  color: var(--warn);
+}
+
+.panic-index-block.panic-index-4 .panic-index-fraction,
+.panic-index-block.panic-index-5 .panic-index-fraction,
+.panic-index-block.panic-index-4 .meter-seg-filled,
+.panic-index-block.panic-index-5 .meter-seg-filled {
+  color: var(--alert);
 }
 
 .mood-line {
   margin: 0 0 12px;
   color: var(--text-dim);
+}
+
+/* Legacy class names for charts / other panels */
+.panic-index-level {
+  font-size: 42px;
+  line-height: 1;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
 .panic-index-1,
@@ -771,6 +839,14 @@ table.data tr:nth-child(even) {
 
   .nav-alerts-error {
     text-align: center;
+  }
+
+  .panic-index-fraction {
+    font-size: 40px;
+  }
+
+  .panic-index-meter {
+    font-size: 17px;
   }
 
   .panic-index-level {

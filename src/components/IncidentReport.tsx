@@ -51,7 +51,7 @@ export function IncidentReport({ snapshot, previous }: IncidentReportProps) {
       </summary>
       <div className="incident-body">
         <p>
-          PANIC INDEX: {snapshot.panicIndex} — {snapshot.mood}
+          PANIC INDEX: {snapshot.panicIndex}/5 — {snapshot.mood}
         </p>
         <p>
           Carb {snapshot.days.carbDay.rainPct}% | Legends{" "}

@@ -1,7 +1,8 @@
 import type { ForecastSnapshot } from "@/lib/types";
-import { getPanicIndexLabel, PANIC_INDEX_MOODS } from "@/lib/panic-index";
+import { PANIC_INDEX_MOODS } from "@/lib/panic-index";
 import { truncateChangeLine } from "@/lib/labels";
 import { formatStationTime } from "@/lib/format";
+import { PanicIndexMeter } from "./PanicIndexMeter";
 import { TrendIndicator } from "./TrendIndicator";
 
 interface PanicHeroProps {
@@ -34,9 +35,15 @@ export function PanicHero({
         <span className="radar-pulse" aria-hidden="true" />
       </div>
       <div
-        className={`panic-index-level panic-index-${snapshot.panicIndex}`}
+        className={`panic-index-block panic-index-${snapshot.panicIndex}`}
       >
-        {getPanicIndexLabel(snapshot.panicIndex)}
+        <div className="panic-index-headline">
+          <span className="panic-index-caption">PANIC INDEX:</span>
+          <span className="panic-index-fraction">
+            {snapshot.panicIndex}/5
+          </span>
+        </div>
+        <PanicIndexMeter level={snapshot.panicIndex} />
       </div>
       <p className="mood-line">{PANIC_INDEX_MOODS[snapshot.panicIndex]}</p>
       <p className="hero-rain">
