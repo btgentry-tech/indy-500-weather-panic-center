@@ -10,11 +10,6 @@ import {
 } from "@/lib/alerts-storage";
 import { onMessage } from "firebase/messaging";
 
-/** REMOVABLE DEBUG — delete with push-debug logging cleanup */
-function pushDebug(...args: unknown[]): void {
-  console.log("[push-debug]", ...args);
-}
-
 type AlertState = "offline" | "requesting" | "armed" | "denied" | "failed" | "unsupported";
 
 function isIos(): boolean {
@@ -32,77 +27,30 @@ function isStandalonePwa(): boolean {
 }
 
 async function registerServiceWorker(): Promise<ServiceWorkerRegistration> {
-  try {
-    const existing = await navigator.serviceWorker.getRegistration("/");
-    if (existing?.active) {
-      pushDebug("service worker: reusing active registration", {
-        scope: existing.scope,
-      });
-      return existing;
-    }
+  const existing = await navigator.serviceWorker.getRegistration("/");
+  if (existing?.active) return existing;
 
-    pushDebug("service worker: registering /sw.js");
-    const reg = await navigator.serviceWorker.register("/sw.js", { scope: "/" });
-    await navigator.serviceWorker.ready;
-    pushDebug("service worker: registration succeeded", {
-      scope: reg.scope,
-      active: Boolean(reg.active),
-    });
-    return reg;
-  } catch (error) {
-    pushDebug("service worker: registration failed", {
-      message: error instanceof Error ? error.message : String(error),
-    });
-    throw error;
-  }
+  const reg = await navigator.serviceWorker.register("/sw.js", { scope: "/" });
+  await navigator.serviceWorker.ready;
+  return reg;
 }
 
 async function subscribeToken(registration: ServiceWorkerRegistration): Promise<void> {
   const messaging = await getClientMessaging();
   const { getToken } = await import("firebase/messaging");
-
-  let token: string | null = null;
-  try {
-    pushDebug("getToken: requesting FCM token");
-    token = await getToken(messaging, {
-      vapidKey: getVapidKey(),
-      serviceWorkerRegistration: registration,
-    });
-    pushDebug("getToken: succeeded", {
-      tokenLength: token?.length ?? 0,
-      hasToken: Boolean(token),
-    });
-  } catch (error) {
-    pushDebug("getToken: failed", {
-      message: error instanceof Error ? error.message : String(error),
-    });
-    throw error;
-  }
-
+  const token = await getToken(messaging, {
+    vapidKey: getVapidKey(),
+    serviceWorkerRegistration: registration,
+  });
   if (!token) throw new Error("FCM token unavailable.");
 
-  pushDebug("POST /api/subscribe: sending");
   const res = await fetch("/api/subscribe", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ token }),
   });
-
-  let responseBody: unknown = null;
-  try {
-    responseBody = await res.json();
-  } catch {
-    responseBody = "(non-JSON or empty body)";
-  }
-
-  pushDebug("POST /api/subscribe: response", {
-    status: res.status,
-    ok: res.ok,
-    body: responseBody,
-  });
-
   if (!res.ok) {
-    const body = responseBody as { error?: string };
+    const body = (await res.json()) as { error?: string };
     throw new Error(body.error ?? "Subscription failed.");
   }
 }
@@ -114,17 +62,9 @@ export function AlertSubscribePanel() {
   const [supported, setSupported] = useState(true);
 
   const syncArmedState = useCallback(async () => {
-    pushDebug("syncArmedState: start", {
-      notificationsSupported: notificationsSupported(),
-      permission:
-        typeof Notification !== "undefined" ? Notification.permission : "n/a",
-      isAlertsArmed: isAlertsArmed(),
-    });
-
     if (!notificationsSupported()) {
       setSupported(false);
       setState("unsupported");
-      pushDebug("syncArmedState: unsupported browser");
       return;
     }
     setSupported(true);
@@ -133,23 +73,15 @@ export function AlertSubscribePanel() {
       setState(
         Notification.permission === "denied" ? "denied" : "offline",
       );
-      pushDebug("syncArmedState: not armed");
       return;
     }
 
     setState("armed");
-    pushDebug("syncArmedState: armed in storage, re-subscribing");
     try {
       const registration = await registerServiceWorker();
       await subscribeToken(registration);
-      pushDebug("syncArmedState: re-subscribe complete", {
-        isAlertsArmed: isAlertsArmed(),
-      });
-    } catch (error) {
-      pushDebug("syncArmedState: re-subscribe failed (UI still armed)", {
-        message: error instanceof Error ? error.message : String(error),
-        isAlertsArmed: isAlertsArmed(),
-      });
+    } catch {
+      /* armed in UI; re-subscribe may fail if Firebase unset locally */
     }
   }, []);
 
@@ -178,7 +110,6 @@ export function AlertSubscribePanel() {
   }, [supported]);
 
   async function enableAlerts() {
-    pushDebug("enableAlerts: start", { isAlertsArmed: isAlertsArmed() });
     setState("requesting");
     setStatus("Enabling alerts...");
 
@@ -195,7 +126,6 @@ export function AlertSubscribePanel() {
       }
 
       const permission = await Notification.requestPermission();
-      pushDebug("enableAlerts: permission", { permission });
       if (permission !== "granted") {
         setState("denied");
         throw new Error("Notification permission denied.");
@@ -207,18 +137,9 @@ export function AlertSubscribePanel() {
       setAlertsArmed(true);
       setState("armed");
       setStatus("Alerts armed. indy-panic topic.");
-      pushDebug("enableAlerts: complete", {
-        isAlertsArmed: isAlertsArmed(),
-        uiState: "armed",
-      });
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Subscription failed.";
-      pushDebug("enableAlerts: failed", {
-        message,
-        permission: Notification.permission,
-        isAlertsArmed: isAlertsArmed(),
-      });
       if (Notification.permission === "denied") {
         setState("denied");
       } else if (state !== "unsupported") {
