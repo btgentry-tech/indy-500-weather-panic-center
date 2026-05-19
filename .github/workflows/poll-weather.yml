@@ -1,4 +1,4 @@
-# Optional manual poll — production uses Vercel Cron (/api/internal/poll-weather).
+# Optional manual poll — production uses Vercel Cron (/api/poll-weather).
 name: Poll Weather (manual)
 
 on:

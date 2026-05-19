@@ -113,21 +113,20 @@ Production polling runs on **Vercel Cron**, not GitHub schedule. You can still r
 | `BLOB_READ_WRITE_TOKEN` | Yes | Auto-set when Blob store is linked |
 
 7. Click **Deploy**
-8. **Settings** → **Cron Jobs** — confirm `/api/internal/poll-weather` every 15 minutes (from `vercel.json`)
+8. **Settings** → **Cron Jobs** — confirm `/api/poll-weather` every 15 minutes (from `vercel.json`)
+9. **Settings** → **General** → leave **Output Directory** blank (do not set `out` — that disables API routes)
 
 ### Test poll manually
 
 ```bash
-curl -s "https://YOUR-APP.vercel.app/api/internal/poll-weather?secret=YOUR_CRON_SECRET" | jq
-# Or hit the primary handler directly:
-# curl -s "https://YOUR-APP.vercel.app/api/poll-weather?secret=YOUR_CRON_SECRET" | jq
+curl -s "https://YOUR-APP.vercel.app/api/poll-weather?secret=YOUR_CRON_SECRET" | jq
 ```
 
 Expect JSON with `checkedAt`, `snapshotSaved`, `notificationSent`, `panicIndex`, etc.
 
 ### Verify cron is firing
 
-1. Vercel → **Logs** → filter path `/api/internal/poll-weather` — entries every ~15 min
+1. Vercel → **Logs** → filter path `/api/poll-weather` — entries every ~15 min
 2. Site **Last NOAA check** should advance (may lag one ISR cycle; client refresh hits `/api/data/station`)
 3. Vercel → **Storage** → **Blob** → files under `weather-data/`
 
@@ -169,7 +168,8 @@ npm run poll       # saves snapshot + may notify
 | NOAA errors | Set `NOAA_USER_AGENT` with a real contact email |
 | Subscribe API 500 | Check `FIREBASE_SERVICE_ACCOUNT_JSON` on Vercel |
 | No push on iPhone | Must use Home Screen installed PWA, not Safari tab |
-| Empty dashboard | Link Vercel Blob, set `CRON_SECRET`, trigger `/api/internal/poll-weather` |
+| Empty dashboard | Link Vercel Blob, set `CRON_SECRET`, trigger `/api/poll-weather` |
+| API routes 404 | Clear Vercel **Output Directory** (must be empty for Next.js serverless) |
 | Last NOAA check stuck | Check Vercel Cron logs; confirm `CRON_SECRET` + Blob token |
 | Service worker errors | Run `npm run prebuild` after changing Firebase env vars; push requires production build (`npm run build && npm start`) — dev mode disables PWA |
 | Alerts show OFFLINE after subscribe | Check Vercel env vars; confirm `/sw.js` loads on deployed site |
@@ -183,7 +183,7 @@ npm run poll       # saves snapshot + may notify
 | Live data (production) | Vercel Blob `weather-data/*` |
 | Seed / local dev data | `public/data/*` |
 | Poll logic | `src/lib/run-poll.ts` |
-| Cron endpoint | `src/app/api/internal/poll-weather/route.ts` |
+| Cron endpoint | `src/app/api/poll-weather/route.ts` |
 | Poll CLI | `npm run poll` |
 | Optional manual GHA | `.github/workflows/poll-weather.yml` |
 | FCM handlers (imported into PWA SW) | `public/fcm-handlers.js` |

@@ -6,14 +6,13 @@
     "predev": "node scripts/generate-firebase-config.mjs",
     "dev": "next dev",
     "prebuild": "node scripts/generate-firebase-config.mjs",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
     "poll": "node --import tsx scripts/poll-weather.ts --force-window",
     "poll:dry": "node --import tsx scripts/poll-weather.ts --dry-run --force-window"
   },
   "dependencies": {
-    "@vercel/blob": "^2.4.0",
     "chart.js": "^4.5.1",
     "firebase": "^12.13.0",
     "firebase-admin": "^13.10.0",
