@@ -1,12 +1,12 @@
 {
   "id": "2026-05-19-0430",
-  "fetchedAt": "2026-05-19T08:30:00.032Z",
-  "noaaGeneratedAt": "2026-05-19T08:29:59+00:00",
+  "fetchedAt": "2026-05-19T16:30:38.677Z",
+  "noaaGeneratedAt": "2026-05-19T16:30:39+00:00",
   "panicIndex": 4,
   "panicScale": 2,
   "defcon": 4,
   "mood": "High concern. Track drying equipment on standby. Atmospheric chaos entering the chat.",
-  "forecastStability": 47,
+  "forecastStability": 58,
   "forecastStabilityLevel": "unsettled",
   "lastForecastChange": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
   "days": {
@@ -18,7 +18,7 @@
       "highTemp": 71,
       "shortForecast": "Showers And Thunderstorms",
       "detailedForecast": "Rain showers likely before 2pm, then showers and thunderstorms. Mostly cloudy, with a high near 71. East wind around 9 mph. Chance of precipitation is 90%.",
-      "trend": "↑"
+      "trend": "→"
     },
     "legendsDay": {
       "label": "Legends Day",
@@ -28,7 +28,7 @@
       "highTemp": 78,
       "shortForecast": "Chance Showers And Thunderstorms",
       "detailedForecast": "A chance of showers and thunderstorms before 2pm, then a chance of showers and thunderstorms. Mostly cloudy, with a high near 78. West wind around 7 mph. Chance of precipitation is 50%.",
-      "trend": "↓"
+      "trend": "→"
     },
     "raceDay": {
       "label": "Race Day",
@@ -38,7 +38,7 @@
       "highTemp": 81,
       "shortForecast": "Slight Chance Showers And Thunderstorms then Chance Showers And Thunderstorms",
       "detailedForecast": "A slight chance of showers and thunderstorms before 8am, then a chance of showers and thunderstorms between 8am and 2pm, then a slight chance of showers and thunderstorms. Partly sunny, with a high near 81. Chance of precipitation is 30%.",
-      "trend": "↑"
+      "trend": "→"
     }
   },
   "hourly": [
@@ -237,8 +237,8 @@
   ],
   "volatility": {
     "changes24h": 3,
-    "largestRainSwing": 11,
-    "stabilityScore": 47,
-    "volatilityScore": 53
+    "largestRainSwing": 0,
+    "stabilityScore": 58,
+    "volatilityScore": 42
   }
 }

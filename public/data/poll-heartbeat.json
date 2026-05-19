@@ -1,9 +1,11 @@
 {
-  "at": "2026-05-19T14:18:14.425Z",
+  "at": "2026-05-19T16:30:38.677Z",
   "ok": true,
   "outcome": "checked_no_save",
-  "message": "NOAA checked; no material forecast change.",
+  "message": "NOAA checked; forecast unchanged — refreshed snapshot timestamp.",
   "shouldSave": false,
+  "hasForecastDataChanged": false,
   "hasMeaningfulChange": false,
+  "snapshotId": "2026-05-19-0430",
   "panicIndex": 4
 }
