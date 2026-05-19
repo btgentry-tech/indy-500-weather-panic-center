@@ -43,7 +43,7 @@ export function PanicHero({ snapshot, revisionSummary }: PanicHeroProps) {
         </p>
       </div>
       <div className="hero-stability-block">
-        <span className="field-label">Overall NOAA stability</span>
+        <span className="field-label">Overall forecast stability</span>
         <p
           className={`hero-stability-value ${stabilityCssClass(stability)}`}
         >

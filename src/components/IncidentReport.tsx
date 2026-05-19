@@ -53,8 +53,8 @@ export function IncidentReport({ snapshot, previous }: IncidentReportProps) {
           ) : null}
         </section>
 
-        <section className="incident-section" aria-label="NOAA stability">
-          <span className="field-label">Overall NOAA stability</span>
+        <section className="incident-section" aria-label="Forecast stability">
+          <span className="field-label">Overall forecast stability</span>
           <p className={`hero-stability-value ${stabilityClass}`}>
             {stabilityLabel(stability)}
           </p>
