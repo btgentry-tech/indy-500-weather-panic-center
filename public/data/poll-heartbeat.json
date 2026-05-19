@@ -1,10 +1,10 @@
 {
-  "at": "2026-05-19T17:45:54.370Z",
+  "at": "2026-05-19T19:26:58.348Z",
   "ok": true,
-  "outcome": "checked_no_save",
-  "message": "NOAA checked; forecast unchanged.",
-  "shouldSave": false,
-  "hasForecastDataChanged": false,
-  "snapshotId": "2026-05-19-0430",
+  "outcome": "saved_notify",
+  "message": "Forecast updated. Race Day rain chances ticked upward. Carb Day improving — rain odds easing.",
+  "shouldSave": true,
+  "hasForecastDataChanged": true,
+  "snapshotId": "2026-05-19-1526",
   "panicIndex": 4
 }
