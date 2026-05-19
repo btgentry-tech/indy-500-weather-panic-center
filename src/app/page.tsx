@@ -2,21 +2,17 @@ import { AsciiHeader } from "@/components/AsciiHeader";
 import { AlertSubscribePanel } from "@/components/AlertSubscribePanel";
 import { ForecastTable } from "@/components/ForecastTable";
 import { PanicHero } from "@/components/PanicHero";
-import { VolatilityStrip } from "@/components/VolatilityStrip";
 import {
   loadAllSnapshots,
-  loadChangelog,
   loadLatestSnapshot,
   loadStationMeta,
 } from "@/lib/data";
-import { computeRecordVolatility } from "@/lib/volatility";
 
 export const revalidate = 900;
 
 export default async function DashboardPage() {
   const snapshot = await loadLatestSnapshot();
   const station = await loadStationMeta();
-  const changelog = await loadChangelog();
   const history = await loadAllSnapshots();
 
   if (!snapshot) {
@@ -33,11 +29,6 @@ export default async function DashboardPage() {
     );
   }
 
-  const recordStats = computeRecordVolatility(
-    history,
-    changelog.entries.length,
-  );
-
   return (
     <>
       <AsciiHeader compact />
@@ -47,8 +38,7 @@ export default async function DashboardPage() {
         lastForecastChange={station.lastForecastChangeSummary}
         lastForecastChangeAt={station.lastForecastChangeAt}
       />
-      <ForecastTable snapshot={snapshot} />
-      <VolatilityStrip record={recordStats} panicMeter={snapshot.panicMeter} />
+      <ForecastTable snapshot={snapshot} history={history} />
     </>
   );
 }

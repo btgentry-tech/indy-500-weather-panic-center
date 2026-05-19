@@ -1,6 +1,5 @@
 import type {
   DayKey,
-  ForecastConfidence,
   NormalizedForecast,
   PanicIndexLevel,
   RaceDayForecast,
@@ -93,28 +92,6 @@ export function normalizeLegacyPanicIndex(level: number): PanicIndexLevel {
   return 3;
 }
 
-export function computePanicMeter(
-  days: Record<DayKey, Pick<RaceDayForecast, "rainPct" | "stormRisk">>,
-  volatilityScore: number,
-): number {
-  const carb = days.carbDay.rainPct;
-  const legends = days.legendsDay.rainPct;
-  const race = days.raceDay.rainPct;
-
-  const rainScore = Math.min(
-    100,
-    carb * 0.2 + legends * 0.3 + race * 0.5,
-  );
-  const stormScore =
-    STORM_WEIGHT[days.carbDay.stormRisk] +
-    STORM_WEIGHT[days.legendsDay.stormRisk] +
-    STORM_WEIGHT[days.raceDay.stormRisk];
-
-  return Math.round(
-    Math.min(100, rainScore * 0.65 + stormScore * 0.2 + volatilityScore * 0.15),
-  );
-}
-
 export function computeTrend(
   current: number,
   previous: number | undefined,
@@ -126,39 +103,18 @@ export function computeTrend(
   return "→";
 }
 
-export function computeConfidence(
-  rainHistory: number[],
-): ForecastConfidence {
-  if (rainHistory.length < 2) return "UNCERTAIN";
-  const deltas = rainHistory
-    .slice(1)
-    .map((v, i) => Math.abs(v - rainHistory[i]));
-  const avgDelta = deltas.reduce((a, b) => a + b, 0) / deltas.length;
-  const latest = rainHistory[rainHistory.length - 1];
-  const prev = rainHistory[rainHistory.length - 2];
-  if (avgDelta < 8) return "STABLE";
-  if (latest > prev + 10) return "DETERIORATING";
-  return "UNCERTAIN";
-}
-
 export function buildRaceDayRows(
   forecast: NormalizedForecast,
   previous?: Record<DayKey, RaceDayForecast>,
-  rainHistory: number[] = [],
 ): Record<DayKey, RaceDayForecast> {
   const result = {} as Record<DayKey, RaceDayForecast>;
 
   for (const config of RACE_DAYS) {
     const day = forecast.days[config.key];
     const prev = previous?.[config.key];
-    const confidence = computeConfidence([
-      ...rainHistory,
-      day.rainPct,
-    ]);
 
     result[config.key] = {
       ...day,
-      confidence,
       trend: computeTrend(day.rainPct, prev?.rainPct),
     };
   }

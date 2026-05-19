@@ -1,6 +1,13 @@
 export type StormRisk = "NONE" | "ELEVATED" | "ACTIVE";
-export type ForecastConfidence = "STABLE" | "UNCERTAIN" | "DETERIORATING";
 export type TrendArrow = "↑" | "↓" | "→";
+
+/** Derived bunker interpretation — not an official NOAA metric. */
+export type ForecastStabilityLevel =
+  | "stable"
+  | "mostly-stable"
+  | "unsettled"
+  | "volatile"
+  | "rapidly-changing";
 export type PanicIndexLevel = 1 | 2 | 3 | 4 | 5;
 /** @deprecated Use PanicIndexLevel */
 export type DefconLevel = PanicIndexLevel;
@@ -13,7 +20,6 @@ export interface RaceDayForecast {
   rainPct: number;
   stormRisk: StormRisk;
   highTemp: number;
-  confidence: ForecastConfidence;
   trend: TrendArrow;
   shortForecast: string;
   detailedForecast: string;
@@ -31,14 +37,6 @@ export interface VolatilityStats {
   largestRainSwing: number;
   stabilityScore: number;
   volatilityScore: number;
-}
-
-export interface RecordVolatilityStats {
-  totalRevisions: number;
-  changes24h: number;
-  largestRainSwingRecord: number;
-  latestRainSwing: number;
-  stabilityScore: number;
 }
 
 export interface LocalConditions {
@@ -85,9 +83,12 @@ export interface ForecastSnapshot {
   panicScale?: number;
   /** Legacy field — kept in sync when writing */
   defcon?: PanicIndexLevel;
-  panicMeter: number;
+  /** @deprecated No longer computed — retained for legacy JSON only */
+  panicMeter?: number;
   mood: string;
+  /** Legacy numeric score 0–100 (higher = more stable) */
   forecastStability: number;
+  forecastStabilityLevel?: ForecastStabilityLevel;
   lastForecastChange: string | null;
   days: Record<DayKey, RaceDayForecast>;
   hourly: HourlyPoint[];
@@ -133,7 +134,7 @@ export interface CompareResult {
 
 export interface NormalizedForecast {
   noaaGeneratedAt: string;
-  days: Record<DayKey, Omit<RaceDayForecast, "confidence" | "trend">>;
+  days: Record<DayKey, Omit<RaceDayForecast, "trend">>;
   hourly: HourlyPoint[];
 }
 

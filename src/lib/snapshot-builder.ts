@@ -2,11 +2,11 @@ import { compareForecasts } from "./compare";
 import {
   buildRaceDayRows,
   computePanicIndex,
-  computePanicMeter,
   PANIC_INDEX_MOODS,
 } from "./panic-index";
 import type { ForecastSnapshot, NormalizedForecast } from "./types";
-import { computeForecastStability, computeVolatility } from "./volatility";
+import { computeSnapshotStabilityLevel } from "./forecast-stability";
+import { computeVolatility } from "./volatility";
 import { formatSnapshotId } from "./race-days";
 
 export function buildSnapshot(
@@ -17,31 +17,14 @@ export function buildSnapshot(
   const previous = history[history.length - 1];
   const id = formatSnapshotId(fetchedAt);
 
-  const rainHistory = history
-    .slice(-5)
-    .map((s) => s.days.raceDay.rainPct);
-
-  const days = buildRaceDayRows(forecast, previous?.days, rainHistory);
+  const days = buildRaceDayRows(forecast, previous?.days);
 
   const volatility = computeVolatility(history, { days });
   const panicIndex = computePanicIndex(days, volatility.largestRainSwing);
-  const panicMeter = computePanicMeter(days, volatility.volatilityScore);
-  const forecastStability = computeForecastStability([
-    ...history,
-    {
-      id,
-      fetchedAt: fetchedAt.toISOString(),
-      noaaGeneratedAt: forecast.noaaGeneratedAt,
-      panicIndex,
-      panicMeter,
-      mood: PANIC_INDEX_MOODS[panicIndex],
-      forecastStability: 0,
-      lastForecastChange: null,
-      days,
-      hourly: forecast.hourly,
-      volatility,
-    },
-  ]);
+  const forecastStabilityLevel = computeSnapshotStabilityLevel(history, {
+    days,
+  });
+  const forecastStability = volatility.stabilityScore;
 
   const compare = compareForecasts(
     previous ?? null,
@@ -58,9 +41,9 @@ export function buildSnapshot(
     panicIndex,
     panicScale: 2,
     defcon: panicIndex,
-    panicMeter,
     mood: PANIC_INDEX_MOODS[panicIndex],
     forecastStability,
+    forecastStabilityLevel,
     lastForecastChange: compare.hasMeaningfulChange
       ? compare.summary
       : previous?.lastForecastChange ?? null,

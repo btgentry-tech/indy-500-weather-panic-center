@@ -1,5 +1,11 @@
 import type { ForecastSnapshot } from "@/lib/types";
 import { PANIC_INDEX_MOODS } from "@/lib/panic-index";
+import {
+  FORECAST_STABILITY_NOTE,
+  resolveSnapshotStabilityLevel,
+  stabilityCssClass,
+  stabilityLabel,
+} from "@/lib/forecast-stability";
 import { truncateChangeLine } from "@/lib/labels";
 import { formatStationTime } from "@/lib/format";
 import { TrendIndicator } from "./TrendIndicator";
@@ -21,12 +27,7 @@ export function PanicHero({
     snapshot.lastForecastChange ??
     PANIC_INDEX_MOODS[snapshot.panicIndex];
   const changeAt = lastForecastChangeAt ?? snapshot.fetchedAt;
-  const meterFilled = Math.max(
-    0,
-    Math.min(10, Math.round(snapshot.panicMeter / 10)),
-  );
-  const meterBar =
-    "█".repeat(meterFilled) + "░".repeat(10 - meterFilled);
+  const stability = resolveSnapshotStabilityLevel(snapshot);
 
   return (
     <section
@@ -50,18 +51,18 @@ export function PanicHero({
         <p className="panic-index-mood">
           {PANIC_INDEX_MOODS[snapshot.panicIndex]}
         </p>
-        <div className="panic-meter-block">
-          <span className="field-label">Atmospheric load</span>
-          <p
-            className="panic-meter"
-            aria-label={`Atmospheric load meter ${snapshot.panicMeter} out of 100`}
-          >
-            <span className="panic-meter-bar" aria-hidden="true">
-              {meterBar}
-            </span>
-            <span className="panic-meter-value">{snapshot.panicMeter}/100</span>
-          </p>
-        </div>
+      </div>
+      <div className="hero-stability-block">
+        <span className="field-label">Forecast stability</span>
+        <p
+          className={`hero-stability-value ${stabilityCssClass(stability)}`}
+        >
+          {stabilityLabel(stability)}
+        </p>
+        <p className="hero-stability-note">{FORECAST_STABILITY_NOTE}</p>
+        <p className="hero-stability-derived">
+          Derived interpretation — not an official NOAA metric.
+        </p>
       </div>
       <div className="hero-metrics">
         <div className="hero-metric">
@@ -82,3 +83,4 @@ export function PanicHero({
     </section>
   );
 }
+

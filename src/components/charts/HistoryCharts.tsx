@@ -129,24 +129,6 @@ export function HistoryCharts({ snapshots }: HistoryChartsProps) {
     ],
   };
 
-  const volatilityData = {
-    labels,
-    datasets: [
-      {
-        label: "Volatility",
-        data: snapshots.map((s) => s.volatility.volatilityScore),
-        borderColor: CHART_COLORS.red,
-        backgroundColor: "transparent",
-      },
-      {
-        label: "Stability",
-        data: snapshots.map((s) => s.volatility.stabilityScore),
-        borderColor: CHART_COLORS.green,
-        backgroundColor: "transparent",
-      },
-    ],
-  };
-
   const latest = snapshots[snapshots.length - 1];
   const raceHourly = latest?.hourly.filter((h) =>
     h.time.includes("2026-05-24"),
@@ -226,24 +208,6 @@ export function HistoryCharts({ snapshots }: HistoryChartsProps) {
         </div>
       </section>
 
-      <section className="panel chart-panel">
-        <h2 className="panel-title">Volatility / Stability</h2>
-        <div style={{ height: 220 }}>
-          <Line
-            data={volatilityData}
-            options={{
-              ...chartOptions,
-              plugins: {
-                ...chartOptions.plugins,
-                tooltip: {
-                  ...chartOptions.plugins.tooltip,
-                  callbacks: tooltipCallbacks,
-                },
-              },
-            }}
-          />
-        </div>
-      </section>
 
       <section className="panel chart-panel">
         <h2 className="panel-title">Race Day Hourly Precipitation</h2>

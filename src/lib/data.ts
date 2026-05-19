@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
+import { resolveSnapshotStabilityLevel } from "./forecast-stability";
 import { normalizeLegacyPanicIndex } from "./panic-index";
 import type {
   ChangelogEntry,
@@ -24,11 +25,24 @@ export function normalizeSnapshot(raw: RawForecastSnapshot): ForecastSnapshot {
     raw.panicScale === 2
       ? (rawLevel as ForecastSnapshot["panicIndex"])
       : normalizeLegacyPanicIndex(rawLevel);
+  const volatility = raw.volatility ?? {
+    changes24h: 0,
+    largestRainSwing: 0,
+    stabilityScore: raw.forecastStability ?? 50,
+    volatilityScore: 100 - (raw.forecastStability ?? 50),
+  };
+
   return {
     ...raw,
     panicIndex,
     panicScale: 2,
     defcon: panicIndex,
+    volatility,
+    forecastStabilityLevel: resolveSnapshotStabilityLevel({
+      ...raw,
+      panicIndex,
+      volatility,
+    }),
   };
 }
 
