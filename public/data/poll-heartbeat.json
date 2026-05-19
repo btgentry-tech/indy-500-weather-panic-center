@@ -1,6 +1,9 @@
 {
-  "at": "1970-01-01T00:00:00.000Z",
-  "ok": false,
-  "outcome": "error",
-  "message": "No automated poll has committed yet. Run Poll Weather workflow on GitHub Actions."
+  "at": "2026-05-19T02:48:36.148Z",
+  "ok": true,
+  "outcome": "checked_no_save",
+  "message": "NOAA checked; no material forecast change.",
+  "shouldSave": false,
+  "hasMeaningfulChange": false,
+  "panicIndex": 4
 }
