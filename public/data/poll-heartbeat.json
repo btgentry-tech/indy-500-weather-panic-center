@@ -1,10 +1,10 @@
 {
-  "at": "2026-05-20T07:03:51.906Z",
+  "at": "2026-05-20T10:29:42.506Z",
   "ok": true,
   "outcome": "saved_notify",
-  "message": "Forecast updated. Weekend rain risk climbing. Race Day conditions worsened as rain odds climbed 21%.",
+  "message": "Forecast updated. Race Day improving — rain odds easing.",
   "shouldSave": true,
   "hasForecastDataChanged": true,
-  "snapshotId": "2026-05-20-0303",
+  "snapshotId": "2026-05-20-0629",
   "panicIndex": 4
 }
