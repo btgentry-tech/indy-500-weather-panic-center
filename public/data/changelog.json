@@ -1,6 +1,22 @@
 {
   "entries": [
     {
+      "at": "2026-05-20T07:03:51.906Z",
+      "snapshotId": "2026-05-20-0303",
+      "severity": "info",
+      "summary": "Weekend rain risk climbing. Race Day conditions worsened as rain odds climbed 21%.",
+      "details": [
+        "Legends Day rain 42% → 54% (up).",
+        "Legends Day trend → → ↑.",
+        "Legends Day high 78° → 79°.",
+        "Race Day rain 39% → 60% (up).",
+        "Race Day trend → → ↑.",
+        "Race Day high 79° → 80°.",
+        "Race Day forecast wording revised.",
+        "Hourly forecast slots revised."
+      ]
+    },
+    {
       "at": "2026-05-19T21:04:07.702Z",
       "snapshotId": "2026-05-19-1704",
       "severity": "info",
