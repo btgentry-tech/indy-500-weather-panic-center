@@ -1,10 +1,10 @@
 {
-  "at": "2026-05-21T15:32:01.873Z",
+  "at": "2026-05-21T17:45:54.389Z",
   "ok": true,
   "outcome": "saved_notify",
-  "message": "Forecast updated. Carb Day storm threat easing.",
+  "message": "Forecast updated. Legends Day rain chance dropped 23%.",
   "shouldSave": true,
   "hasForecastDataChanged": true,
-  "snapshotId": "2026-05-21-1132",
+  "snapshotId": "2026-05-21-1345",
   "panicIndex": 4
 }

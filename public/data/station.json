@@ -1,18 +1,18 @@
 {
-  "lastCheckedAt": "2026-05-21T15:32:01.873Z",
-  "lastSnapshotAt": "2026-05-21T15:32:01.873Z",
-  "lastSnapshotId": "2026-05-21-1132",
+  "lastCheckedAt": "2026-05-21T17:45:54.389Z",
+  "lastSnapshotAt": "2026-05-21T17:45:54.389Z",
+  "lastSnapshotId": "2026-05-21-1345",
   "lastForecastChangeAt": "2026-05-19T00:01:46.030Z",
   "lastForecastChangeSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
   "localConditions": {
-    "temperatureF": 55,
+    "temperatureF": 63,
     "condition": "CLOUDY",
     "windDirection": "E",
-    "windSpeedMph": 46,
-    "observedAt": "2026-05-21T15:20:00+00:00"
+    "windSpeedMph": 50,
+    "observedAt": "2026-05-21T17:30:00+00:00"
   },
   "lastMajorShiftAt": "2026-05-19T00:01:46.030Z",
   "lastMajorShiftSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
-  "lastOperationalUpdateAt": "2026-05-21T15:32:01.873Z",
-  "lastOperationalUpdateSummary": "Carb Day storm threat easing."
+  "lastOperationalUpdateAt": "2026-05-21T17:45:54.389Z",
+  "lastOperationalUpdateSummary": "Legends Day rain chance dropped 23%."
 }
