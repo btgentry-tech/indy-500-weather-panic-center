@@ -1,10 +1,10 @@
 {
-  "at": "2026-05-21T08:34:06.348Z",
+  "at": "2026-05-21T11:53:38.129Z",
   "ok": true,
   "outcome": "saved_notify",
-  "message": "Forecast updated. Legends Day conditions worsened as rain odds climbed 20%.",
+  "message": "Forecast updated. NOAA guidance updated.",
   "shouldSave": true,
   "hasForecastDataChanged": true,
-  "snapshotId": "2026-05-21-0434",
+  "snapshotId": "2026-05-21-0753",
   "panicIndex": 4
 }
