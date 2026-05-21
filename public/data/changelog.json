@@ -1,6 +1,24 @@
 {
   "entries": [
     {
+      "at": "2026-05-21T08:34:06.348Z",
+      "snapshotId": "2026-05-21-0434",
+      "severity": "warning",
+      "summary": "Legends Day conditions worsened as rain odds climbed 20%.",
+      "details": [
+        "Carb Day rain 78% → 66% (down).",
+        "Carb Day trend → → ↓.",
+        "Carb Day forecast wording revised.",
+        "Legends Day rain 68% → 88% (up).",
+        "Legends Day trend → → ↑.",
+        "Legends Day high 79° → 77°.",
+        "Legends Day forecast wording revised.",
+        "Legends Day storm risk ACTIVE → NONE.",
+        "Race Day rain 47% → 49% (up).",
+        "Hourly forecast slots revised."
+      ]
+    },
+    {
       "at": "2026-05-20T21:14:29.769Z",
       "snapshotId": "2026-05-20-1714",
       "severity": "info",
