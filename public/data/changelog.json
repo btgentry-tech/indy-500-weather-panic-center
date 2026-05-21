@@ -1,6 +1,20 @@
 {
   "entries": [
     {
+      "at": "2026-05-21T19:56:00.756Z",
+      "snapshotId": "2026-05-21-1556",
+      "severity": "info",
+      "summary": "Hourly slots reshuffled. Timing details still in flux.",
+      "details": [
+        "Carb Day trend ↑ → →.",
+        "Carb Day forecast wording revised.",
+        "Legends Day trend ↓ → →.",
+        "Legends Day forecast wording revised.",
+        "Race Day trend ↓ → →.",
+        "Hourly forecast slots revised."
+      ]
+    },
+    {
       "at": "2026-05-21T17:45:54.389Z",
       "snapshotId": "2026-05-21-1345",
       "severity": "info",
