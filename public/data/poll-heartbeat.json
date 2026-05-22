@@ -1,10 +1,10 @@
 {
-  "at": "2026-05-22T21:43:18.520Z",
+  "at": "2026-05-22T22:43:12.404Z",
   "ok": true,
   "outcome": "saved_notify",
-  "message": "Forecast updated. Hourly slots reshuffled. Timing details still in flux.",
+  "message": "Forecast updated. Carb Day rain chance dropped 86%.",
   "shouldSave": true,
   "hasForecastDataChanged": true,
-  "snapshotId": "2026-05-22-1743",
+  "snapshotId": "2026-05-22-1843",
   "panicIndex": 4
 }

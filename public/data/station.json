@@ -1,18 +1,18 @@
 {
-  "lastCheckedAt": "2026-05-22T21:43:18.520Z",
-  "lastSnapshotAt": "2026-05-22T21:43:18.520Z",
-  "lastSnapshotId": "2026-05-22-1743",
+  "lastCheckedAt": "2026-05-22T22:43:12.404Z",
+  "lastSnapshotAt": "2026-05-22T22:43:12.404Z",
+  "lastSnapshotId": "2026-05-22-1843",
   "lastForecastChangeAt": "2026-05-19T00:01:46.030Z",
   "lastForecastChangeSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
   "localConditions": {
-    "temperatureF": 61,
+    "temperatureF": 59,
     "condition": "LIGHT RAIN",
-    "windDirection": "E",
-    "windSpeedMph": 21,
-    "observedAt": "2026-05-22T21:25:00+00:00"
+    "windDirection": "NE",
+    "windSpeedMph": 25,
+    "observedAt": "2026-05-22T22:20:00+00:00"
   },
   "lastMajorShiftAt": "2026-05-19T00:01:46.030Z",
   "lastMajorShiftSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
-  "lastOperationalUpdateAt": "2026-05-22T21:43:18.520Z",
-  "lastOperationalUpdateSummary": "Hourly slots reshuffled. Timing details still in flux."
+  "lastOperationalUpdateAt": "2026-05-22T22:43:12.404Z",
+  "lastOperationalUpdateSummary": "Carb Day rain chance dropped 86%."
 }

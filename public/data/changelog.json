@@ -1,6 +1,22 @@
 {
   "entries": [
     {
+      "at": "2026-05-22T22:43:12.404Z",
+      "snapshotId": "2026-05-22-1843",
+      "severity": "warning",
+      "summary": "Carb Day rain chance dropped 86%.",
+      "details": [
+        "Carb Day rain 86% → 0% (down).",
+        "Carb Day trend → → ↓.",
+        "Carb Day high 67° → 0°.",
+        "Carb Day forecast wording revised.",
+        "Carb Day storm risk ACTIVE → NONE.",
+        "Legends Day forecast wording revised.",
+        "Hourly forecast slots revised.",
+        "Storm timing moved later."
+      ]
+    },
+    {
       "at": "2026-05-22T21:43:18.520Z",
       "snapshotId": "2026-05-22-1743",
       "severity": "info",
