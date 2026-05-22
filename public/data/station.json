@@ -1,18 +1,18 @@
 {
-  "lastCheckedAt": "2026-05-22T18:17:34.526Z",
-  "lastSnapshotAt": "2026-05-22T18:17:34.526Z",
-  "lastSnapshotId": "2026-05-22-1417",
+  "lastCheckedAt": "2026-05-22T20:20:09.448Z",
+  "lastSnapshotAt": "2026-05-22T20:20:09.448Z",
+  "lastSnapshotId": "2026-05-22-1620",
   "lastForecastChangeAt": "2026-05-19T00:01:46.030Z",
   "lastForecastChangeSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
   "localConditions": {
-    "temperatureF": 64,
-    "condition": "CLOUDY",
+    "temperatureF": 61,
+    "condition": "LIGHT RAIN",
     "windDirection": "E",
-    "windSpeedMph": 33,
-    "observedAt": "2026-05-22T18:00:00+00:00"
+    "windSpeedMph": 37,
+    "observedAt": "2026-05-22T20:05:00+00:00"
   },
   "lastMajorShiftAt": "2026-05-19T00:01:46.030Z",
   "lastMajorShiftSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
-  "lastOperationalUpdateAt": "2026-05-22T18:17:34.526Z",
-  "lastOperationalUpdateSummary": "Weekend rain risk climbing. Legends Day conditions worsened as rain odds climbed 37%."
+  "lastOperationalUpdateAt": "2026-05-22T20:20:09.448Z",
+  "lastOperationalUpdateSummary": "Carb Day thunderstorm risk upgraded."
 }

@@ -1,10 +1,10 @@
 {
-  "at": "2026-05-22T18:17:34.526Z",
+  "at": "2026-05-22T20:20:09.448Z",
   "ok": true,
   "outcome": "saved_notify",
-  "message": "Forecast updated. Weekend rain risk climbing. Legends Day conditions worsened as rain odds climbed 37%.",
+  "message": "Forecast updated. Carb Day thunderstorm risk upgraded.",
   "shouldSave": true,
   "hasForecastDataChanged": true,
-  "snapshotId": "2026-05-22-1417",
+  "snapshotId": "2026-05-22-1620",
   "panicIndex": 4
 }
