@@ -1,0 +1,208 @@
+{
+  "id": "2026-05-22-1417",
+  "fetchedAt": "2026-05-22T18:17:34.526Z",
+  "noaaGeneratedAt": "2026-05-22T18:17:34+00:00",
+  "panicIndex": 4,
+  "panicScale": 2,
+  "defcon": 4,
+  "mood": "High concern — track drying on standby, atmospheric chaos in the chat.",
+  "forecastStability": 41,
+  "forecastStabilityLevel": "volatile",
+  "lastForecastChange": "Weekend rain risk climbing. Legends Day conditions worsened as rain odds climbed 37%.",
+  "days": {
+    "carbDay": {
+      "label": "Carb Day",
+      "date": "2026-05-22",
+      "rainPct": 86,
+      "stormRisk": "NONE",
+      "highTemp": 67,
+      "shortForecast": "Rain Showers",
+      "detailedForecast": "Rain showers. Cloudy. High near 67, with temperatures falling to around 64 in the afternoon. East wind around 9 mph, with gusts as high as 18 mph. Chance of precipitation is 90%. New rainfall amounts less than a tenth of an inch possible.",
+      "trend": "→"
+    },
+    "legendsDay": {
+      "label": "Legends Day",
+      "date": "2026-05-23",
+      "rainPct": 67,
+      "stormRisk": "NONE",
+      "highTemp": 75,
+      "shortForecast": "Rain Showers Likely",
+      "detailedForecast": "Rain showers likely before 5pm. Mostly cloudy, with a high near 75. West wind 3 to 8 mph. Chance of precipitation is 70%. New rainfall amounts between a quarter and half of an inch possible.",
+      "trend": "↑"
+    },
+    "raceDay": {
+      "label": "Race Day",
+      "date": "2026-05-24",
+      "rainPct": 65,
+      "stormRisk": "ACTIVE",
+      "highTemp": 80,
+      "shortForecast": "Showers And Thunderstorms Likely",
+      "detailedForecast": "A chance of rain showers between 7am and 2pm, then showers and thunderstorms likely. Partly sunny, with a high near 80. Southwest wind 2 to 6 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible.",
+      "trend": "↑"
+    }
+  },
+  "hourly": [
+    {
+      "time": "2026-05-22T14:00:00-04:00",
+      "rainPct": 16,
+      "shortForecast": "Slight Chance Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-22T15:00:00-04:00",
+      "rainPct": 40,
+      "shortForecast": "Chance Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-22T16:00:00-04:00",
+      "rainPct": 68,
+      "shortForecast": "Rain Showers Likely",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-22T17:00:00-04:00",
+      "rainPct": 86,
+      "shortForecast": "Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-23T08:00:00-04:00",
+      "rainPct": 48,
+      "shortForecast": "Chance Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-23T09:00:00-04:00",
+      "rainPct": 30,
+      "shortForecast": "Chance Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-23T10:00:00-04:00",
+      "rainPct": 11,
+      "shortForecast": "Mostly Cloudy",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-23T11:00:00-04:00",
+      "rainPct": 8,
+      "shortForecast": "Mostly Cloudy",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-23T12:00:00-04:00",
+      "rainPct": 6,
+      "shortForecast": "Mostly Cloudy",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-23T13:00:00-04:00",
+      "rainPct": 5,
+      "shortForecast": "Mostly Cloudy",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-23T14:00:00-04:00",
+      "rainPct": 15,
+      "shortForecast": "Slight Chance Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-23T15:00:00-04:00",
+      "rainPct": 15,
+      "shortForecast": "Slight Chance Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-23T16:00:00-04:00",
+      "rainPct": 15,
+      "shortForecast": "Slight Chance Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-23T17:00:00-04:00",
+      "rainPct": 13,
+      "shortForecast": "Mostly Cloudy",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-24T06:00:00-04:00",
+      "rainPct": 6,
+      "shortForecast": "Partly Sunny",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-24T07:00:00-04:00",
+      "rainPct": 26,
+      "shortForecast": "Chance Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-24T08:00:00-04:00",
+      "rainPct": 35,
+      "shortForecast": "Chance Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-24T09:00:00-04:00",
+      "rainPct": 35,
+      "shortForecast": "Chance Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-24T10:00:00-04:00",
+      "rainPct": 35,
+      "shortForecast": "Chance Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-24T11:00:00-04:00",
+      "rainPct": 35,
+      "shortForecast": "Chance Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-24T12:00:00-04:00",
+      "rainPct": 35,
+      "shortForecast": "Chance Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-24T13:00:00-04:00",
+      "rainPct": 35,
+      "shortForecast": "Chance Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-24T14:00:00-04:00",
+      "rainPct": 65,
+      "shortForecast": "Showers And Thunderstorms Likely",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T15:00:00-04:00",
+      "rainPct": 65,
+      "shortForecast": "Showers And Thunderstorms Likely",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T16:00:00-04:00",
+      "rainPct": 65,
+      "shortForecast": "Showers And Thunderstorms Likely",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T17:00:00-04:00",
+      "rainPct": 65,
+      "shortForecast": "Showers And Thunderstorms Likely",
+      "hasStormWording": true
+    }
+  ],
+  "volatility": {
+    "changes24h": 2,
+    "largestRainSwing": 37,
+    "stabilityScore": 41,
+    "volatilityScore": 59
+  }
+}
