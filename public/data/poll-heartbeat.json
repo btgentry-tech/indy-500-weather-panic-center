@@ -1,10 +1,10 @@
 {
-  "at": "2026-05-22T22:43:12.404Z",
+  "at": "2026-05-22T23:49:43.999Z",
   "ok": true,
   "outcome": "saved_notify",
-  "message": "Forecast updated. Carb Day rain chance dropped 86%.",
+  "message": "Forecast updated. NOAA guidance updated.",
   "shouldSave": true,
   "hasForecastDataChanged": true,
-  "snapshotId": "2026-05-22-1843",
+  "snapshotId": "2026-05-22-1949",
   "panicIndex": 4
 }
