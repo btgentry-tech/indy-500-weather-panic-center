@@ -1,10 +1,10 @@
 {
-  "at": "2026-05-22T08:03:44.094Z",
+  "at": "2026-05-22T11:18:57.010Z",
   "ok": true,
   "outcome": "saved_notify",
-  "message": "Forecast updated. Legends Day rain chance dropped 31%.",
+  "message": "Forecast updated. NOAA guidance updated.",
   "shouldSave": true,
   "hasForecastDataChanged": true,
-  "snapshotId": "2026-05-22-0403",
+  "snapshotId": "2026-05-22-0718",
   "panicIndex": 4
 }
