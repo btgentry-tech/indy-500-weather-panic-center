@@ -1,6 +1,15 @@
 {
   "entries": [
     {
+      "at": "2026-05-22T21:43:18.520Z",
+      "snapshotId": "2026-05-22-1743",
+      "severity": "info",
+      "summary": "Hourly slots reshuffled. Timing details still in flux.",
+      "details": [
+        "Hourly forecast slots revised."
+      ]
+    },
+    {
       "at": "2026-05-22T20:20:09.448Z",
       "snapshotId": "2026-05-22-1620",
       "severity": "warning",
