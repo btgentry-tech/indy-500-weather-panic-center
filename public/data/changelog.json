@@ -1,6 +1,20 @@
 {
   "entries": [
     {
+      "at": "2026-05-23T14:19:07.429Z",
+      "snapshotId": "2026-05-23-1019",
+      "severity": "info",
+      "summary": "Legends Day rain chance dropped 22%.",
+      "details": [
+        "Legends Day rain 28% → 6% (down).",
+        "Legends Day trend → → ↓.",
+        "Legends Day forecast wording revised.",
+        "Race Day rain 64% → 70% (up).",
+        "Race Day trend → → ↑.",
+        "Hourly forecast slots revised."
+      ]
+    },
+    {
       "at": "2026-05-23T12:44:25.627Z",
       "snapshotId": "2026-05-23-0844",
       "severity": "info",
