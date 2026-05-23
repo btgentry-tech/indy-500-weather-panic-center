@@ -1,6 +1,20 @@
 {
   "entries": [
     {
+      "at": "2026-05-23T08:35:51.363Z",
+      "snapshotId": "2026-05-23-0435",
+      "severity": "warning",
+      "summary": "Weekend outlook steadier overall. Race Day remains volatile.",
+      "details": [
+        "Legends Day rain 42% → 32% (down).",
+        "Race Day rain 65% → 64% (down).",
+        "Race Day high 80° → 79°.",
+        "Race Day forecast wording revised.",
+        "Hourly forecast slots revised.",
+        "Storm timing moved earlier."
+      ]
+    },
+    {
       "at": "2026-05-23T06:23:33.704Z",
       "snapshotId": "2026-05-23-0223",
       "severity": "info",
