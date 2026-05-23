@@ -1,10 +1,10 @@
 {
-  "at": "2026-05-23T17:46:26.847Z",
+  "at": "2026-05-23T19:13:25.131Z",
   "ok": true,
   "outcome": "saved_notify",
-  "message": "Forecast updated. Legends Day improving — rain odds easing.",
+  "message": "Forecast updated. Hourly slots reshuffled. Timing details still in flux.",
   "shouldSave": true,
   "hasForecastDataChanged": true,
-  "snapshotId": "2026-05-23-1346",
+  "snapshotId": "2026-05-23-1513",
   "panicIndex": 4
 }

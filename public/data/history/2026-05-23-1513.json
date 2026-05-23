@@ -1,0 +1,142 @@
+{
+  "id": "2026-05-23-1513",
+  "fetchedAt": "2026-05-23T19:13:25.131Z",
+  "noaaGeneratedAt": "2026-05-23T19:13:25+00:00",
+  "panicIndex": 4,
+  "panicScale": 2,
+  "defcon": 4,
+  "mood": "High concern — track drying on standby, atmospheric chaos in the chat.",
+  "forecastStability": 0,
+  "forecastStabilityLevel": "rapidly-changing",
+  "lastForecastChange": "Hourly slots reshuffled. Timing details still in flux.",
+  "days": {
+    "carbDay": {
+      "label": "Carb Day",
+      "date": "2026-05-22",
+      "rainPct": 0,
+      "stormRisk": "NONE",
+      "highTemp": 0,
+      "shortForecast": "No daytime period available",
+      "detailedForecast": "Forecast period not yet issued.",
+      "trend": "→"
+    },
+    "legendsDay": {
+      "label": "Legends Day",
+      "date": "2026-05-23",
+      "rainPct": 3,
+      "stormRisk": "NONE",
+      "highTemp": 71,
+      "shortForecast": "Mostly Cloudy",
+      "detailedForecast": "Mostly cloudy, with a high near 71. West wind around 8 mph.",
+      "trend": "→"
+    },
+    "raceDay": {
+      "label": "Race Day",
+      "date": "2026-05-24",
+      "rainPct": 77,
+      "stormRisk": "ACTIVE",
+      "highTemp": 79,
+      "shortForecast": "Isolated Showers And Thunderstorms then Showers And Thunderstorms",
+      "detailedForecast": "Isolated rain showers between 7am and 8am, then isolated showers and thunderstorms between 8am and 9am, then showers and thunderstorms between 9am and 2pm, then scattered showers and thunderstorms. Mostly cloudy. High near 79, with temperatures falling to around 76 in the afternoon. Southwest wind 2 to 6 mph. Chance of precipitation is 80%. New rainfall amounts less than a tenth of an inch possible.",
+      "trend": "→"
+    }
+  },
+  "hourly": [
+    {
+      "time": "2026-05-23T15:00:00-04:00",
+      "rainPct": 3,
+      "shortForecast": "Mostly Cloudy",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-23T16:00:00-04:00",
+      "rainPct": 3,
+      "shortForecast": "Mostly Cloudy",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-23T17:00:00-04:00",
+      "rainPct": 3,
+      "shortForecast": "Mostly Cloudy",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-24T06:00:00-04:00",
+      "rainPct": 8,
+      "shortForecast": "Mostly Cloudy",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-24T07:00:00-04:00",
+      "rainPct": 18,
+      "shortForecast": "Isolated Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-24T08:00:00-04:00",
+      "rainPct": 20,
+      "shortForecast": "Isolated Showers And Thunderstorms",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T09:00:00-04:00",
+      "rainPct": 32,
+      "shortForecast": "Scattered Showers And Thunderstorms",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T10:00:00-04:00",
+      "rainPct": 45,
+      "shortForecast": "Scattered Showers And Thunderstorms",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T11:00:00-04:00",
+      "rainPct": 60,
+      "shortForecast": "Chance Showers And Thunderstorms",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T12:00:00-04:00",
+      "rainPct": 77,
+      "shortForecast": "Showers And Thunderstorms",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T13:00:00-04:00",
+      "rainPct": 71,
+      "shortForecast": "Chance Showers And Thunderstorms",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T14:00:00-04:00",
+      "rainPct": 54,
+      "shortForecast": "Scattered Showers And Thunderstorms",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T15:00:00-04:00",
+      "rainPct": 52,
+      "shortForecast": "Scattered Showers And Thunderstorms",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T16:00:00-04:00",
+      "rainPct": 36,
+      "shortForecast": "Scattered Showers And Thunderstorms",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T17:00:00-04:00",
+      "rainPct": 32,
+      "shortForecast": "Scattered Showers And Thunderstorms",
+      "hasStormWording": true
+    }
+  ],
+  "volatility": {
+    "changes24h": 10,
+    "largestRainSwing": 0,
+    "stabilityScore": 0,
+    "volatilityScore": 100
+  }
+}
