@@ -1,10 +1,10 @@
 {
-  "at": "2026-05-22T23:49:43.999Z",
+  "at": "2026-05-23T03:27:30.156Z",
   "ok": true,
   "outcome": "saved_notify",
-  "message": "Forecast updated. NOAA guidance updated.",
+  "message": "Forecast updated. Storm window shifted later. Legends Day improving — rain odds easing.",
   "shouldSave": true,
   "hasForecastDataChanged": true,
-  "snapshotId": "2026-05-22-1949",
+  "snapshotId": "2026-05-22-2327",
   "panicIndex": 4
 }
