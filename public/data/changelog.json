@@ -1,6 +1,16 @@
 {
   "entries": [
     {
+      "at": "2026-05-23T23:12:11.417Z",
+      "snapshotId": "2026-05-23-1912",
+      "severity": "info",
+      "summary": "Hourly slots reshuffled. Timing details still in flux.",
+      "details": [
+        "Race Day forecast wording revised.",
+        "Hourly forecast slots revised."
+      ]
+    },
+    {
       "at": "2026-05-23T22:09:26.071Z",
       "snapshotId": "2026-05-23-1809",
       "severity": "info",
