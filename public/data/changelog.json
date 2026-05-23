@@ -1,6 +1,18 @@
 {
   "entries": [
     {
+      "at": "2026-05-23T06:23:33.704Z",
+      "snapshotId": "2026-05-23-0223",
+      "severity": "info",
+      "summary": "Legends Day rain chance dropped 16%.",
+      "details": [
+        "Legends Day rain 58% → 42% (down).",
+        "Legends Day high 73° → 74°.",
+        "Legends Day forecast wording revised.",
+        "Hourly forecast slots revised."
+      ]
+    },
+    {
       "at": "2026-05-23T03:27:30.156Z",
       "snapshotId": "2026-05-22-2327",
       "severity": "warning",
