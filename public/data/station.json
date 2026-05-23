@@ -1,18 +1,18 @@
 {
-  "lastCheckedAt": "2026-05-23T21:09:40.865Z",
-  "lastSnapshotAt": "2026-05-23T20:12:33.546Z",
-  "lastSnapshotId": "2026-05-23-1612",
+  "lastCheckedAt": "2026-05-23T22:09:26.071Z",
+  "lastSnapshotAt": "2026-05-23T22:09:26.071Z",
+  "lastSnapshotId": "2026-05-23-1809",
   "lastForecastChangeAt": "2026-05-19T00:01:46.030Z",
   "lastForecastChangeSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
   "localConditions": {
     "temperatureF": 70,
     "condition": "CLOUDY",
-    "windDirection": "W",
-    "windSpeedMph": 25,
-    "observedAt": "2026-05-23T20:50:00+00:00"
+    "windDirection": "SW",
+    "windSpeedMph": 21,
+    "observedAt": "2026-05-23T21:50:00+00:00"
   },
   "lastMajorShiftAt": "2026-05-19T00:01:46.030Z",
   "lastMajorShiftSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
-  "lastOperationalUpdateAt": "2026-05-23T20:12:33.546Z",
-  "lastOperationalUpdateSummary": "Hourly slots reshuffled. Timing details still in flux."
+  "lastOperationalUpdateAt": "2026-05-23T22:09:26.071Z",
+  "lastOperationalUpdateSummary": "Legends Day improving — rain odds easing."
 }
