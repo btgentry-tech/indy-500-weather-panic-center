@@ -1,6 +1,17 @@
 {
   "entries": [
     {
+      "at": "2026-05-23T11:42:04.171Z",
+      "snapshotId": "2026-05-23-0742",
+      "severity": "info",
+      "summary": "Legends Day improving — rain odds easing.",
+      "details": [
+        "Legends Day rain 32% → 31% (down).",
+        "Legends Day trend ↓ → →.",
+        "Hourly forecast slots revised."
+      ]
+    },
+    {
       "at": "2026-05-23T08:35:51.363Z",
       "snapshotId": "2026-05-23-0435",
       "severity": "warning",

@@ -1,18 +1,18 @@
 {
-  "lastCheckedAt": "2026-05-23T08:35:51.363Z",
-  "lastSnapshotAt": "2026-05-23T08:35:51.363Z",
-  "lastSnapshotId": "2026-05-23-0435",
+  "lastCheckedAt": "2026-05-23T11:42:04.171Z",
+  "lastSnapshotAt": "2026-05-23T11:42:04.171Z",
+  "lastSnapshotId": "2026-05-23-0742",
   "lastForecastChangeAt": "2026-05-19T00:01:46.030Z",
   "lastForecastChangeSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
   "localConditions": {
     "temperatureF": 57,
     "condition": "CLOUDY",
     "windDirection": "NW",
-    "windSpeedMph": 25,
-    "observedAt": "2026-05-23T08:25:00+00:00"
+    "windSpeedMph": 29,
+    "observedAt": "2026-05-23T11:25:00+00:00"
   },
   "lastMajorShiftAt": "2026-05-19T00:01:46.030Z",
   "lastMajorShiftSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
-  "lastOperationalUpdateAt": "2026-05-23T08:35:51.363Z",
-  "lastOperationalUpdateSummary": "Weekend outlook steadier overall. Race Day remains volatile."
+  "lastOperationalUpdateAt": "2026-05-23T11:42:04.171Z",
+  "lastOperationalUpdateSummary": "Legends Day improving — rain odds easing."
 }
