@@ -1,10 +1,10 @@
 {
-  "at": "2026-05-23T14:19:07.429Z",
+  "at": "2026-05-23T15:42:31.865Z",
   "ok": true,
   "outcome": "saved_notify",
-  "message": "Forecast updated. Legends Day rain chance dropped 22%.",
+  "message": "Forecast updated. Storm window shifted earlier. Race Day rain chances ticked upward.",
   "shouldSave": true,
   "hasForecastDataChanged": true,
-  "snapshotId": "2026-05-23-1019",
+  "snapshotId": "2026-05-23-1142",
   "panicIndex": 4
 }
