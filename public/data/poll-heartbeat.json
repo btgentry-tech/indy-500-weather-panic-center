@@ -1,10 +1,10 @@
 {
-  "at": "2026-05-23T23:12:11.417Z",
+  "at": "2026-05-24T00:13:54.441Z",
   "ok": true,
-  "outcome": "saved_notify",
-  "message": "Forecast updated. Hourly slots reshuffled. Timing details still in flux.",
-  "shouldSave": true,
-  "hasForecastDataChanged": true,
+  "outcome": "checked_no_save",
+  "message": "NOAA checked; forecast unchanged.",
+  "shouldSave": false,
+  "hasForecastDataChanged": false,
   "snapshotId": "2026-05-23-1912",
   "panicIndex": 4
 }
