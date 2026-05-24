@@ -1,7 +1,7 @@
 {
-  "lastCheckedAt": "2026-05-24T07:42:47.676Z",
-  "lastSnapshotAt": "2026-05-24T07:42:47.676Z",
-  "lastSnapshotId": "2026-05-24-0342",
+  "lastCheckedAt": "2026-05-24T09:32:52.973Z",
+  "lastSnapshotAt": "2026-05-24T09:32:52.973Z",
+  "lastSnapshotId": "2026-05-24-0532",
   "lastForecastChangeAt": "2026-05-19T00:01:46.030Z",
   "lastForecastChangeSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
   "localConditions": {
@@ -9,10 +9,10 @@
     "condition": "FOG/MIST",
     "windDirection": "N",
     "windSpeedMph": 0,
-    "observedAt": "2026-05-24T07:30:00+00:00"
+    "observedAt": "2026-05-24T09:15:00+00:00"
   },
   "lastMajorShiftAt": "2026-05-19T00:01:46.030Z",
   "lastMajorShiftSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
-  "lastOperationalUpdateAt": "2026-05-24T07:42:47.676Z",
-  "lastOperationalUpdateSummary": "Storm window shifted later. Race Day rain chances ticked upward."
+  "lastOperationalUpdateAt": "2026-05-24T09:32:52.973Z",
+  "lastOperationalUpdateSummary": "NOAA guidance updated."
 }
