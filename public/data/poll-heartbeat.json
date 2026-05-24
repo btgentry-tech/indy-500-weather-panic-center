@@ -1,10 +1,10 @@
 {
-  "at": "2026-05-24T16:43:37.641Z",
+  "at": "2026-05-24T17:44:48.989Z",
   "ok": true,
   "outcome": "saved_notify",
-  "message": "Forecast updated. Race Day improving — rain odds easing.",
+  "message": "Forecast updated. Hourly slots reshuffled. Timing details still in flux.",
   "shouldSave": true,
   "hasForecastDataChanged": true,
-  "snapshotId": "2026-05-24-1243",
+  "snapshotId": "2026-05-24-1344",
   "panicIndex": 4
 }
