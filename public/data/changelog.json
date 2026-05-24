@@ -1,6 +1,15 @@
 {
   "entries": [
     {
+      "at": "2026-05-24T23:17:17.731Z",
+      "snapshotId": "2026-05-24-1917",
+      "severity": "info",
+      "summary": "NOAA guidance updated.",
+      "details": [
+        "Race Day trend ↓ → →."
+      ]
+    },
+    {
       "at": "2026-05-24T22:13:01.328Z",
       "snapshotId": "2026-05-24-1813",
       "severity": "warning",

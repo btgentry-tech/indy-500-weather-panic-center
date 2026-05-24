@@ -1,0 +1,51 @@
+{
+  "id": "2026-05-24-1917",
+  "fetchedAt": "2026-05-24T23:17:17.731Z",
+  "noaaGeneratedAt": "2026-05-24T23:17:18+00:00",
+  "panicIndex": 1,
+  "panicScale": 2,
+  "defcon": 1,
+  "mood": "Minimal threat — backyard cookout conditions, panic systems idle.",
+  "forecastStability": 0,
+  "forecastStabilityLevel": "rapidly-changing",
+  "lastForecastChange": "NOAA guidance updated.",
+  "days": {
+    "carbDay": {
+      "label": "Carb Day",
+      "date": "2026-05-22",
+      "rainPct": 0,
+      "stormRisk": "NONE",
+      "highTemp": 0,
+      "shortForecast": "No daytime period available",
+      "detailedForecast": "Forecast period not yet issued.",
+      "trend": "→"
+    },
+    "legendsDay": {
+      "label": "Legends Day",
+      "date": "2026-05-23",
+      "rainPct": 0,
+      "stormRisk": "NONE",
+      "highTemp": 0,
+      "shortForecast": "No daytime period available",
+      "detailedForecast": "Forecast period not yet issued.",
+      "trend": "→"
+    },
+    "raceDay": {
+      "label": "Race Day",
+      "date": "2026-05-24",
+      "rainPct": 0,
+      "stormRisk": "NONE",
+      "highTemp": 0,
+      "shortForecast": "No daytime period available",
+      "detailedForecast": "Forecast period not yet issued.",
+      "trend": "→"
+    }
+  },
+  "hourly": [],
+  "volatility": {
+    "changes24h": 7,
+    "largestRainSwing": 0,
+    "stabilityScore": 0,
+    "volatilityScore": 100
+  }
+}
