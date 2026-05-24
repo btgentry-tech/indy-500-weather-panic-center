@@ -1,6 +1,24 @@
 {
   "entries": [
     {
+      "at": "2026-05-24T12:12:12.952Z",
+      "snapshotId": "2026-05-24-0812",
+      "severity": "alert",
+      "summary": "Race Day conditions worsened as rain odds climbed 15%. Overall concern rising — panic index now 5/5.",
+      "details": [
+        "Race Day rain 67% → 82% (up).",
+        "Race Day trend → → ↑.",
+        "Race Day forecast wording revised.",
+        "Hourly forecast slots revised.",
+        "Storm timing moved later.",
+        "PANIC INDEX 4 → 5."
+      ],
+      "panicIndexFrom": 4,
+      "panicIndexTo": 5,
+      "defconFrom": 4,
+      "defconTo": 5
+    },
+    {
       "at": "2026-05-24T11:03:25.202Z",
       "snapshotId": "2026-05-24-0703",
       "severity": "info",

@@ -1,0 +1,112 @@
+{
+  "id": "2026-05-24-0812",
+  "fetchedAt": "2026-05-24T12:12:12.952Z",
+  "noaaGeneratedAt": "2026-05-24T12:12:13+00:00",
+  "panicIndex": 5,
+  "panicScale": 2,
+  "defcon": 5,
+  "mood": "Red alert — every uncle in Indiana is now a meteorologist, disruption possible.",
+  "forecastStability": 0,
+  "forecastStabilityLevel": "rapidly-changing",
+  "lastForecastChange": "Race Day conditions worsened as rain odds climbed 15%. Overall concern rising — panic index now 5/5.",
+  "days": {
+    "carbDay": {
+      "label": "Carb Day",
+      "date": "2026-05-22",
+      "rainPct": 0,
+      "stormRisk": "NONE",
+      "highTemp": 0,
+      "shortForecast": "No daytime period available",
+      "detailedForecast": "Forecast period not yet issued.",
+      "trend": "→"
+    },
+    "legendsDay": {
+      "label": "Legends Day",
+      "date": "2026-05-23",
+      "rainPct": 0,
+      "stormRisk": "NONE",
+      "highTemp": 0,
+      "shortForecast": "No daytime period available",
+      "detailedForecast": "Forecast period not yet issued.",
+      "trend": "→"
+    },
+    "raceDay": {
+      "label": "Race Day",
+      "date": "2026-05-24",
+      "rainPct": 82,
+      "stormRisk": "ACTIVE",
+      "highTemp": 74,
+      "shortForecast": "Widespread Showers And Thunderstorms",
+      "detailedForecast": "Scattered rain showers between 10am and 2pm, then widespread showers and thunderstorms. Mostly cloudy. High near 74, with temperatures falling to around 72 in the afternoon. Southwest wind 2 to 6 mph. Chance of precipitation is 80%. New rainfall amounts between a tenth and quarter of an inch possible.",
+      "trend": "↑"
+    }
+  },
+  "hourly": [
+    {
+      "time": "2026-05-24T08:00:00-04:00",
+      "rainPct": 4,
+      "shortForecast": "Cloudy",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-24T09:00:00-04:00",
+      "rainPct": 11,
+      "shortForecast": "Cloudy",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-24T10:00:00-04:00",
+      "rainPct": 23,
+      "shortForecast": "Isolated Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-24T11:00:00-04:00",
+      "rainPct": 30,
+      "shortForecast": "Scattered Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-24T12:00:00-04:00",
+      "rainPct": 40,
+      "shortForecast": "Scattered Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-24T13:00:00-04:00",
+      "rainPct": 33,
+      "shortForecast": "Scattered Rain Showers",
+      "hasStormWording": false
+    },
+    {
+      "time": "2026-05-24T14:00:00-04:00",
+      "rainPct": 27,
+      "shortForecast": "Scattered Showers And Thunderstorms",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T15:00:00-04:00",
+      "rainPct": 66,
+      "shortForecast": "Chance Showers And Thunderstorms",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T16:00:00-04:00",
+      "rainPct": 82,
+      "shortForecast": "Widespread Showers And Thunderstorms",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T17:00:00-04:00",
+      "rainPct": 55,
+      "shortForecast": "Chance Showers And Thunderstorms",
+      "hasStormWording": true
+    }
+  ],
+  "volatility": {
+    "changes24h": 7,
+    "largestRainSwing": 15,
+    "stabilityScore": 0,
+    "volatilityScore": 100
+  }
+}
