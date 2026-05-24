@@ -1,10 +1,10 @@
 {
-  "at": "2026-05-24T00:13:54.441Z",
+  "at": "2026-05-24T04:42:16.311Z",
   "ok": true,
-  "outcome": "checked_no_save",
-  "message": "NOAA checked; forecast unchanged.",
-  "shouldSave": false,
-  "hasForecastDataChanged": false,
-  "snapshotId": "2026-05-23-1912",
+  "outcome": "saved_notify",
+  "message": "Forecast updated. Race Day rain chance dropped 17%.",
+  "shouldSave": true,
+  "hasForecastDataChanged": true,
+  "snapshotId": "2026-05-24-2442",
   "panicIndex": 4
 }

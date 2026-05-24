@@ -1,6 +1,19 @@
 {
   "entries": [
     {
+      "at": "2026-05-24T04:42:16.311Z",
+      "snapshotId": "2026-05-24-2442",
+      "severity": "warning",
+      "summary": "Race Day rain chance dropped 17%.",
+      "details": [
+        "Race Day rain 77% → 60% (down).",
+        "Race Day trend → → ↓.",
+        "Race Day forecast wording revised.",
+        "Hourly forecast slots revised.",
+        "Storm timing moved later."
+      ]
+    },
+    {
       "at": "2026-05-23T23:12:11.417Z",
       "snapshotId": "2026-05-23-1912",
       "severity": "info",
