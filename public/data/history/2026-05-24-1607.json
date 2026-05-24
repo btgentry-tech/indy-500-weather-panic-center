@@ -1,0 +1,64 @@
+{
+  "id": "2026-05-24-1607",
+  "fetchedAt": "2026-05-24T20:07:12.295Z",
+  "noaaGeneratedAt": "2026-05-24T20:07:12+00:00",
+  "panicIndex": 4,
+  "panicScale": 2,
+  "defcon": 4,
+  "mood": "High concern — track drying on standby, atmospheric chaos in the chat.",
+  "forecastStability": 7,
+  "forecastStabilityLevel": "rapidly-changing",
+  "lastForecastChange": "Race Day conditions worsened as rain odds climbed 15%. Storm window shifted later.",
+  "days": {
+    "carbDay": {
+      "label": "Carb Day",
+      "date": "2026-05-22",
+      "rainPct": 0,
+      "stormRisk": "NONE",
+      "highTemp": 0,
+      "shortForecast": "No daytime period available",
+      "detailedForecast": "Forecast period not yet issued.",
+      "trend": "→"
+    },
+    "legendsDay": {
+      "label": "Legends Day",
+      "date": "2026-05-23",
+      "rainPct": 0,
+      "stormRisk": "NONE",
+      "highTemp": 0,
+      "shortForecast": "No daytime period available",
+      "detailedForecast": "Forecast period not yet issued.",
+      "trend": "→"
+    },
+    "raceDay": {
+      "label": "Race Day",
+      "date": "2026-05-24",
+      "rainPct": 69,
+      "stormRisk": "ACTIVE",
+      "highTemp": 74,
+      "shortForecast": "Showers And Thunderstorms Likely",
+      "detailedForecast": "Showers and thunderstorms likely before 5pm, then a chance of showers and thunderstorms. Cloudy. High near 74, with temperatures falling to around 70 in the afternoon. Northwest wind around 7 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible.",
+      "trend": "↑"
+    }
+  },
+  "hourly": [
+    {
+      "time": "2026-05-24T16:00:00-04:00",
+      "rainPct": 69,
+      "shortForecast": "Showers And Thunderstorms Likely",
+      "hasStormWording": true
+    },
+    {
+      "time": "2026-05-24T17:00:00-04:00",
+      "rainPct": 53,
+      "shortForecast": "Chance Showers And Thunderstorms",
+      "hasStormWording": true
+    }
+  ],
+  "volatility": {
+    "changes24h": 6,
+    "largestRainSwing": 15,
+    "stabilityScore": 7,
+    "volatilityScore": 93
+  }
+}
