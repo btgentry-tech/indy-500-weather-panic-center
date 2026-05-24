@@ -1,6 +1,19 @@
 {
   "entries": [
     {
+      "at": "2026-05-24T21:12:13.797Z",
+      "snapshotId": "2026-05-24-1712",
+      "severity": "warning",
+      "summary": "Race Day storm threat easing.",
+      "details": [
+        "Race Day rain 69% → 67% (down).",
+        "Race Day trend ↑ → →.",
+        "Race Day forecast wording revised.",
+        "Race Day storm risk ACTIVE → NONE.",
+        "Hourly forecast slots revised."
+      ]
+    },
+    {
       "at": "2026-05-24T20:07:12.295Z",
       "snapshotId": "2026-05-24-1607",
       "severity": "warning",
