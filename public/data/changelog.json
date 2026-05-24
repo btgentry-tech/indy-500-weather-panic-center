@@ -1,6 +1,17 @@
 {
   "entries": [
     {
+      "at": "2026-05-24T16:43:37.641Z",
+      "snapshotId": "2026-05-24-1243",
+      "severity": "info",
+      "summary": "Race Day improving — rain odds easing.",
+      "details": [
+        "Race Day rain 55% → 54% (down).",
+        "Race Day forecast wording revised.",
+        "Hourly forecast slots revised."
+      ]
+    },
+    {
       "at": "2026-05-24T15:34:05.045Z",
       "snapshotId": "2026-05-24-1134",
       "severity": "info",
