@@ -1,5 +1,5 @@
 {
-  "lastCheckedAt": "2026-07-19T22:35:11.190Z",
+  "lastCheckedAt": "2026-07-19T23:40:05.540Z",
   "lastSnapshotAt": "2026-05-24T23:17:17.731Z",
   "lastSnapshotId": "2026-05-24-1917",
   "lastForecastChangeAt": "2026-05-19T00:01:46.030Z",
@@ -9,7 +9,7 @@
     "condition": "HAZE",
     "windDirection": "NE",
     "windSpeedMph": 33,
-    "observedAt": "2026-07-19T22:15:00+00:00"
+    "observedAt": "2026-07-19T23:15:00+00:00"
   },
   "lastMajorShiftAt": "2026-05-19T00:01:46.030Z",
   "lastMajorShiftSummary": "Storm timing shifted. Forecast improving. Moisture retreating eastward.",
